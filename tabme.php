@@ -6,7 +6,7 @@ if (!empty($_SESSION['auth']) && $_SESSION['auth']['subjectAltName'] || $_REQUES
 
 	print "<script src=http://foaf-visualizer.org/embed/widget/?uri=$webid ></script>";
 
-	print '<script>$("a").each(function() { $(this).attr("href", $(this).attr("href").replace("foaf-visualizer.org/?uri=", ' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?webid=") ) } );</script>';
+	print '<script>$("a").each(function() { $(this).attr("href", $(this).attr("href").replace("foaf-visualizer.org/?uri=", "' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?webid=") ) } );</script>';
 
 				
 
