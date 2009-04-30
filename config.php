@@ -1,3 +1,5 @@
+<?php
+
 $config = array(
         /* db */
         'db_name'    => '',
@@ -6,3 +8,5 @@ $config = array(
         /* store */
         'store_name' => '',
 );
+
+?>
