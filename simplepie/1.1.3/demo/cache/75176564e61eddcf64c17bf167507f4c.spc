@@ -1,0 +1,1 @@
+a:3:{s:3:"url";s:26:"http://del.icio.us/danbri/";s:8:"feed_url";s:49:"http://feeds.delicious.com/v2/rss/danbri?count=15";s:5:"build";i:20081219;}

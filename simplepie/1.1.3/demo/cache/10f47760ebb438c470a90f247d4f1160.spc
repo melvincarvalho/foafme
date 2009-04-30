@@ -1,0 +1,1 @@
+a:3:{s:3:"url";s:31:"http://youtube.com/user/daverix";s:8:"feed_url";s:116:"http://gdata.youtube.com/feeds/base/users/Daverix/uploads?alt=rss&v=2&orderby=published&client=ytapi-youtube-profile";s:5:"build";i:20081219;}

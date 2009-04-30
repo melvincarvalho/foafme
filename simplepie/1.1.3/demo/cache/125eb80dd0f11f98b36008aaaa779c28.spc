@@ -1,0 +1,1 @@
+a:3:{s:3:"url";s:71:"http://myopenlink.net/dataspace/person/kidehen/online_account#Identi.ca";s:8:"feed_url";s:50:"http://myopenlink.net/feeds/people/kidehen/friends";s:5:"build";i:20081219;}

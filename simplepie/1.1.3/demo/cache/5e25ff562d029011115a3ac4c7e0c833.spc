@@ -1,0 +1,1 @@
+a:3:{s:3:"url";s:69:"http://myopenlink.net/dataspace/person/kidehen/online_account#Twitter";s:8:"feed_url";s:50:"http://myopenlink.net/feeds/people/kidehen/friends";s:5:"build";i:20081219;}

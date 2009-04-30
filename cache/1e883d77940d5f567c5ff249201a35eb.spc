@@ -1,0 +1,1 @@
+a:3:{s:3:"url";s:30:"http://melvincarvalho.com/blog";s:8:"feed_url";s:41:"http://melvincarvalho.com/blog/?feed=rss2";s:5:"build";i:20081219;}

@@ -1,0 +1,1 @@
+a:3:{s:3:"url";s:35:"http://identi.ca/melvincarvalho/all";s:8:"feed_url";s:39:"http://identi.ca/melvincarvalho/all/rss";s:5:"build";i:20081219;}

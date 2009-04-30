@@ -1,0 +1,1 @@
+a:3:{s:3:"url";s:16:"http://identi.ca";s:8:"feed_url";s:20:"http://identi.ca/rss";s:5:"build";i:20081219;}

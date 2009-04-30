@@ -1,0 +1,1 @@
+a:3:{s:3:"url";s:25:"http://github.com/daverix";s:8:"feed_url";s:30:"http://github.com/daverix.atom";s:5:"build";i:20081219;}

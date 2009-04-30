@@ -1,0 +1,1 @@
+a:3:{s:3:"url";s:28:"http://friendfeed.com/public";s:8:"feed_url";s:40:"http://friendfeed.com/public?format=atom";s:5:"build";i:20081219;}

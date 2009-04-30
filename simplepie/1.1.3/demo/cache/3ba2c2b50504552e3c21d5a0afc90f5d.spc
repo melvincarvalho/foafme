@@ -1,0 +1,1 @@
+a:3:{s:3:"url";s:42:"http://picasaweb.google.com/david.laurell/";s:8:"feed_url";s:103:"http://picasaweb.google.com/data/feed/base/user/david.laurell?alt=rss&kind=album&hl=en_US&access=public";s:5:"build";i:20081219;}

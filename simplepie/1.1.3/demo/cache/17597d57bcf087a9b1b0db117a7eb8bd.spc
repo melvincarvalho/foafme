@@ -1,0 +1,1 @@
+a:3:{s:3:"url";s:31:"http://daverix.bilddagboken.se/";s:8:"feed_url";s:44:"http://daverix.bilddagboken.se/p/rss/rss.xml";s:5:"build";i:20081219;}

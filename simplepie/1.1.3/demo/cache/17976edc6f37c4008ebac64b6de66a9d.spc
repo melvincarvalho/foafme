@@ -1,0 +1,1 @@
+a:3:{s:3:"url";s:32:"http://momoshishop.blogspot.com/";s:8:"feed_url";s:51:"http://momoshishop.blogspot.com/feeds/posts/default";s:5:"build";i:20081219;}
