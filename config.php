@@ -6,7 +6,7 @@ $config = array(
         'db_user'    => '',
         'db_pwd'     => '',
         /* store */
-        'store_name' => '',
+        'store_name' => 'arc_tests',
 );
 
 ?>
