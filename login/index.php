@@ -79,7 +79,7 @@
 	        <li><? print $_REQUEST['webid'] ? "<a href=index.php>Logout: $_REQUEST[webid]</a>" : "<a href=https://foafssl.org/srv/insecureLogin?return_to=http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI] />Login With Secure Web ID</a>" ?></li>
 			<li class="sep">|</li>
 			<li id="toggle">
-				<a id="open" class="open" href="#" ?> New Users</a>
+				<a id="open" class="open" href="#"> New Users</a>
 				<a id="close" style="display: none;" class="close" href="#">Close Panel</a>			
 			</li>
 	    	<li class="right">&nbsp;</li>
@@ -89,7 +89,7 @@
 </div> <!--panel -->
 
     <div id="container">
-	<img align="right" id="postit" src="http://brophus.com/postit.png"/>
+	<a id="open" class="open" href="#"><img id="postit" src="images/postit.png"/></a>
 		<div id="content" style="padding-top:100px;">
 
 <?php			

@@ -62,3 +62,10 @@ h2{
   	text-align: left;
 	padding: 20px;
 }
+
+#postit {
+        position: absolute;
+        top: 0;
+        right: 0;
+}
+
