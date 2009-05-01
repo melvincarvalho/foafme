@@ -150,10 +150,10 @@ function get_all_friends($store, $agenturi)
 //				print_r($row);
 				if (strcmp($row['y'],$agenturi)!=0)
 				{
-					if ($row['name'])
+					if (isset($row['name']))
 						$res = array('name'=>$row['name']);
 	
-					if ( ($row['seeAlso'])  && (strcmp($row['seeAlso type'],'uri')==0) ) 
+					if (isset($row['seeAlso']) && (strcmp($row['seeAlso type'],'uri')==0) ) 
 					{	
 						$seeAlso = $row['seeAlso'];
 						$res = safe_array_merge($res, array('seeAlso'=>$seeAlso));
@@ -161,10 +161,10 @@ function get_all_friends($store, $agenturi)
 					else
 						$seeAlso = NULL;
 
-					if ($row['mbox'])
+					if (isset($row['mbox']))
 						$res = safe_array_merge($res, array('mbox'=>$row['mbox']));
 
-					if ($row['homepage'])
+					if (isset($row['homepage']))
 						$res = safe_array_merge($res, array('homepage'=>$row['homepage']));
 /*
 					if ($row['maker'])
@@ -173,7 +173,7 @@ function get_all_friends($store, $agenturi)
 					if ($row['primaryTopic'])
 						$res = safe_array_merge($res, array('primaryTopic'=>$row['primaryTopic']));
 */
-					if ( ($row['y']) && (strcmp($row['y type'],'uri')==0) )
+					if (isset($row['y']) && (strcmp($row['y type'],'uri')==0) )
 					{
 						$y = $row['y'];
 						$res = safe_array_merge($res, array('about'=>$y));
@@ -243,28 +243,28 @@ function get_all_nyms($store, $agenturi)
 				{	
 //					print_r($row);
 
-					if ($row['name'])
+					if (isset($row['name']))
 						$res = safe_array_merge($res, array('name'=>$row['name']));
 	
-					if ( ($row['seeAlso'])  && (strcmp($row['seeAlso type'],'uri')==0) ) 
+					if (isset($row['seeAlso']) && (strcmp($row['seeAlso type'],'uri')==0))
 						$res = safe_array_merge($res, array('seeAlso'=>array_unique(safe_array_merge($res['seeAlso'], array($row['seeAlso'])))));
 			
-					if ($row['mbox'])
+					if (isset($row['mbox']))
 						$res = safe_array_merge($res, array('mbox'=>array_unique(safe_array_merge($res['mbox'], array($row['mbox'])))));
 
-					if ($row['mbox_sha1sum'])
+					if (isset($row['mbox_sha1sum']))
 						$res = safe_array_merge($res, array('mbox_sha1sum'=>array_unique(safe_array_merge($res['mbox_sha1sum'], array($row['mbox_sha1sum'])))));
 
-					if ($row['homepage'])
+					if (isset($row['homepage']))
 						$res = safe_array_merge($res, array('homepage'=>array_unique(safe_array_merge($res['homepage'], array($row['homepage'])))));
 
-					if ($row['nick'])
+					if (isset($row['nick']))
 						$res = safe_array_merge($res, array('nick'=>array_unique(safe_array_merge($res['nick'], array($row['nick'])))));
 
-					if ($row['accountProfilePage'])
+					if (isset($row['accountProfilePage']))
 						$res = safe_array_merge($res, array('accountProfilePage'=>array_unique(safe_array_merge($res['accountProfilePage'], array($row['accountProfilePage'])))));
 
-					if ( ($row['y']) && (strcmp($row['y type'],'uri')==0) ) 
+					if (isset($row['y']) && (strcmp($row['y type'],'uri')==0))
 					{
 						$acct = $row['y'];
 //						if (strstr($acct, 'http://identi.ca/'))
@@ -272,7 +272,7 @@ function get_all_nyms($store, $agenturi)
 						$res = safe_array_merge($res, array('holdsAccount'=>array_unique(safe_array_merge($res['holdsAccount'], array($acct)))));
 					}
 
-					if ($row['holdsAccountHomepage']) 
+					if (isset($row['holdsAccountHomepage']))
 					{
 						$acct = $row['holdsAccountHomepage'];
 //						if (strstr($acct, 'http://identi.ca/'))
@@ -280,10 +280,10 @@ function get_all_nyms($store, $agenturi)
 						$res = safe_array_merge($res, array('holdsAccount'=>array_unique(safe_array_merge($res['holdsAccount'], array($acct)))));
 					}
 
-					if ($row['img'])
+					if (isset($row['img']))
 						$res = safe_array_merge($res, array('img'=>$row['img']));
 
-					if ($row['depiction'])
+					if (isset($row['depiction']))
 						$res = safe_array_merge($res, array('depiction'=>$row['depiction']));
 				}
 			}
@@ -442,7 +442,7 @@ function get_primary_profile($store)
 		{
 			foreach ($rows as $row) 
 			{
-				return $row[primaryTopic];
+				return $row['primaryTopic'];
 			}
 		}
 	}

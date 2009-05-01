@@ -281,3 +281,18 @@ margin-top:15px;
 padding:3px;
 width:100%;
 }
+
+/* Activity Stream */
+.activity-favicon {
+  float: left;
+  border-style: none;
+  margin-right: 10px;
+}
+
+.chunk {
+  border-bottom: 1px solid #eeeeee;
+}
+
+.footnote {
+  color: #666666;
+}

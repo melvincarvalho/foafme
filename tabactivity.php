@@ -6,7 +6,7 @@ require_once('lib/libAuthentication.php');
 
 $auth = $_SESSION['auth'];
 
-if ($_REQUEST['webid']) {
+if (isset($_REQUEST['webid'])) {
   $auth = get_agent($_REQUEST['webid']);
 }
 
@@ -52,8 +52,8 @@ $feed->handle_content_type();
 	?>
 
 		<div class="chunk">
-			<h4 style="background-image:url(<?php echo $feed->get_favicon(); ?>); background-repeat: no-repeat;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $item->get_permalink(); ?>"><?php echo html_entity_decode($item->get_title(), ENT_QUOTES, 'UTF-8'); ?></a></h4><br/>
-
+			<img src="<?php echo $feed->get_favicon(); ?>" width="16" height="16" class="activity-favicon" alt="[icon]" />
+			<h4><a href="<?php echo $item->get_permalink(); ?>"><?php echo html_entity_decode($item->get_title(), ENT_QUOTES, 'UTF-8'); ?></a></h4>
 			<!-- get_content() prefers full content over summaries -->
 			<?php echo $item->get_content(); ?>
 

@@ -4,7 +4,7 @@ session_name('phpMyID_Server');
 session_start();
 
 $agent = (!empty($_SESSION['auth']) && $_SESSION['auth']['subjectAltName'])? $_SESSION['auth']['subjectAltName'] : '';
-$agent = $_REQUEST['webid']?$_REQUEST['webid']:$agent;
+$agent = isset($_REQUEST['webid']) ? $_REQUEST['webid'] : $agent;
 
 include('head.php'); ?>
 

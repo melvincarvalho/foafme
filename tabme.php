@@ -2,7 +2,7 @@
 
 if (!empty($_SESSION['auth']) && $_SESSION['auth']['subjectAltName'] || $_REQUEST['webid'] ) {
 
-	$webid = $_REQUEST['webid'] ? $_REQUEST['webid'] : $_SESSION['auth']['subjectAltName'];
+	$webid = isset($_REQUEST['webid']) ? $_REQUEST['webid'] : $_SESSION['auth']['subjectAltName'];
 
 	print "<script src=http://foaf-visualizer.org/embed/widget/?uri=$webid ></script>";
 

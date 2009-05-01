@@ -7032,6 +7032,7 @@ class SimplePie_Enclosure
 		}
 
 		// Flash
+		/*
 		elseif ($handler == 'flash')
 		{
 			if ($native)
@@ -7043,6 +7044,7 @@ class SimplePie_Enclosure
 				$embed .= "<script type='text/javascript'>embed_flash('$bgcolor', '$width', '$height', '" . $this->get_link() . "', '$loop', '$type');</script>";
 			}
 		}
+		*/
 
 		// Flash Media Player file types.
 		// Preferred handler for MP3 file types.
