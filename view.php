@@ -197,7 +197,7 @@ else
 		<foaf:nick>' . $username . '</foaf:nick> 
 		<foaf:firstName>firstname</foaf:firstName> 
 		<foaf:givenName>givenname</foaf:givenName> 
-		<foaf:homepage rdf:resource="http://foaf.me/' . $username . '"/> 
+		<foaf:homepage rdf:resource="http://'. $_SERVER['HTTP_HOST'] .'/' . $username . '"/> 
 		</foaf:Person> 
 		
 		</rdf:RDF>';
