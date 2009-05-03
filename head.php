@@ -50,8 +50,8 @@
 
 $(function() {
 	$('#container').tabs({ fxFade: true, fxSpeed: 'fast' });
-	gGeneratorAgent = 'http://foaf.me';
-	gErrorReportsTo = 'mailto:error@foaf.me';
+	gGeneratorAgent = 'http://<?php echo $_SERVER['HTTP_HOST'] ?>';
+	gErrorReportsTo = 'mailto:error@<?php echo $_SERVER['HTTP_HOST'] ?>';
 });
 
 function addf() {
@@ -78,7 +78,7 @@ function makeTags() {
 	// set homepage from nick
 	if ( $("#homepage").val() == "")
 	{
-        $("#homepage").val( "http://foaf.me/" + $("#nick").val() );
+        $("#homepage").val( "http://<?php echo $_SERVER['HTTP_HOST'] ?>/" + $("#nick").val() );
 	}
 
     rdf  = '<rdf:RDF\n      xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n      ' +
