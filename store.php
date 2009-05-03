@@ -50,7 +50,7 @@ if ($db->row_count == 0) {
 	$db->update_sql(" update foaf set rdf = '$_POST[rdf]' , rdf2 = '$rdf' where username like '$_POST[uri]'  ");
 }
 
-print "Congratulations, you have successfully created a foaf file, which can be permanently accessed  here: <br/><br/><a href='http://foaf.me/$_POST[uri]'>http://foaf.me/$_POST[uri]</a>";
+print "Congratulations, you have successfully created a foaf file, which can be permanently accessed  here: <br/><br/><a href='http://$_SERVER[HTTP_HOST]/$_POST[uri]'>http://$_SERVER[HTTP_HOST]/$_POST[uri]</a>";
 
 
 
