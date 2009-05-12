@@ -26,9 +26,9 @@ if (!empty($_REQUEST['webid'])) {
   } else {
     print "No online accounts discovered";
   }
-    print "<h3>Your Account Settings</h3>";
-    print "<h3>Active Tabs</h3>";
-    print "Me<br/>Friends<br/>Accounts<br/>Activity";
+    //print "<h3>Your Account Settings</h3>";
+    //print "<h3>Active Tabs</h3>";
+    //print "Me<br/>Friends<br/>Accounts<br/>Activity";
 
 } else {
 ?>
