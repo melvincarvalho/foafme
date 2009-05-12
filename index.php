@@ -24,12 +24,12 @@ include('head.php'); ?>
         <div id="container" typeof="foaf:Person" about="me">
 		<ul>
 			<li style="list-style-image: none"><a href="#me"><span>Me</span></a></li>
+			<li style="list-style-image: none"><a href="#friends"><span>Friends</span></a></li>
 <?php
 if ($agent) {
 ?>
 			<li style="list-style-image: none"><a href="#activity"><span>Activity</span></a></li>
 <? } else { ?>
-			<li style="list-style-image: none"><a href="#friends"><span>Friends</span></a></li>
 			<li style="list-style-image: none"><a href="#accounts"><span>Accounts</span></a></li>
 			<li style="list-style-image: none"><a href="#interests"><span>Interests</span></a></li>
 			<li style="list-style-image: none"><a href="#security"><span>Security</span></a></li>
@@ -45,12 +45,7 @@ if ($agent) {
 
             <!-- start friends tab -->
             <div id="friends">
-			  <table id="friendstable">
-			  <tr><td></td><td>Name</span></td><td>URL</td></tr>
-			  <tr typeof="foaf:Person"><td>Add: </td><td><input size="12" id="friend1" property="foaf:name" onChange="makeTags()" type="text" name="friend1name" /></td><td><input size="12" rel="rdfs:seeAlso" id="friend1" onChange="makeTags()" type="text" name="friend1" /></td></tr>
-			  <tr typeof="foaf:Person"><td>Add: </td><td><input size="12" id="friend2" property="foaf:name" onChange="makeTags()" type="text" name="friend2name" /></td><td><input size="12" rel="rdfs:seeAlso" id="friend2" onChange="makeTags()" type="text" name="friend2" /></td></tr>			  
-			  </table>
-			  <a href="#" onclick="javascript:addf()">Add</a>
+                <?php include('tabfriends.php'); ?>
             </div>
             <!-- end friends tab -->
 
