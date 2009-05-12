@@ -11,8 +11,10 @@ if (isset($_REQUEST['webid'])) {
 
 if (!empty($auth['agent']['knows'])) {
 
+  print "<h3>Friends</h3>";
+
   foreach ($auth['agent']['knows'] as $k => $v) {
-    print "<a href='http://foaf.me/index.php?webid=$v[webid]'>$v[name]</a><br/>";
+    print "<a href='http://$_SERVER[HTTP_HOST]/index.php?webid=$v[webid]'>$v[name]</a><br/>";
   }
 
 } else {

@@ -25,12 +25,12 @@ include('head.php'); ?>
 		<ul>
 			<li style="list-style-image: none"><a href="#me"><span>Me</span></a></li>
 			<li style="list-style-image: none"><a href="#friends"><span>Friends</span></a></li>
+			<li style="list-style-image: none"><a href="#accounts"><span>Accounts</span></a></li>
 <?php
 if ($agent) {
 ?>
 			<li style="list-style-image: none"><a href="#activity"><span>Activity</span></a></li>
 <? } else { ?>
-			<li style="list-style-image: none"><a href="#accounts"><span>Accounts</span></a></li>
 			<li style="list-style-image: none"><a href="#interests"><span>Interests</span></a></li>
 			<li style="list-style-image: none"><a href="#security"><span>Security</span></a></li>
 <? } ?>
@@ -60,15 +60,7 @@ if ($agent) {
 
             <!-- start accounts tab -->
             <div id="accounts">
-			  <table>
-			  <table id="accountstable">
-			  <tr><td></td><td>External Account URL</td></tr>
-			  <tr typeof="foaf:OnlineAccount"><td>OpenID: </td><td><input size="20" rel="foaf:openid" id="account1" onChange="makeTags()" type="text" name="account1" /></td></tr>
-			  <tr typeof="foaf:OnlineAccount"><td>Account: </td><td><input size="20" rel="foaf:holdsAccount" id="account1" onChange="makeTags()" type="text" name="account1" /></td></tr>
-			  <tr typeof="foaf:OnlineAccount"><td>Account: </td></td><td><input size="20" rel="foaf:holdsAccount" id="account2" onChange="makeTags()" type="text" name="accounts2" /></td></tr>			  
-			  <table>
-			  <a href="#" onclick="javascript:adda()">Add</a>
-			  </table>
+                <?php include('tabaccounts.php'); ?>
             </div>
             <!-- end accounts tab -->
 
