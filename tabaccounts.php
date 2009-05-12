@@ -27,7 +27,6 @@ if (!empty($_REQUEST['webid'])) {
     print "No online accounts discovered";
   }
     print "<h3>Your Account Settings</h3>";
-    print "Coming soon:  <br/><br/>Protect account with SSL certificate<br/> Edit profile (please use tabulator at the moment)<br/> Privacy control<br/>";
     print "<h3>Active Tabs</h3>";
     print "Me<br/>Friends<br/>Accounts<br/>Activity";
 

@@ -26,13 +26,13 @@ include('head.php'); ?>
 			<li style="list-style-image: none"><a href="#me"><span>Me</span></a></li>
 			<li style="list-style-image: none"><a href="#friends"><span>Friends</span></a></li>
 			<li style="list-style-image: none"><a href="#accounts"><span>Accounts</span></a></li>
+			<li style="list-style-image: none"><a href="#security"><span>Security</span></a></li>
 <?php
 if ($agent) {
 ?>
 			<li style="list-style-image: none"><a href="#activity"><span>Activity</span></a></li>
 <? } else { ?>
 			<li style="list-style-image: none"><a href="#interests"><span>Interests</span></a></li>
-			<li style="list-style-image: none"><a href="#security"><span>Security</span></a></li>
 <? } ?>
 		</ul>
 
@@ -76,12 +76,7 @@ if ($agent) {
             <!-- end interests tab -->
 
             <!-- start security tab -->
-            <div id="security">
-			  <table>
-			  <tr typeof="cert:identity"><td><b>Secure Account!</b> </td><td>(RSA)</td></tr>
-			  <tr><td>Public Key: </td><td><input inner="cert:hex" property="rsa:modulus" id="publicKey" onChange="makeTags()" type="text" name="publicKey" /></tr>
-			  <tr><td>Exponent: </td><td><input inner="cert:decimal" property="rsa:public_exponent" id="exponent" onChange="makeTags()" type="text" name="exponent" /> (Default = 65537)</tr>
-			  </table>
+            <div id="security">Loading...
             </div>
             <!-- end security tab -->
 
@@ -92,6 +87,7 @@ if ($agent) {
                         <script> $("#activity").load("tabactivity.php?webid=<?= $agent ?>");</script>
                         <script> $("#friends").load("tabfriends.php?webid=<?= $agent ?>");</script>
                         <script> $("#accounts").load("tabaccounts.php?webid=<?= $agent ?>");</script>
+                        <script> $("#security").load("tabsecurity.php?webid=<?= $agent ?>");</script>
 
 <?php
 if ($agent) {
