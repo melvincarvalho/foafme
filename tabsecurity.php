@@ -14,10 +14,11 @@ if (!empty($_REQUEST['webid'])) {
 
   if (!empty($key)) {
 
-      print "key: $key[modulus]<br/>";
-      print "exponent: $key[exponent]<br/>";
+      print "Public Key: $key[modulus]<br/>";
+      print "Exponent: $key[exponent]<br/>";
 
   } else {
+     print "No public key found";
   }
     print "<h3>Coming soon</h3>  Protect account with SSL certificate<br/> Edit profile (please use tabulator at the moment)<br/> Privacy control<br/>";
 

@@ -34,6 +34,7 @@ $feed->handle_content_type();
 
 // Begin the (X)HTML page.
 ?>
+ <h2>Activity</h2>
 
 			
 
