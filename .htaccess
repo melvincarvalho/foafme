@@ -1,0 +1,17 @@
+SSLOptions +StdEnvVars
+SSLOptions +ExportCertData
+
+
+RewriteEngine on
+RewriteCond %{QUERY_STRING} _path]?=http
+RewriteRule !^/?nofile.php - [C]
+RewriteRule (.*) nofile.php/$1/%{QUERY_STRING} [L]
+
+RewriteEngine On
+### if the requested url doesn't exist as a file (-f)
+RewriteCond %{REQUEST_FILENAME} !-f
+### and the requested url doesn't exist as a directory (-d)
+RewriteCond %{REQUEST_FILENAME} !-d
+
+
+RewriteRule ^(.*) view.php?username=$1 [PT,L,QSA]

@@ -1,4 +1,18 @@
+Foaf.me alpha source code
+
+Features
+- FOAF Create Wizard
+- Store FOAF in DB
+- FOAF+SSL login via delagate server
+- FOAF Cloud Browser
+- Activity Streams from FOAF
+- SPARUL update
+- Auto Create foaf files or mbox
+
 To enable acrivity stream:
 
 1. change config.php to include the values in your MySQL DB
 2. make /cache/ writable
+
+To install DB tabel run:
+install.php

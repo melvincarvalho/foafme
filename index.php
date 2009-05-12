@@ -109,7 +109,7 @@ if ($agent) {
 		<p>Your FOAF file:</p>
 		<textarea id="rdf" name="rdf" cols="80" rows="20"></textarea>
 		<br/>
-		foaf.me/<input id="uri" value="" type="text" name="uri"> <button type="submit">Save!</button> 
+		<? echo $_SERVER['HTTP_HOST'] ?>/<input id="uri" value="" type="text" name="uri"> <button type="submit">Save!</button> 
 		<p style='display:none'><input value="" type="checkbox" name="spamProtect" checked> Protect email addresses from spammers</p>
 		</form>
 <? } ?>
