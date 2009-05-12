@@ -4,33 +4,32 @@ require_once('lib/libAuthentication.php');
 
 $auth = $_SESSION['auth'];
 
-if (isset($_REQUEST['webid'])) {
+if (!empty($_REQUEST['webid'])) {
   $auth = get_agent($_REQUEST['webid']);
-}
 
 
-$a1 = replace_with_rss($auth['agent']['holdsAccount']);
-$a2 = replace_with_rss($auth['agent']['accountProfilePage']);
+  $a1 = replace_with_rss($auth['agent']['holdsAccount']);
+  $a2 = replace_with_rss($auth['agent']['accountProfilePage']);
  
-if ( $a1 || $a2 ) {
-  $a3 = array_merge(  $a1?$a1:array(), $a2?$a2:array() );
-}
-
-
-if (!empty($a3)) {
-  print "<h3>Online Accounts</h3>";
-
-  foreach ($a3 as $k => $v) {
-    print "<a href='$v'>$v</a><br/>";
+  if ( $a1 || $a2 ) {
+    $a3 = array_merge(  $a1?$a1:array(), $a2?$a2:array() );
   }
 
-  print "<h3>Account Settings</h3>";
+  print "<h3>Online Accounts</h3>";
 
-  print "Coming soon:  <br/><br/>Protect account with SSL certificate<br/> Edit profile (please use tabulator at the moment)<br/> Privacy control<br/>";
-  
-  print "<h3>Active Tabs</h3>";
+  if (!empty($a3)) {
 
-  print "Me<br/>Friends<br/>Accounts<br/>Activity";
+    foreach ($a3 as $k => $v) {
+      print "<a href='$v'>$v</a><br/>";
+    }
+
+  } else {
+    print "No online accounts discovered";
+  }
+    print "<h3>Your Account Settings</h3>";
+    print "Coming soon:  <br/><br/>Protect account with SSL certificate<br/> Edit profile (please use tabulator at the moment)<br/> Privacy control<br/>";
+    print "<h3>Active Tabs</h3>";
+    print "Me<br/>Friends<br/>Accounts<br/>Activity";
 
 } else {
 ?>

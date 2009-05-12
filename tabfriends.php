@@ -4,17 +4,17 @@ require_once('lib/libAuthentication.php');
 
 $auth = $_SESSION['auth'];
 
-if (isset($_REQUEST['webid'])) {
+if (!empty($_REQUEST['webid'])) {
   $auth = get_agent($_REQUEST['webid']);
-}
-
-
-if (!empty($auth['agent']['knows'])) {
 
   print "<h3>Friends</h3>";
 
-  foreach ($auth['agent']['knows'] as $k => $v) {
-    print "<a href='http://$_SERVER[HTTP_HOST]/index.php?webid=$v[webid]'>$v[name]</a><br/>";
+  if (!empty($auth['agent']['knows'])) {
+
+
+    foreach ($auth['agent']['knows'] as $k => $v) {
+      print "<a href='http://" . $_SERVER['HTTP_HOST'] . str_replace('tabfriends', 'index', $_SERVER['PHP_SELF']) . "?webid=$v[webid]'>$v[name]</a><br/>";
+    }
   }
 
 } else {

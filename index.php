@@ -44,8 +44,7 @@ if ($agent) {
 
 
             <!-- start friends tab -->
-            <div id="friends">
-                <?php include('tabfriends.php'); ?>
+            <div id="friends">Loading...
             </div>
             <!-- end friends tab -->
 
@@ -59,8 +58,7 @@ if ($agent) {
 <? } ?>
 
             <!-- start accounts tab -->
-            <div id="accounts">
-                <?php include('tabaccounts.php'); ?>
+            <div id="accounts">Loading...
             </div>
             <!-- end accounts tab -->
 
@@ -91,10 +89,13 @@ if ($agent) {
 		<!-- end tabs container -->
 
 		<!-- start foaf file -->
+                        <script> $("#activity").load("tabactivity.php?webid=<?= $agent ?>");</script>
+                        <script> $("#friends").load("tabfriends.php?webid=<?= $agent ?>");</script>
+                        <script> $("#accounts").load("tabaccounts.php?webid=<?= $agent ?>");</script>
+
 <?php
 if ($agent) {
 ?>
-			<script> $("#activity").load("tabactivity.php?webid=<?= $agent ?>");</script>
 <? } else { ?>
 		<div id="form">
 		<form name="results" action="store.php" method="POST" >
