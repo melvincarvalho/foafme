@@ -1,10 +1,67 @@
 <?php 
 
-session_name('phpMyID_Server');
 session_start();
 
 $agent = (!empty($_SESSION['auth']) && $_SESSION['auth']['subjectAltName'])? $_SESSION['auth']['subjectAltName'] : '';
 $agent = isset($_REQUEST['webid']) ? $_REQUEST['webid'] : $agent;
+
+/*
+ * Settings for the IdP. The following two variables may change with
+ * another IdP.
+ */
+
+$sigalg = "rsa-sha1";
+$idp_certificate = "foafssl.org-cert.pem";
+
+/*
+ * Verifies the WebID
+ */
+
+$webid = "";
+
+/* Reconstructs the signed message: the URI except the 'sig' parameter */
+$full_uri = ($_SERVER["HTTPS"] == "on" ? "https" : "http")
+. "://" . $_SERVER["HTTP_HOST"]
+. ($_SERVER["SERVER_PORT"] != ($_SERVER["HTTPS"] == "on" ? 443 : 80) ? ":".$_SERVER["SERVER_PORT"] : "")
+. $_SERVER["REQUEST_URI"];
+
+$signed_info = substr($full_uri, 0, -5-strlen(urlencode($_GET["sig"])));
+
+/* Extracts the signature */
+$signature = base64_decode($_GET["sig"]);
+
+/* Only rsa-sha1 is supported at the moment. */
+if ($sigalg == "rsa-sha1") {
+        /*
+         * Loads the trusted certificate of the IdP: its public key is used to
+         * verify the integrity of the signed assertion.
+         */
+        $fp = fopen($idp_certificate, "r");
+        $cert = fread($fp, 8192);
+        fclose($fp);
+
+        $pubkeyid = openssl_get_publickey($cert);
+
+        /* Verifies the signature */
+        $verified = openssl_verify($signed_info, $signature, $pubkeyid);
+        if ($verified == 1) {
+                // The verification was successful.
+                $webid = $_GET["webid"];
+        } elseif ($verified == 0) {
+                // The signature didn't match.
+                $webid = "";
+        } else {
+                // Error during the verification.
+                $webid = "";
+        }
+
+        openssl_free_key($pubkeyid);
+} else {
+        // Unsupported signature algorithm.
+        $webid = "";
+}
+
+
 
 include('head.php'); ?>
 

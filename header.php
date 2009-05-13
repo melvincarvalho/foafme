@@ -1,6 +1,6 @@
 <?php
 //if (!empty($_SESSION['auth']) && $_SESSION['auth']['subjectAltName']) {
-if (!empty($_REQUEST['webid']) ) {
+if (!empty($webid) ) {
 ?>
 		<div id="user">
 				<a id="logout" href="http://foaf.me/clearSession.php?return_to=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]" ?>">
@@ -11,7 +11,7 @@ if (!empty($_REQUEST['webid']) ) {
 		</div>
 <? } else { ?>
 		<div id="user">
-				<a id="account" href="https://foafssl.org/srv/insecureLogin?return_to=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]" ?>">
+				<a id="account" href="https://foafssl.org/srv/idp?authreqissuer=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]" ?>">
 					login to your <strong>account</strong>
 				</a>
 			<br clear="all" />
