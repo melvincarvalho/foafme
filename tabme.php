@@ -1,12 +1,21 @@
 <?php
 
-if (!empty($_SESSION['auth']) && $_SESSION['auth']['subjectAltName'] || $_REQUEST['webid'] ) {
+require_once('lib/libAuthentication.php');
 
-	$webid = isset($_REQUEST['webid']) ? $_REQUEST['webid'] : $_SESSION['auth']['subjectAltName'];
+$auth = $_SESSION['auth'];
 
-	print "<script src=http://foaf-visualizer.org/embed/widget/?uri=$webid ></script>";
+if (!empty($_REQUEST['webid'])) {
+  $auth = get_agent($_REQUEST['webid']);
 
-	print '<script>$("a").each(function() { $(this).attr("href", $(this).attr("href").replace("foaf-visualizer.org/?uri=", "' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?webid=") ) } );</script>';
+
+
+  if (!empty($auth['agent']['webid'])) {
+    $webid = $auth['agent']['webid'];
+
+    print "<script src=http://foaf-visualizer.org/embed/widget/?uri=$webid ></script>";
+  } else {
+    print "No profile discovered yet";
+  }
 
 				
 
