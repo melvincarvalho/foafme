@@ -22,7 +22,7 @@ if (!empty($_REQUEST['webid'])) {
 	}
 	
 	print "<h3>Coming soon</h3>";
-	print "Protect account with SSL <a href=config[certficate_uri]?" .
+	print "Protect account with SSL <a href='$config[certficate_uri]?" .
 	      "commonName=foaf.me-cert&foaf=" .
 	      $_REQUEST['webid'] . "'>certificate</a><br/> ";
 	print "Edit profile (please use tabulator at the moment)<br/> ";
