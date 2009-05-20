@@ -10,7 +10,7 @@ $config = array(
 
         /* modes */
         'multi_user'     => true,        // not yet implemented
-        'federated_uri'  => '',          // not yet implemented
+        'federation_uri' => '',          // not yet implemented
         'certficate_uri' => ''           // not yet implemented
 );
 
