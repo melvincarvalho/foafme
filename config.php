@@ -1,17 +1,20 @@
 <?php
 
 $config = array(
+
         /* db */
-        'db_name'        => '',
-        'db_user'        => '',
-        'db_pwd'         => '',
+        'db_name'        => '',                              // db name
+        'db_user'        => '',                              // db username
+        'db_pwd'         => '',                              // db password
+
         /* store */
-        'store_name'     => 'arc_tests', // temporary table name
+        'store_name'     => 'arc_tests',                     // tmp table name
 
         /* modes */
-        'multi_user'     => true,        // not yet implemented
-        'federation_uri' => '',          // not yet implemented
-        'certficate_uri' => ''           // not yet implemented
+        'multi_user'     => true,                            // not yet impl
+        'federation_uri' => '',                              // not yet impl
+        'certficate_uri' => 'https://foaf.me/spkac_cert.php' // not yet impl
+
 );
 
 ?>
