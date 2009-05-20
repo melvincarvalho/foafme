@@ -13,7 +13,7 @@ $config = array(
         /* modes */
         'multi_user'     => true,                            // not yet impl
         'federation_uri' => '',                              // not yet impl
-        'certficate_uri' => 'https://foaf.me/spkac_cert.php' // not yet impl
+        'certficate_uri' => 'https://foaf.me/cert.php'       // not yet impl
 
 );
 
