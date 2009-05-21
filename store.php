@@ -51,7 +51,7 @@ if ($db->row_count == 0) {
 }
 
 
-$link = "<a href='http://" . $_SERVER['HTTP_HOST'] . str_replace('store', 'index', $_SERVER['PHP_SELF'])
+$link = "http://" . $_SERVER['HTTP_HOST'] . str_replace('store', 'index', $_SERVER['PHP_SELF'])
         . "?webid=" . $_POST['uri'];
 
 
