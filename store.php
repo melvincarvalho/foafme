@@ -51,13 +51,14 @@ if ($db->row_count == 0) {
 }
 
 
-$link = "http://" . $_SERVER['HTTP_HOST'] . str_replace('store', 'index', $_SERVER['PHP_SELF'])
-        . "?webid=" . $_POST['uri'];
+$link = "http://" . $_SERVER['HTTP_HOST'] . str_replace('store.php', 'index.php', $_SERVER['PHP_SELF'])
+        . "?webid=" . "http://" . $_SERVER['HTTP_HOST'] . str_replace('store.php', '', $_SERVER['PHP_SELF']) .
+        $_POST['uri'];
 
 
 ?>
 Congratulations, you have successfully created a foaf file, which can be permanently accessed  here: <br/><br/>
-<a href='<?= $link ?>'><?= $link ?></a><br/>" 
+<a href='<?= $link ?>'><?= $link ?></a><br/>
 
 
 </div>
