@@ -50,11 +50,16 @@ if ($db->row_count == 0) {
 	$db->update_sql(" update foaf set rdf = '$_POST[rdf]' , rdf2 = '$rdf' where username like '$_POST[uri]'  ");
 }
 
-print "Congratulations, you have successfully created a foaf file, which can be permanently accessed  here: <br/><br/><a href='http://$_SERVER[HTTP_HOST]/$_POST[uri]'>http://$_SERVER[HTTP_HOST]/$_POST[uri]</a>";
+
+$link = "<a href='http://" . $_SERVER['HTTP_HOST'] . str_replace('store', 'index', $_SERVER['PHP_SELF'])
+        . "?webid=" . $_POST['uri'];
 
 
+?>
+Congratulations, you have successfully created a foaf file, which can be permanently accessed  here: <br/><br/>
+<a href='<?= $link ?>'><?= $link ?></a><br/>" 
 
 
-?></div>
+</div>
 </body>
 </html>
