@@ -149,7 +149,7 @@ function makeTags() {
 
 function makeStartTag(el) {
     var about = $(el).attr("about") ? $(el).attr("about") : $(el).find("[rel]").val() ;
-    return '<' + $(el).attr("typeof")  + (about?about=='me'?' rdf:ID="me"':'':' rdf:about=""')  + '>\n';
+    return '<' + $(el).attr("typeof")  + (about?(' rdf:ID="'+about+'"'):(' rdf:about=""'))  + '>\n';
 }
 
 function makeEndTag(el) {
