@@ -18,21 +18,27 @@ if (!empty($_REQUEST['webid'])) {
 		print "Exponent: $key[exponent]<br/>";
 
 	} else {
-		print "No public key found";
+	print 'This identity is not yet protected.<form name="input" action="' . $config['certficate_uri'] .'" method="get">';
+?>
+	<input type="hidden" size="25" id="foaf" name="foaf" value="<?= $_REQUEST['webid'] ?>">
+	Key Strength: <keygen name="pubkey" challenge="randomchars"></td><td></td><td></td>
+	<input type="hidden" id="commonName" name="commonName" value="FOAF ME Cert <?= $_REQUEST['webid'] ?>"><button id="generate" type="submit">Claim Account with SSL Certificate!</button> 
+	<input type="hidden" id="uri" name="uri" value="<?= $_REQUEST['webid'] ?>">
+	</form>
+	<a href="https://foaf.me/simpleLogin.php">Test</a>
+<?
 	}
 	
+
 	print "<h3>Coming soon</h3>";
-	print "Protect account with SSL <a href='$config[certficate_uri]?" .
-	      "commonName=foaf.me-cert&foaf=" .
-	      $_REQUEST['webid'] . "'>certificate</a><br/> ";
 	print "Edit profile (please use tabulator at the moment)<br/> ";
 	print "Privacy control<br/>";
 
 } else {
 	?>
 
-<table>
-	<tr typeof="cert:identity">
+<table typeof="cert:identity">
+	<tr>
 		<td><b>Secure Account!</b></td>
 		<td>(RSA)</td>
 	</tr>
