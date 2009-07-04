@@ -43,12 +43,16 @@ if (empty($rdf) || $rdf == '0' ) {
 
 }
 
+// check if username exists
+$username = 
 $res = $db->select(" select * from foaf where username like '$_POST[uri]' ");
-if ($db->row_count == 0) {
+$numrows = $db->row_count;
+if ($numrows == 0) {
 	$db->insert_sql(" insert into foaf (id, username, rdf) VALUES (NULL, '$_POST[uri]', '$rdf')  ");
 } else {
-	$db->update_sql(" update foaf set rdf = '$_POST[rdf]' , rdf2 = '$rdf' where username like '$_POST[uri]'  ");
+	//$db->update_sql(" update foaf set rdf = '$_POST[rdf]' , rdf2 = '$rdf' where username like '$_POST[uri]'  ");
 }
+
 
 $webid = "http://" . $_SERVER['HTTP_HOST'] . str_replace('store.php', '', $_SERVER['PHP_SELF']) .
         $_POST['uri'];
@@ -57,7 +61,10 @@ $link = "http://" . $_SERVER['HTTP_HOST'] . str_replace('store.php', 'index.php'
         . "?webid=$webid";
 
 
+if ($numrows == 0) {
 ?>
+
+
 Congratulations, you have successfully created a foaf file, which can be permanently accessed  here: <br/><br/>
 <a href='<?= $link ?>'><?= $webid ?></a><br/>
 
@@ -71,7 +78,11 @@ Congratulations, you have successfully created a foaf file, which can be permane
 	</form>
 	<a href="https://foaf.me/simpleLogin.php">Test</a>
 
+<? } else { ?>
 
+Sorry, username already exists, please press back and try another username.
+
+<? } ?>
 
 </div>
 </body>
