@@ -12,8 +12,9 @@ $config = array(
 
         /* modes */
         'multi_user'     => true,                            // not yet impl
+        'auto_generate'  => true,                            // not yet impl
         'federation_uri' => '',                              // not yet impl
-        'certficate_uri' => 'https://foaf.me/cert.php'       // not yet impl
+        'certficate_uri' => 'https://foaf.me/keygen.php'     // not yet impl
 
 );
 
