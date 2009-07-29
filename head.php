@@ -1,3 +1,67 @@
+<?php 
+
+session_start();
+
+$agent = (!empty($_SESSION['auth']) && $_SESSION['auth']['subjectAltName'])? $_SESSION['auth']['subjectAltName'] : '';
+$agent = isset($_REQUEST['webid']) ? $_REQUEST['webid'] : $agent;
+
+/*
+ * Settings for the IdP. The following two variables may change with
+ * another IdP.
+ */
+
+$sigalg = "rsa-sha1";
+$idp_certificate = "foafssl.org-cert.pem";
+
+/*
+ * Verifies the WebID
+ */
+
+$webid = "";
+
+/* Reconstructs the signed message: the URI except the 'sig' parameter */
+$full_uri = ($_SERVER["HTTPS"] == "on" ? "https" : "http")
+. "://" . $_SERVER["HTTP_HOST"]
+. ($_SERVER["SERVER_PORT"] != ($_SERVER["HTTPS"] == "on" ? 443 : 80) ? ":".$_SERVER["SERVER_PORT"] : "")
+. $_SERVER["REQUEST_URI"];
+
+$signed_info = substr($full_uri, 0, -5-strlen(urlencode($_GET["sig"])));
+
+/* Extracts the signature */
+$signature = base64_decode($_GET["sig"]);
+
+/* Only rsa-sha1 is supported at the moment. */
+if ($sigalg == "rsa-sha1") {
+        /*
+         * Loads the trusted certificate of the IdP: its public key is used to
+         * verify the integrity of the signed assertion.
+         */
+        $fp = fopen($idp_certificate, "r");
+        $cert = fread($fp, 8192);
+        fclose($fp);
+
+        $pubkeyid = openssl_get_publickey($cert);
+
+        /* Verifies the signature */
+        $verified = openssl_verify($signed_info, $signature, $pubkeyid);
+        if ($verified == 1) {
+                // The verification was successful.
+                $webid = $_GET["webid"];
+        } elseif ($verified == 0) {
+                // The signature didn't match.
+                $webid = "";
+        } else {
+                // Error during the verification.
+                $webid = "";
+        }
+
+        openssl_free_key($pubkeyid);
+} else {
+        // Unsupported signature algorithm.
+        $webid = "";
+}
+
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">  
 <!--
@@ -17,11 +81,11 @@
   xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
   xmlns:biografr="http://biografr.com/ontology#">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta http-equiv="Content-Style-Type" content="text/css">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
 <title>FOAF Me</title>
-<link rel="stylesheet" href="css/jquery.tabs.css" type="text/css" media="print, projection, screen">
+<link rel="stylesheet" href="css/jquery.tabs.css" type="text/css" media="print, projection, screen" />
 <!--
 <link rel="shortcut icon" href="/img/favicon.png" type="image/png" />	
 -->
@@ -29,21 +93,18 @@
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 <script type="text/javascript" src="js/jquery/1.3.1/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery/jquery.tabs.pack.js"></script>
- <!--
-<script src="jquery.history_remote.pack.js" type="text/javascript"></script>
-<script type="text/javascript" src="jquery.uri.js"></script>
-<script type="text/javascript" src="jquery.xmlns.js"></script>
-<script type="text/javascript" src="jquery.curie.js"></script>
-<script type="text/javascript" src="jquery.datatype.js"></script>
-<script type="text/javascript" src="jquery.rdf.js"></script>
-<script type="text/javascript" src="jquery.rdfa.js"></script>
--->
-<script language="javascript" type="text/javascript" src="js/sha1.js"></script>
+<script type="text/javascript" src="js/jquery.rdfquery.core-1.0.js"></script>
+<script type="text/javascript" src="js/jquery.rdfquery.rdfa-1.0.js"></script>
+<script type="text/javascript" src="js/jquery.rdfquery.rules-1.0.js"></script>
+<script type="text/javascript" src="js/jquery.editinplace.js"></script>
+
+<script type="text/javascript" src="js/sha1.js"></script>
 
 <link rel="stylesheet" href="jquery.tabs-ie.css" type="text/css" media="projection, screen" />
 	
 	
 <script type="text/javascript">
+// <!--
 
 /* JQuery Script */
 /*****************/       
@@ -52,11 +113,13 @@ $(function() {
 	$('#container').tabs({ fxFade: true, fxSpeed: 'fast' });
 	gGeneratorAgent = 'http://<?php echo $_SERVER['HTTP_HOST'] ?>';
 	gErrorReportsTo = 'mailto:error@<?php echo $_SERVER['HTTP_HOST'] ?>';
+	$("span[property]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' })
 });
 
-function addf() {
-  $("#friends tr:last").clone().appendTo("#friendstable");
-  //alert($("#friends tr:last").html());
+
+function addf(el) {
+  //$("#friends tr:last").clone().appendTo("#friendstable");
+  alert($(el).html());
 }
 
 function adda() {
@@ -81,7 +144,7 @@ function makeTags() {
         $("#homepage").val( "http://<?php echo $_SERVER['HTTP_HOST'] ?>/" + $("#nick").val() );
 	}
 
-    rdf  = '<rdf:RDF\n      xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n      ' +
+    rdf  = '<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n      ' +
                   'xmlns:rdfs=\"http://www.w3.org/2000/01/rdf-schema#\"\n      ' +
                   'xmlns:foaf=\"http://xmlns.com/foaf/0.1/\"\n      ' +
                   'xmlns:rsa=\"http://www.w3.org/ns/auth/rsa#\"\n      ' +
@@ -173,6 +236,7 @@ function makeTag(el) {
 
 }
 
+// -->
 </script>
 
 	
@@ -180,3 +244,4 @@ function makeTag(el) {
 
 </head>
 
+<? $headedLoaded = true ?>

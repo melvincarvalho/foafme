@@ -1,3 +1,7 @@
+<body id="tools_scrollable">
+
+	<div id="wrap">	
+
 <?php
 //if (!empty($_SESSION['auth']) && $_SESSION['auth']['subjectAltName']) {
 if (!empty($webid) ) {
@@ -7,14 +11,14 @@ if (!empty($webid) ) {
 					<!-- Logout <strong><?= $_SESSION['auth']['subjectAltName'] ?> </strong> -->
 		Logout <strong><?= $_REQUEST['webid'] ?></strong>
 				</a>
-			<br clear="all" />
+			<br/>
 		</div>
 <? } else { ?>
 		<div id="user">
 				<a id="account" href="https://foafssl.org/srv/idp?authreqissuer=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]" ?>">
 					login to your <strong>account</strong>
 				</a>
-			<br clear="all" />
+			<br />
 		</div>
 <? } ?>		
 		
@@ -25,7 +29,7 @@ if (!empty($webid) ) {
 		<div id="content"> 
 		
 		<h1>
-			<img src="images/foaf.gif" />
+			<img alt="foaf" src="images/foaf.gif" />
 			<strong>FOAF</strong> 
 		</h1>
 		 
