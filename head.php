@@ -84,6 +84,7 @@ if ($sigalg == "rsa-sha1") {
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <meta http-equiv="Content-Script-Type" content="text/javascript" />
+<!-- <base href="<?= $agent ?>"> -->
 <title>FOAF Me</title>
 <link rel="stylesheet" href="css/jquery.tabs.css" type="text/css" media="print, projection, screen" />
 <!--
@@ -97,8 +98,8 @@ if ($sigalg == "rsa-sha1") {
 <script type="text/javascript" src="js/jquery.rdfquery.rdfa-1.0.js"></script>
 <script type="text/javascript" src="js/jquery.rdfquery.rules-1.0.js"></script>
 <script type="text/javascript" src="js/jquery.editinplace.js"></script>
+<script type="text/javascript" src="js/jquery.json-1.3.js"></script>
 
-<script type="text/javascript" src="js/sha1.js"></script>
 
 <link rel="stylesheet" href="jquery.tabs-ie.css" type="text/css" media="projection, screen" />
 	
@@ -113,13 +114,45 @@ $(function() {
 	$('#container').tabs({ fxFade: true, fxSpeed: 'fast' });
 	gGeneratorAgent = 'http://<?php echo $_SERVER['HTTP_HOST'] ?>';
 	gErrorReportsTo = 'mailto:error@<?php echo $_SERVER['HTTP_HOST'] ?>';
-	$("span[property]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' })
+	sparul();
 });
 
 
+
+function del(el) {
+	str = "#" + el;
+	frag = $(str).parent().parent().rdf().databank.triples()[0].subject.value;
+
+	var re = new RegExp("[0-9A-Za-z]*$","ig");
+    var resultArray = re.exec(frag);
+
+	while (resultArray) {
+		frag = resultArray[0];
+		resultArray = re.exec(str);
+	}
+
+	frag = "<?= $agent ?>#" + frag;
+	alert("sparul.php?uri=<?= $agent ?>&delete=" + escape(frag));
+	$.post("sparul.php?uri=<?= $agent ?>&delete=" + escape(frag));
+
+	$(str).parent().parent().remove();
+	//location.reload();
+
+}
+
 function addf(el) {
-  //$("#friends tr:last").clone().appendTo("#friendstable");
-  alert($(el).html());
+	//$("#friends tr:last").clone().appendTo("#friendstable");
+	var lastFriend = $("#friendstable tr:last").attr("about").replace(/.*friend/, "");
+	lastFriend++;
+	//alert (lastFriend)
+	$("#friendstable tr:last").after("<tr about=<?= $agent ?>#friend"+lastFriend+" typeof=foaf:Person property=foaf:knows><td>Friend</td><td><span property=foaf:name></span></td><td><a rel=refs:seeAlso></a></td><td><a>x</a></td></tr>");
+	sparul();
+}
+
+
+function sparul() {
+	$("span[property]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' })
+	$("span[rel]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' })
 }
 
 function adda() {

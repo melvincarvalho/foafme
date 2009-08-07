@@ -130,6 +130,8 @@ jQuery.fn.editInPlace = function(options) {
 
 				//save original text - for cancellation functionality
 				var original_html = jQuery(this).html();
+				var s = original_element.rdf().databank.triples()[0].subject.value._string ;
+				var p = original_element.rdf().databank.triples()[0].property.value._string ;
 				var buttons_code  = (settings.show_buttons) ? settings.save_button + ' ' + settings.cancel_button : '';
 
 				//if html is our default text, clear it out to prevent saving accidentally
@@ -222,7 +224,7 @@ jQuery.fn.editInPlace = function(options) {
 						jQuery.ajax({
 							url: settings.url,
 							type: "POST",
-							data: settings.update_value + '=' + new_html + '&' + settings.element_id + '=' + original_element.attr("id") + settings.params + '&' + settings.original_html + '=' + original_html,
+							data: settings.update_value + '=' + new_html + '&' + settings.element_id + '=' + original_element.attr("id") + settings.params + '&' + settings.original_html + '=' + original_html + '&s=' + s + '&p=' + p + '&o=' + new_html,
 							dataType: "html",
 							complete: function(request){
 								editing = false;

@@ -1,33 +1,65 @@
 <?
-// Include the SimplePie library, and the one that handles internationalized domain names.
+
+if ( $headedLoaded != true ) {
+	include('head.php'); 
+	include('header.php'); 
+}
+
+
+// Authenticate
 require_once('lib/libAuthentication.php');
 
-$auth = $_SESSION['auth'];
+// init
+$friends = 2;
 
+// Have we found a webid?
 if (!empty($_REQUEST['webid'])) {
-  $auth = get_agent($_REQUEST['webid']);
 
-  print "<h3>Friends</h3>";
+	// get webid details
+	$auth = get_agent($_REQUEST['webid']);
+	$friends = count($auth['agent']['knows']);
 
-  if (!empty($auth['agent']['knows'])) {
-
-    foreach ($auth['agent']['knows'] as $k => $v) {
-      print "<a href='http://" . $_SERVER['HTTP_HOST'] . str_replace('tabfriends', 'index', $_SERVER['PHP_SELF']) . "?webid=$v[webid]'>$v[name]</a><br/>";
-    }
-  } else {
-    print "No friends discovered yet";
-  }
-
-} else {
+} 
 ?>
-                          <table id="friendstable">
-                          <tr><td></td><td>Name</span></td><td>URL</td></tr>
-                          <tr typeof="foaf:Person" about="friend1" ><td>Add: </td><td><input size="12" id="friend1" property="foaf:name" onChange="makeTags()" type="text" name="friend1name" /></td><td><input size="12" rel="rdfs:seeAlso" id="friend1" onChange="makeTags()" type="text" name="friend1" /></td></tr>
-                          <tr typeof="foaf:Person" about="friend2" ><td>Add: </td><td><input size="12" id="friend2" property="foaf:name" onChange="makeTags()" type="text" name="friend2name" /></td><td><input size="12" rel="rdfs:seeAlso" id="friend2" onChange="makeTags()" type="text" name="friend2" /></td></tr>
-                          </table>
-                          <a href="#" onclick="javascript:addf()">Add</a>
+
+
+	<table id="friendstable" about="<?= $_REQUEST['webid'] ?>#me">
+	<tr>
+		<td></td>
+		<td>Name</td><td>URL</td>
+	</tr>
+
+	<? for ($i=0; $i<$friends; $i++) { ?>
+
+
+
+	<tr typeof="foaf:Person" about="<?= $agent ?>#friend<?= $i ?>" >
+
+		<td>Friend: </td>
+
+		<? if (empty($_REQUEST['webid'])) {  ?>
+
+			<td><input size="12" id="friend<?= i ?>" property="foaf:name" onchange="makeTags()" type="text" name="friend<?= i ?>name" /></td>
+			<td><input size="12" rel="rdfs:seeAlso" onchange="makeTags()" type="text" name="friend<?= i ?>" /></td>
+
+		<? } else { $v = $auth['agent']['knows'][$i]; ?>
+
+			<td><span id="friend<?= $i ?>" property="foaf:name"><?= $v['name'] ?></span></td>
+			<td><span href="<?= $v['webid'] ?>" rel="rdfs:seeAlso" ><?= $v['webid'] ?></a></td>
+			<td about="<?= $agent ?>#me"" rel="foaf:knows" href="<?= $agent ?>#friend<?= $i ?>"><a  id="delfriend<?= $i ?>" href="javascript:del('delfriend<?= $i ?>')" >x</a></td>
+		<? } ?>
+
+	</tr>
+
+	<? } ?>
+
+
+	</table>
+	<a id="addf" href="#" onclick="javascript:addf(this)">Add</a>
 
 <?
+if ( $headedLoaded != true ) {
+	include('footer.php'); 
 }
 ?>
 
