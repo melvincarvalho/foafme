@@ -141,12 +141,24 @@ function del(el) {
 }
 
 function addf(el) {
-	//$("#friends tr:last").clone().appendTo("#friendstable");
-	var lastFriend = $("#friendstable tr:last").attr("about").replace(/.*friend/, "");
-	lastFriend++;
-	//alert (lastFriend)
-	$("#friendstable tr:last").after("<tr about=<?= $agent ?>#friend"+lastFriend+" typeof=foaf:Person property=foaf:knows><td>Friend</td><td><span property=foaf:name></span></td><td><a rel=refs:seeAlso></a></td><td><a>x</a></td></tr>");
-	sparul();
+
+	if ($("#friendstable tr:last td:last input").attr("name") == "friend1") {
+
+		var clone = $("#friendstable tr:last").clone();
+		clone.appendTo("#friendstable");
+		return;
+	}
+
+	var last = $("#friendstable tr:last");
+	if (last == null) {
+	} else {
+		var about = $("#friendstable tr:last").attr("about");
+		var lastFriend = about != undefined? about.replace(/.*friend/, "") : -1;
+		lastFriend++;
+		//alert (lastFriend)
+		$("#friendstable tr:last").after("<tr about=<?= $agent ?>#friend"+lastFriend+" typeof=foaf:Person property=foaf:knows><td>Friend</td><td><span property=foaf:name></span></td><td><a rel=refs:seeAlso></a></td><td><a>x</a></td></tr>");
+		sparul();
+	}
 }
 
 

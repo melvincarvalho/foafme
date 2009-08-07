@@ -39,8 +39,8 @@ if (!empty($_REQUEST['webid'])) {
 
 		<? if (empty($_REQUEST['webid'])) {  ?>
 
-			<td><input size="12" id="friend<?= i ?>" property="foaf:name" onchange="makeTags()" type="text" name="friend<?= i ?>name" /></td>
-			<td><input size="12" rel="rdfs:seeAlso" onchange="makeTags()" type="text" name="friend<?= i ?>" /></td>
+			<td><input size="12" id="friend<?= $i ?>" property="foaf:name" onchange="makeTags()" type="text" name="friend<?= $i ?>name" /></td>
+			<td><input size="12" rel="rdfs:seeAlso" onchange="makeTags()" type="text" name="friend<?= $i ?>" /></td>
 
 		<? } else { $v = $auth['agent']['knows'][$i]; ?>
 
