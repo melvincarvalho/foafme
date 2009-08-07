@@ -144,7 +144,14 @@ function addf(el) {
 
 	if ($("#friendstable tr:last td:last input").attr("name") == "friend1") {
 
+		var about = $("#friendstable tr:last").attr("about");
+		var lastFriend = about != undefined? about.replace(/.*friend/, "") : -1;
+		lastFriend++;
+		//alert (lastFriend)
+
 		var clone = $("#friendstable tr:last").clone();
+		clone.attr({about : '#friend' + lastFriend });
+
 		clone.appendTo("#friendstable");
 		return;
 	}
