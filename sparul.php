@@ -121,23 +121,32 @@ if (!empty($delete) && !empty($uri)) {
 	// sparql for exisitng matches
 	$ret = getObject($uri);
 	for ($i=0; $i<count($ret); $i++) {
-		if ($ret[$i][0] == $delete) {
+print "line: " . urlencode($ret[$i][0]) . " " . urlencode($delete) . "\n";
+		if (urlencode($ret[$i][0]) == urlencode($delete)) {
+print "match: " . urlencode($ret[$i][0]) . " " . urlencode($delete) . "\n";
 			$t = $ret[$i];
 			$sparul = "DELETE { <" . $t[0] . "> <$t[1]> <$t[2]>  . }";
-			$return += $sparul;
+			$return .= $sparul;
+			postSparul($uri, $sparul);
+			$sparul = "DELETE { <" . $t[0] . "> <$t[1]> \"$t[2]\"  . }";
+			$return .= $sparul;
 			postSparul($uri, $sparul);
 		}
-		if ($ret[$i][2] == $delete) {
+		if (urlencode($ret[$i][2]) == urlencode($delete)) {
 			$t = $ret[$i];
 			$sparul = "DELETE { <" . $t[0] . "> <$t[1]> <$t[2]>  . }";
 			$return += $sparul;
 			postSparul($uri, $sparul);
+			$sparul = "DELETE { <" . $t[0] . "> <$t[1]> \"$t[2]\"  . }";
+			$return .= $sparul;
 		}
 	}
+print("ret");
 
+print_r($ret);
 print $uri;
 	print $return;
-	exit;
+	return;
 }
 
 $original = "\"" . $_REQUEST['original_html'] . "\"";
