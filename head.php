@@ -132,7 +132,7 @@ function del(el) {
 	}
 
 	frag = "<?= $agent ?>#" + frag;
-	alert("sparul.php?uri=<?= $agent ?>&delete=" + escape(frag));
+	//alert("sparul.php?uri=<?= $agent ?>&delete=" + escape(frag));
 	$.post("sparul.php?uri=<?= $agent ?>&delete=" + escape(frag));
 
 	$(str).parent().parent().remove();
