@@ -2,6 +2,10 @@
 
 session_start();
 
+include ("lib/libImport.php");
+
+$import = getImport();
+
 $agent = (!empty($_SESSION['auth']) && $_SESSION['auth']['subjectAltName'])? $_SESSION['auth']['subjectAltName'] : '';
 $agent = isset($_REQUEST['webid']) ? $_REQUEST['webid'] : $agent;
 
@@ -60,6 +64,7 @@ if ($sigalg == "rsa-sha1") {
         // Unsupported signature algorithm.
         $webid = "";
 }
+$webidbase = preg_replace('/#.*/', '', $webid);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -67,8 +72,7 @@ if ($sigalg == "rsa-sha1") {
 <!--
  * FOAF Me : FOAF Me Home Page and FOAF creator wizard.
  * Copyright (c) http://foaf.me/
- * Dual licensed under the MIT (MIT-license.txt)
- * and GPL (GPL-license.txt) licenses.
+ * AGPL (AGPL-license.txt) license.
  *
 -->
 <html xmlns="http://www.w3.org/1999/xhtml"
@@ -115,6 +119,7 @@ $(function() {
 	gGeneratorAgent = 'http://<?php echo $_SERVER['HTTP_HOST'] ?>';
 	gErrorReportsTo = 'mailto:error@<?php echo $_SERVER['HTTP_HOST'] ?>';
 	sparul();
+	makeTags();
 });
 
 
@@ -140,33 +145,6 @@ function del(el) {
 
 }
 
-function addf(el) {
-
-	if ($("#friendstable tr:last td:last input").attr("name") == "friend1") {
-
-		var about = $("#friendstable tr:last").attr("about");
-		var lastFriend = about != undefined? about.replace(/.*friend/, "") : -1;
-		lastFriend++;
-		//alert (lastFriend)
-
-		var clone = $("#friendstable tr:last").clone();
-		clone.attr({about : '#friend' + lastFriend });
-
-		clone.appendTo("#friendstable");
-		return;
-	}
-
-	var last = $("#friendstable tr:last");
-	if (last == null) {
-	} else {
-		var about = $("#friendstable tr:last").attr("about");
-		var lastFriend = about != undefined? about.replace(/.*friend/, "") : -1;
-		lastFriend++;
-		//alert (lastFriend)
-		$("#friendstable tr:last").after("<tr about=<?= $agent ?>#friend"+lastFriend+" typeof=foaf:Person property=foaf:knows><td>Friend</td><td><span property=foaf:name></span></td><td><a rel=refs:seeAlso></a></td><td><a>x</a></td></tr>");
-		sparul();
-	}
-}
 
 
 function sparul() {
@@ -185,15 +163,17 @@ function addi() {
 function makeTags() {
 	
 	// set uri from nick
-	if ( $("#nick").val() != "" )
-	{
-        $("#uri").val($("#nick").val());
+	if ( $("#nick").val() != "" ) {
+		$("#uri").val($("#nick").val());
+	} else {
+		return;
 	}
 
 	// set homepage from nick
-	if ( $("#homepage").val() == "")
-	{
-        $("#homepage").val( "http://<?php echo $_SERVER['HTTP_HOST'] ?>/" + $("#nick").val() );
+	if ( $("#homepage").val() == "") {
+		$("#homepage").val( "http://<?php echo $_SERVER['HTTP_HOST'] ?>/" + $("#nick").val() );
+		$("#displayname").html( "http://<?php echo $_SERVER['HTTP_HOST'] ?>/" + $("#nick").val() + "#me" );
+		$("#saving").css("display", "inline");;
 	}
 
     rdf  = '<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n      ' +
@@ -296,4 +276,4 @@ function makeTag(el) {
 
 </head>
 
-<? $headedLoaded = true ?>
+<? $headerLoaded = true ?>

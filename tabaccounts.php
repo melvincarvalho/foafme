@@ -35,9 +35,9 @@ if (!empty($_REQUEST['webid'])) {
                           <table>
                           <table id="accountstable">
                           <tr><td></td><td>External Account URL</td></tr>
-                          <tr typeof="foaf:OnlineAccount"><td>OpenID: </td><td><input size="20" rel="foaf:openid" id="account1" onChange="makeTags()" type="text" name="account1" /></td></tr>
-                          <tr typeof="foaf:OnlineAccount"><td>Account: </td><td><input size="20" rel="foaf:holdsAccount" id="account1" onChange="makeTags()" type="text" name="account1" /></td></tr>
-                          <tr typeof="foaf:OnlineAccount"><td>Account: </td></td><td><input size="20" rel="foaf:holdsAccount" id="account2" onChange="makeTags()" type="text" name="accounts2" /></td></tr>    
+                          <tr typeof="foaf:OnlineAccount"><td>OpenID: </td><td><input size="40" rel="foaf:openid" id="account1" onChange="makeTags()" type="text" name="account1" /></td></tr>
+                          <tr typeof="foaf:OnlineAccount"><td>Account: </td><td><input size="40" rel="foaf:holdsAccount" id="account2" onChange="makeTags()" type="text" name="account2" value="<?= $import['holdsAccount'] ?>"/></td></tr>
+                          <tr typeof="foaf:OnlineAccount"><td>Account: </td></td><td><input size="40" rel="foaf:holdsAccount" id="account3" onChange="makeTags()" type="text" name="accounts3" /></td></tr>    
                           <table>
                           <a href="#" onclick="javascript:adda()">Add</a>
                           </table>

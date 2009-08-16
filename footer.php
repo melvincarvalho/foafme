@@ -7,3 +7,5 @@
 </body>
 
 </html>
+
+<? $footerLoaded = true ?>
