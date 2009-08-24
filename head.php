@@ -1,13 +1,44 @@
-<?php 
+<?php
+/** 
+ * head.php - initialise the framework, add libraries
+ *
+ * Copyright 2008-2009 foaf.me
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * "Everything should be made as simple as possible, but no simpler." 
+ * -- Albert Einstein
+ *
+ */
 
+
+// Start a session
 session_start();
 
+
+// Include libraries
+// TODO: include libAuthentication, and set up FOAF:Agent from a REQUEST
 include ("lib/libImport.php");
 
+
+// Check to see if we are importing a WebID, if so populate $import
 $import = getImport();
 
+// Get FOAF:Agent From Session
 $agent = (!empty($_SESSION['auth']) && $_SESSION['auth']['subjectAltName'])? $_SESSION['auth']['subjectAltName'] : '';
 $agent = isset($_REQUEST['webid']) ? $_REQUEST['webid'] : $agent;
+
 
 /*
  * Settings for the IdP. The following two variables may change with
@@ -18,9 +49,9 @@ $sigalg = "rsa-sha1";
 $idp_certificate = "foafssl.org-cert.pem";
 
 /*
- * Verifies the WebID
+ * Populates the WebID
+ * TODO: move this to libAuthentication
  */
-
 $webid = "";
 
 /* Reconstructs the signed message: the URI except the 'sig' parameter */
@@ -114,6 +145,7 @@ $webidbase = preg_replace('/#.*/', '', $webid);
 /* JQuery Script */
 /*****************/       
 
+// Initialise page
 $(function() {
 	$('#container').tabs({ fxFade: true, fxSpeed: 'fast' });
 	gGeneratorAgent = 'http://<?php echo $_SERVER['HTTP_HOST'] ?>';
@@ -123,25 +155,29 @@ $(function() {
 });
 
 
+// TODO: make this more generic
 function sparul() {
 	$("span[property]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' });
 	$("span[rel]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' });
 }
 
+// TODO: make this more generic
 function adda() {
   $("#accounts tr:last").clone().appendTo("#accountstable");
 }
 
+// TODO: make this more generic
 function addi() {
   $("#interests tr:last").clone().appendTo("#intereststable");
 }
 
+// TODO: make this more generic
 function del(el) {
 	str = "#" + el;
 	frag = $(str).parent().parent().rdf().databank.triples()[0].subject.value;
 
 	var re = new RegExp("[0-9A-Za-z]*$","ig");
-    var resultArray = re.exec(frag);
+    	var resultArray = re.exec(frag);
 
 	while (resultArray) {
 		frag = resultArray[0];
@@ -152,20 +188,18 @@ function del(el) {
 	//alert("sparul.php?uri=<?= $agent ?>&delete=" + escape(frag));
 	//$.post("sparul.php?uri=<?= $agent ?>&delete=" + escape(frag));
 
-var sparul = 'DELETE { ';
-$(str).parent().parent().rdf().databank.triples().each(function () { sparul += this + ' '; } );
-sparul += ' } ';
-//alert('DELETE:  This funcionality is in Alpha ' + sparul);
-jQuery.post( '<?= $_REQUEST['webid'] ?>', sparul );
+	var sparul = 'DELETE { ';
+	$(str).parent().parent().rdf().databank.triples().each(function () { sparul += this + ' '; } );
+	sparul += ' } ';
+	//alert('DELETE:  This funcionality is in Alpha ' + sparul);
+	jQuery.post( '<?= $_REQUEST['webid'] ?>', sparul );
 
 	$(str).parent().parent().remove();
 	//location.reload();
+}
 
 
-  }
-
-
-
+// TODO: use RDFQuery for this
 function makeTags() {
 	
 	// set uri from nick
