@@ -134,6 +134,20 @@ jQuery.fn.editInPlace = function(options) {
 				var p = original_element.rdf().databank.triples()[0].property.value._string ;
 				var buttons_code  = (settings.show_buttons) ? settings.save_button + ' ' + settings.cancel_button : '';
 
+
+var del_sparul = 'DELETE { ';
+original_element.parent().parent().rdf().databank.triples().each(function () { del_sparul += this + ' '; } );
+del_sparul += ' } ';
+
+var ins_sparul = 'INSERT { ';
+jQuery(this).parent().parent().rdf().databank.triples().each(function () { ins_sparul += this + ' '; } );
+ins_sparul += ' } ';
+
+//alert('DEL ' + sparul2);
+//jQuery.post( '<?= $_REQUEST['webid'] ?>', sparul );
+
+//$("[href^=http://foaf.me/melvincarvalho#friend7]").parent().rdf().databank.triples().each(function () { alert(this); })
+
 				//if html is our default text, clear it out to prevent saving accidentally
 				if (original_html == settings.default_text) jQuery(this).html('');
 
@@ -221,6 +235,15 @@ jQuery.fn.editInPlace = function(options) {
 						original_element.html(original_html);
 						alert("Error: You must enter a value to save this field");
 					} else {
+ins_sparul = ins_sparul.replace(settings.default_text, new_html);
+ins_sparul = ins_sparul.replace(" <" + original_html + "> .", " <" + new_html + "> .");
+ins_sparul = ins_sparul.replace(" \"" + original_html + "\" .", " \"" + new_html + "\" .");
+//jQuery.post( '<?= $_REQUEST['webid'] ?>', del_sparul );
+jQuery.post( $("#friendstable").attr('about') , del_sparul );
+//alert(del_sparul);
+jQuery.post( $("#friendstable").attr('about') , ins_sparul );
+//alert(ins_sparul + " old html " + original_html + " new html " + new_html);
+
 						jQuery.ajax({
 							url: settings.url,
 							type: "POST",

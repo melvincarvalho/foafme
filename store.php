@@ -1,8 +1,7 @@
 <?php include('head.php'); ?>
+<?php include('header.php'); ?>
 
-<body>
-
-<div id="wrap"><?php include('header.php'); ?> <?php
+<?php
 
 require_once("config.php");
 require_once("db.class.php");
@@ -79,6 +78,8 @@ if ($numrows == 0) {
 	</form>
 
 	<a href="https://foaf.me/simpleLogin.php">Test</a>
+
+<? } else if (!empty($_REQUEST['sig'])) { include("content.php"); ?>
 
 <? } else { ?>
 

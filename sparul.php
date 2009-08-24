@@ -104,8 +104,8 @@ function postSparul($uri, $sparul)
 	curl_setopt($c, CURLOPT_URL, $uri);
 	curl_setopt($c, CURLOPT_POST, true);
 	curl_setopt($c, CURLOPT_POSTFIELDS, $sparul);
-	curl_exec ($c);
-	curl_close ($c);
+//	curl_exec ($c);
+//	curl_close ($c);
 }
 
 

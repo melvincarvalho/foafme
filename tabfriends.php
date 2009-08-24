@@ -62,10 +62,12 @@ function addf(el) {
 		var lastFriend = about != undefined? about.replace(/.*friend/, "") : -1;
 		lastFriend++;
 		//alert (lastFriend)
-		$("#friendstable tr:last").after("<tr about='<?= $webidbase ?>#friend"+lastFriend+"' typeof='foaf:Person' property='foaf:knows'><td>Friend</td><td><span property=foaf:name></span></td><td><a rel=refs:seeAlso></a></td><td about=<?= $webid ?> ref=foaf:knows href=<?= $webidbase ?>#friend"+lastFriend+" ><a>x</a></td></tr>");
+		$("#friendstable tr:last").after("<tr about='<?= $webidbase ?>#friend"+lastFriend+"' typeof='foaf:Person' ><td>Friend</td><td><span property='foaf:name'></span></td><td><a rel='refs:seeAlso'></a></td><td about='<?= $webid ?>' rel='foaf:knows' href='<?= $webidbase ?>#friend"+lastFriend+"' ><a>x</a></td></tr>");
 
 		sparul();
 	}
+
+
 }
 // -->
 </script>
@@ -81,16 +83,16 @@ function addf(el) {
 
 		<? if (empty($webid)) {  ?>
 
-		<tr typeof="foaf:Person" about="<?= $webidbase ?>friend<?= $i ?>" >
+		<tr typeof="foaf:Person" id="friend<?= $i ?>" about="<?= $webidbase ?>friend<?= $i ?>" >
 			<td>Friend: </td>
-			<td><input size="12" id="friend<?= $i ?>" property="foaf:name" onchange="makeTags()" type="text" name="friend<?= $i ?>name" /></td>
+			<td><input size="12" property="foaf:name" onchange="makeTags()" type="text" name="friend<?= $i ?>name" /></td>
 			<td><input size="12" rel="rdfs:seeAlso" onchange="makeTags()" type="text" name="friend<?= $i ?>" /></td>
 
 		<? } else { $v = $auth['agent']['knows'][$i]; $about =  $v['about']?$v['about']  : $webidbase . "#friend" . $i ; ?>
 
-		<tr typeof="foaf:Person" about="<?= $about ?>" >
+		<tr typeof="foaf:Person" id="friend<?= $i ?>" about="<?= $about ?>" >
 			<td><a href="?webid=<?= $v['webid'] ?>">Friend</a>: </td>
-			<td><span id="friend<?= $i ?>" property="foaf:name"><?= $v['name'] ?></span></td>
+			<td><span property="foaf:name"><?= $v['name'] ?></span></td>
 			<td><span href="<?= $v['webid'] ?>" rel="rdfs:seeAlso" ><?= $v['webid'] ?></span></td>
 			<td about="<?= $webid ?>" rel="foaf:knows" href="<?= $webidbase ?>#friend<?= $i ?>"><a  id="delfriend<?= $i ?>" href="javascript:del('delfriend<?= $i ?>')" >x</a></td>
 		<? } ?>

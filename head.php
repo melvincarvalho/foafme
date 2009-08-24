@@ -123,6 +123,18 @@ $(function() {
 });
 
 
+function sparul() {
+	$("span[property]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' });
+	$("span[rel]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' });
+}
+
+function adda() {
+  $("#accounts tr:last").clone().appendTo("#accountstable");
+}
+
+function addi() {
+  $("#interests tr:last").clone().appendTo("#intereststable");
+}
 
 function del(el) {
 	str = "#" + el;
@@ -138,27 +150,21 @@ function del(el) {
 
 	frag = "<?= $agent ?>#" + frag;
 	//alert("sparul.php?uri=<?= $agent ?>&delete=" + escape(frag));
-	$.post("sparul.php?uri=<?= $agent ?>&delete=" + escape(frag));
+	//$.post("sparul.php?uri=<?= $agent ?>&delete=" + escape(frag));
+
+var sparul = 'DELETE { ';
+$(str).parent().parent().rdf().databank.triples().each(function () { sparul += this + ' '; } );
+sparul += ' } ';
+//alert('DELETE:  This funcionality is in Alpha ' + sparul);
+jQuery.post( '<?= $_REQUEST['webid'] ?>', sparul );
 
 	$(str).parent().parent().remove();
 	//location.reload();
 
-}
+
+  }
 
 
-
-function sparul() {
-	$("span[property]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' })
-	$("span[rel]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' })
-}
-
-function adda() {
-  $("#accounts tr:last").clone().appendTo("#accountstable");
-}
-
-function addi() {
-  $("#interests tr:last").clone().appendTo("#intereststable");
-}
 
 function makeTags() {
 	
