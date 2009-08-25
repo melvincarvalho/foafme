@@ -9,10 +9,15 @@ Features
 - SPARUL update
 - Auto Create foaf files or mbox
 
+
+Developers
+
+Dive in to index.php to see how things work.  
+
 To enable acrivity stream:
 
 1. change config.php to include the values in your MySQL DB
 2. make /cache/ writable
 
-To install DB tabel run:
+To install DB table run:
 install.php
