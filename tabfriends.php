@@ -39,18 +39,20 @@ if (!empty($webid)) {
 function addf(el) {
 
 	// empty list 
-	// @TODO more robust detection
-	if ($("#friendstable tr:last td:last input").attr("name") == "friend1") {
+	// clone it
+	// replace numbers
+	// make sure fields are blank
+	if ($(el).prevAll().find("tr:last input").attr("type") === 'text' ) {
 
-		var about = $("#friendstable tr:last").attr("about");
-		var lastFriend = about != undefined? about.replace(/.*friend/, "") : -1;
+		var about = $(el).prevAll().find(" tr:last").attr("about");
+		var lastFriend = (about != undefined) ? about.replace(/[^0-9]*/, "") : -1;
+
 		lastFriend++;
-		//alert (lastFriend)
-
 		var clone = $("#friendstable tr:last").clone();
-		clone.attr({about : '#friend' + lastFriend });
 
+		clone.attr({about : 'friend' + lastFriend });
 		clone.appendTo("#friendstable");
+
 		return;
 	}
 
@@ -83,12 +85,12 @@ function addf(el) {
 
 		<? if (empty($webid)) {  ?>
 
-		<tr typeof="foaf:Person" id="friend<?= $i ?>" about="<?= $webidbase ?>friend<?= $i ?>" >
+		<tr typeof="foaf:Person" about="<?= $webidbase ?>friend<?= $i ?>" >
 			<td>Friend: </td>
-			<td><input size="12" property="foaf:name" onchange="makeTags()" type="text" name="friend<?= $i ?>name" /></td>
-			<td><input size="12" rel="rdfs:seeAlso" onchange="makeTags()" type="text" name="friend<?= $i ?>" /></td>
+			<td><input size="12" property="foaf:name" onchange="makeTags()" type="text" /></td>
+			<td><input size="12" rel="rdfs:seeAlso" onchange="makeTags()" type="text" /></td>
 
-		<? } else { $v = $auth['agent']['knows'][$i]; $about =  $v['about']?$v['about']  : $webidbase . "#friend" . $i ; ?>
+		<? } else { $v = $auth['agent']['knows'][$i]; $about =  $v['about']?$v['about']  : $webidbase . "friend" . $i ; ?>
 
 		<tr typeof="foaf:Person" id="friend<?= $i ?>" about="<?= $about ?>" >
 			<td><a href="?webid=<?= $v['webid'] ?>">Friend</a>: </td>
