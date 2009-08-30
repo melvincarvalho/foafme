@@ -455,4 +455,3 @@ class db_class {
 } 
 
 ?>
- 
