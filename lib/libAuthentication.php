@@ -17,16 +17,16 @@ include_once("lib/libActivity.php");
 /* Function to return the modulus and exponent of the supplied Client SSL Page */
 function openssl_pkey_get_public_hex()
 {
-	if ($_SERVER[SSL_CLIENT_CERT])
+	if ($_SERVER['SSL_CLIENT_CERT'])
 	{
-		$pub_key = openssl_pkey_get_public($_SERVER[SSL_CLIENT_CERT]);
+		$pub_key = openssl_pkey_get_public($_SERVER['SSL_CLIENT_CERT']);
 		$key_data = openssl_pkey_get_details($pub_key);
 	
-		$key_len   = strlen($key_data[key]);
+		$key_len   = strlen($key_data['key']);
 		$begin_len = strlen('-----BEGIN PUBLIC KEY----- ');
 		$end_len   = strlen(' -----END PUBLIC KEY----- ');
 
-		$rsa_cert = substr($key_data[key], $begin_len, $key_len - $begin_len - $end_len);
+		$rsa_cert = substr($key_data['key'], $begin_len, $key_len - $begin_len - $end_len);
 
 		$rsa_cert_struct = `echo "$rsa_cert" | openssl asn1parse -inform PEM -i`;
 
@@ -47,12 +47,12 @@ function openssl_pkey_get_public_hex()
 /* Returns an array holding the subjectAltName of the supplied SSL Client Certificate */
 function openssl_get_subjectAltName()
 {
-	if ($_SERVER[SSL_CLIENT_CERT])
+	if ($_SERVER['SSL_CLIENT_CERT'])
 	{
-		$cert = openssl_x509_parse($_SERVER[SSL_CLIENT_CERT]);
-		if ($cert[extensions][subjectAltName])
+		$cert = openssl_x509_parse($_SERVER['SSL_CLIENT_CERT']);
+		if ($cert['extensions']['subjectAltName'])
 		{
-			$list          = split("[,]", $cert[extensions][subjectAltName]);
+			$list          = split("[,]", $cert['extensions']['subjectAltName']);
 
 			for ($i = 0, $i_max = count($list); $i < $i_max; $i++) 
 			{
@@ -83,6 +83,9 @@ function cleanhex($hex)
 /* Returns an array of the modulus and exponent in the supplied RDF */
 function get_foaf_rsakey($store, $agenturi)
 {
+	    $modulus = NULL;
+		$exponent = NULL;
+
 		/* list names */
 		$q = "
 		  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -125,6 +128,8 @@ function webid($seeAlso, $about, $homepage, $mbox)
 
 function get_all_friends($store, $agenturi)
 {
+	$results = NULL;
+
 	if ($store)
 	{
 		/* list names */
@@ -194,8 +199,11 @@ function get_all_friends($store, $agenturi)
 
 function get_all_nyms($store, $agenturi)
 {
+	$res= NULL;
+
 	if ($store && $agenturi)
 	{
+
 		/* list names */
 		
 		$q = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>  
@@ -305,6 +313,10 @@ function get_all_nyms($store, $agenturi)
 
 function get_all_nyms_sec($store, $agenturi)
 {
+	$res =  NULL;
+    $res['nick'] = NULL;
+    $res['homepage'] = NULL;
+
 	if ($store && $agenturi)
 	{
 		/* list names */
@@ -354,37 +366,37 @@ function get_all_nyms_sec($store, $agenturi)
 				{	
 //					print_r($row);
 
-					if ($row['name'])
+					if (isset($row['name']))
 						$res = safe_array_merge($res, array('name'=>$row['name']));
 	
-					if ( ($row['seeAlso'])  && (strcmp($row['seeAlso type'],'uri')==0) ) 
+					if ( isset($row['seeAlso'])  && (strcmp($row['seeAlso type'],'uri')==0) ) 
 						$res = safe_array_merge($res, array('seeAlso'=>array_unique(safe_array_merge($res['seeAlso'], array($row['seeAlso'])))));
 			
-					if ($row['mbox'])
+					if (isset($row['mbox']))
 						$res = safe_array_merge($res, array('mbox'=>array_unique(safe_array_merge($res['mbox'], array($row['mbox'])))));
 
-					if ($row['mbox_sha1sum'])
+					if (isset($row['mbox_sha1sum']))
 						$res = safe_array_merge($res, array('mbox_sha1sum'=>array_unique(safe_array_merge($res['mbox_sha1sum'], array($row['mbox_sha1sum'])))));
 
-					if ($row['homepage'])
+					if (isset($row['homepage']))
 						$res = safe_array_merge($res, array('homepage'=>array_unique(safe_array_merge($res['homepage'], array($row['homepage'])))));
 
-					if ($row['nick'])
+					if (isset($row['nick']))
 						$res = safe_array_merge($res, array('nick'=>array_unique(safe_array_merge($res['nick'], array($row['nick'])))));
 
-					if ($row['accountProfilePage'])
+					if (isset($row['accountProfilePage']))
 						$res = safe_array_merge($res, array('accountProfilePage'=>array_unique(safe_array_merge($res['accountProfilePage'], array($row['accountProfilePage'])))));
 
-					if ( ($row['y']) && (strcmp($row['y type'],'uri')==0) ) 
+					if ( isset($row['y']) && (strcmp($row['y type'],'uri')==0) ) 
 						$res = safe_array_merge($res, array('holdsAccount'=>array_unique(safe_array_merge($res['holdsAccount'], array($row['y'])))));
 
-					if ($row['holdsAccountHomepage']) 
+					if (isset($row['holdsAccountHomepage'])) 
 						$res = safe_array_merge($res, array('holdsAccount'=>array_unique(safe_array_merge($res['holdsAccount'], array($row['holdsAccountHomepage'])))));
 
-					if ($row['img'])
+					if (isset($row['img']))
 						$res = safe_array_merge($res, array('img'=>$row['img']));
 
-					if ($row['depiction'])
+					if (isset($row['depiction']))
 						$res = safe_array_merge($res, array('depiction'=>$row['depiction']));
 				}
 			}
@@ -493,6 +505,8 @@ function get_agent($agenturi)
 {
 	if ($agenturi)
 	{
+		$agent = NULL;
+
 		$store = create_store($agenturi);
 
 		if ($agentrsakey = get_foaf_rsakey($store, $agenturi))
@@ -552,10 +566,10 @@ function get_agent($agenturi)
 
 function getAuth($foafuri = NULL)
 {
-	if (!$_SERVER[HTTPS])
+	if (!$_SERVER['HTTPS'])
 		return ( array( 'isAuthenticated'=>0 , 'authDiagnostic'=>'No client certificate supplied on an unsecure connection') );
 
-	if (!$_SERVER[SSL_CLIENT_CERT])
+	if (!$_SERVER['SSL_CLIENT_CERT'])
 		return ( array( 'isAuthenticated'=>0 , 'authDiagnostic'=>'No client certificate supplied') );
 
 	$certrsakey = openssl_pkey_get_public_hex();
@@ -566,7 +580,7 @@ function getAuth($foafuri = NULL)
 	$result = array('certRSAKey'=>$certrsakey);
 
 	$san     = openssl_get_subjectAltName();
-	$foafuri = $san[URI];
+	$foafuri = $san['URI'];
 //	$foafuri = 'http://www.w3.org/People/Berners-Lee/card#i';
 //  $foafuri = 'http://bblfish.net/people/henry/card#me';
 //	$foafuri = 'http://danbri.org/foaf.rdf#danbri';
