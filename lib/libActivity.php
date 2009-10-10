@@ -29,7 +29,7 @@ function convert_to_rss($acct)
 				$acct = 'http://en.wikipedia.org/w/index.php?title=Special:Contributions&feed=rss&target=' . substr($acct, strlen('http://en.wikipedia.org/wiki/User:'));
 			else
 			{
-				if ( (strstr($acct, 'mailto:')) || (strstr($acct, 'skype:')) || (strstr($acct, 'http://www.linkedin.com/')) || (strstr($acct, 'http://www.facebook.com/')) )
+				if ( (strstr($acct, 'mailto:')) || (strstr($acct, 'skype:')) || (strstr($acct, 'http://www.linkedin.com/')) || (strstr($acct, 'http://www.facebook.com/')) || (strstr($acct, 'http://test.foaf-ssl.org/')) || (strstr($acct, 'http://puszcza.gnu.org.ua/')) || (strstr($acct, 'http://savannah.gnu.org/')) || (strstr($acct, 'http://www.thesixtyone.com/')) )
 					$acct = NULL;
 				else
 				{
@@ -39,6 +39,13 @@ function convert_to_rss($acct)
 					{
 						if (strstr($acct, 'http://www.flickr.com/people/'))
 							$acct = 'http://www.flickr.com/photos/' .  substr( $acct, strlen('http://www.flickr.com/people/') ) ;
+						else
+						{
+							if (strstr($acct, 'http://www.ohloh.net/')  && (strstr($acct,'/messages.rss')==FALSE))
+							{
+								$acct = $acct . '/messages.rss';
+							}
+						}
 					}
 
 				}
@@ -51,6 +58,8 @@ function convert_to_rss($acct)
 
 function replace_with_rss($accts)
 {
+	$ret = NULL;
+
 	if ($accts)
 	{
 		foreach ($accts as $acct)
