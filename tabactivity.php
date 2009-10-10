@@ -10,27 +10,31 @@ if (isset($_REQUEST['webid'])) {
   $auth = get_agent($_REQUEST['webid']);
 }
 
-// Initialize some feeds for use.
-$feed = new SimplePie();
-
 $a1 = replace_with_rss($auth['agent']['holdsAccount']);
 $a2 = replace_with_rss($auth['agent']['accountProfilePage']);
 
 if ( $a1 || $a2 ) {
-  $feed->set_feed_url(array_merge(  $a1?$a1:array(), $a2?$a2:array() ));
+	// Initialize some feeds for use.
+	$feed = new SimplePie();
+
+	$feed->set_feed_url(array_merge(  $a1?$a1:array(), $a2?$a2:array() ));
+	$no_feed = FALSE;
+
+	// When we set these, we need to make sure that the handler_image.php file is also trying to read from the same cache directory that we are.
+	$feed->set_favicon_handler('./handler_image.php');
+	$feed->set_image_handler('./handler_image.php');
+
+	// Initialize the feed.
+	$feed->init();
+
+	// Make sure the page is being served with the UTF-8 headers.
+	$feed->handle_content_type();
+
 } else {
-  $feed->set_feed_url( "http://example.com" );
+//  $feed->set_feed_url( "http://example.com" );
+	$no_feed = TRUE;
+	$feed = NULL;
 }
-
-// When we set these, we need to make sure that the handler_image.php file is also trying to read from the same cache directory that we are.
-$feed->set_favicon_handler('./handler_image.php');
-$feed->set_image_handler('./handler_image.php');
-
-// Initialize the feed.
-$feed->init();
-
-// Make sure the page is being served with the UTF-8 headers.
-$feed->handle_content_type();
 
 // Begin the (X)HTML page.
 ?>
@@ -39,10 +43,12 @@ $feed->handle_content_type();
 			
 
 
-	<?php if ($feed->error): ?>
+	<?php if ( ($no_feed) || ($feed->error) ): ?>
 		<p>No Activity Discovered Yet...</p>
 	<?php endif ?>
 
+
+	<?php if ($feed): ?>
 
 	<?php
 	// Let's loop through each item in the feed.
@@ -72,4 +78,4 @@ $feed->handle_content_type();
 
 	<?php endforeach ?>
 
-
+	<?php endif ?>
