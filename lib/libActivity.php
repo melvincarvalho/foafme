@@ -1,5 +1,31 @@
 <?
 
+//-----------------------------------------------------------------------------------------------------------------------------------
+//
+// Filename   : libActivity.php                                                                                                  
+// Version    : 0.1
+// Date       : 12th October 2009
+//
+// Copyright 2008-2009 foaf.me
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program. If not, see <http://www.gnu.org/licenses/>.
+//
+// "Everything should be made as simple as possible, but no simpler."
+// -- Albert Einstein
+//
+//-----------------------------------------------------------------------------------------------------------------------------------
+
 function get_openlink_acct($acct)
 {
 	$parser = ARC2::getRDFParser();
@@ -29,7 +55,7 @@ function convert_to_rss($acct)
 				$acct = 'http://en.wikipedia.org/w/index.php?title=Special:Contributions&feed=rss&target=' . substr($acct, strlen('http://en.wikipedia.org/wiki/User:'));
 			else
 			{
-				if ( (strstr($acct, 'mailto:')) || (strstr($acct, 'skype:')) || (strstr($acct, 'http://www.linkedin.com/')) || (strstr($acct, 'http://www.facebook.com/')) )
+				if ( (strstr($acct, 'mailto:')) || (strstr($acct, 'skype:')) || (strstr($acct, 'http://www.linkedin.com/')) || (strstr($acct, 'http://www.facebook.com/')) || (strstr($acct, 'http://test.foaf-ssl.org/')) || (strstr($acct, 'http://puszcza.gnu.org.ua/')) || (strstr($acct, 'http://savannah.gnu.org/')) || (strstr($acct, 'http://www.thesixtyone.com/')) )
 					$acct = NULL;
 				else
 				{
@@ -39,6 +65,13 @@ function convert_to_rss($acct)
 					{
 						if (strstr($acct, 'http://www.flickr.com/people/'))
 							$acct = 'http://www.flickr.com/photos/' .  substr( $acct, strlen('http://www.flickr.com/people/') ) ;
+						else
+						{
+							if (strstr($acct, 'http://www.ohloh.net/')  && (strstr($acct,'/messages.rss')==FALSE))
+							{
+								$acct = $acct . '/messages.rss';
+							}
+						}
 					}
 
 				}
@@ -51,6 +84,8 @@ function convert_to_rss($acct)
 
 function replace_with_rss($accts)
 {
+	$ret = NULL;
+
 	if ($accts)
 	{
 		foreach ($accts as $acct)

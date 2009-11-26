@@ -1,4 +1,31 @@
 <?
+
+//-----------------------------------------------------------------------------------------------------------------------------------
+//
+// Filename   : tabactivity.php                                                                                                  
+// Date       : 15th October 2009
+//
+//
+// Copyright 2008-2009 foaf.me
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program. If not, see <http://www.gnu.org/licenses/>.
+//
+// "Everything should be made as simple as possible, but no simpler."
+// -- Albert Einstein
+//
+//-----------------------------------------------------------------------------------------------------------------------------------
+
 // Include the SimplePie library, and the one that handles internationalized domain names.
 require_once('simplepie/1.1.3/simplepie.inc');
 require_once('simplepie/1.1.3/idn/idna_convert.class.php');
@@ -10,27 +37,31 @@ if (isset($_REQUEST['webid'])) {
   $auth = get_agent($_REQUEST['webid']);
 }
 
-// Initialize some feeds for use.
-$feed = new SimplePie();
-
 $a1 = replace_with_rss($auth['agent']['holdsAccount']);
 $a2 = replace_with_rss($auth['agent']['accountProfilePage']);
 
 if ( $a1 || $a2 ) {
-  $feed->set_feed_url(array_merge(  $a1?$a1:array(), $a2?$a2:array() ));
+	// Initialize some feeds for use.
+	$feed = new SimplePie();
+
+	$feed->set_feed_url(array_merge(  $a1?$a1:array(), $a2?$a2:array() ));
+	$no_feed = FALSE;
+
+	// When we set these, we need to make sure that the handler_image.php file is also trying to read from the same cache directory that we are.
+	$feed->set_favicon_handler('./handler_image.php');
+	$feed->set_image_handler('./handler_image.php');
+
+	// Initialize the feed.
+	$feed->init();
+
+	// Make sure the page is being served with the UTF-8 headers.
+	$feed->handle_content_type();
+
 } else {
-  $feed->set_feed_url( "http://example.com" );
+//  $feed->set_feed_url( "http://example.com" );
+	$no_feed = TRUE;
+	$feed = NULL;
 }
-
-// When we set these, we need to make sure that the handler_image.php file is also trying to read from the same cache directory that we are.
-$feed->set_favicon_handler('./handler_image.php');
-$feed->set_image_handler('./handler_image.php');
-
-// Initialize the feed.
-$feed->init();
-
-// Make sure the page is being served with the UTF-8 headers.
-$feed->handle_content_type();
 
 // Begin the (X)HTML page.
 ?>
@@ -39,10 +70,12 @@ $feed->handle_content_type();
 			
 
 
-	<?php if ($feed->error): ?>
+	<?php if ( ($no_feed) || ($feed->error) ): ?>
 		<p>No Activity Discovered Yet...</p>
 	<?php endif ?>
 
+
+	<?php if ($feed): ?>
 
 	<?php
 	// Let's loop through each item in the feed.
@@ -72,4 +105,4 @@ $feed->handle_content_type();
 
 	<?php endforeach ?>
 
-
+	<?php endif ?>
