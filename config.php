@@ -29,8 +29,8 @@
 $config = array(
 
         /* db */
-        'db_name'        => '',                              // db name
-        'db_user'        => '',                              // db username
+        'db_name'        => 'localhost',                     // db name
+        'db_user'        => 'root',                          // db username
         'db_pwd'         => '',                              // db password
 
         /* store */
