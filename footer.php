@@ -16,17 +16,18 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * "Everything should be made as simple as possible, but no simpler." 
+ *
+ * "Everything should be made as simple as possible, but no simpler."
  * -- Albert Einstein
  *
  */
 ?>		
-	</div>
-	</div>
+<div class="footer">Powered by <a href="http://foaf.me">foaf.me</a></div>
 
-<!-- <div>Powered by <a href="http://foaf.me">foaf.me</a>	-->
-	
+</div>
+</div>
+
+
 </body>
 
 </html>

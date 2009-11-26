@@ -33,9 +33,9 @@
 // $headerLoaded is imported from the containter
 // determines whether we were called standalone or included
 if ( $headerLoaded != true ) {
-	include('head.php'); 
-	include('header.php'); 
-	$headerLoaded = false;
+    include('head.php');
+    include('header.php');
+    $headerLoaded = false;
 }
 
 
@@ -50,95 +50,95 @@ $webid = $_REQUEST['webid'];
 $webidbase = preg_replace('/#.*/', '', $webid);
 if (!empty($webid)) {
 
-	// get webid details
-	$auth = get_agent($webid);
-	$friends = count($auth['agent']['knows']);
+// get webid details
+    $auth = get_agent($webid);
+    $friends = count($auth['agent']['knows']);
 
 } 
 ?>
 
 
-<script type="text/javascript">
-<!--
-// function to add a friend
-function addf(el) {
+                <script type="text/javascript">
+                    <!--
+                    // function to add a friend
+                    function addf(el) {
 
-	// empty list 
-	// clone it
-	// replace numbers
-	// make sure fields are blank
-	if ($(el).prevAll().find("tr:last input").attr("type") === 'text' ) {
+                        // empty list
+                        // clone it
+                        // replace numbers
+                        // make sure fields are blank
+                        if ($(el).prevAll().find("tr:last input").attr("type") === 'text' ) {
 
-		var about = $(el).prevAll().find(" tr:last").attr("about");
-		var lastFriend = (about != undefined) ? about.replace(/[^0-9]*/, "") : -1;
+                            var about = $(el).prevAll().find(" tr:last").attr("about");
+                            var lastFriend = (about != undefined) ? about.replace(/[^0-9]*/, "") : -1;
 
-		lastFriend++;
-		var clone = $("#friendstable tr:last").clone();
+                            lastFriend++;
+                            var clone = $("#friendstable tr:last").clone();
 
-		clone.attr({about : 'friend' + lastFriend });
-		clone.appendTo("#friendstable");
+                            clone.attr({about : 'friend' + lastFriend });
+                            clone.appendTo("#friendstable");
 
-		return;
-	}
+                            return;
+                        }
 
-	// edit in place
-	var last = $("#friendstable tr:last");
-	if (last == null) {
-	} else {
-		var about = $("#friendstable tr:last").attr("about");
-		var lastFriend = about != undefined? about.replace(/.*friend/, "") : -1;
-		lastFriend++;
-		//alert (lastFriend)
-		$("#friendstable tr:last").after("<tr about='<?= $webidbase ?>#friend"+lastFriend+"' typeof='foaf:Person' ><td>Friend</td><td><span property='foaf:name'></span></td><td><a rel='refs:seeAlso'></a></td><td about='<?= $webid ?>' rel='foaf:knows' href='<?= $webidbase ?>#friend"+lastFriend+"' ><a>x</a></td></tr>");
+                        // edit in place
+                        var last = $("#friendstable tr:last");
+                        if (last == null) {
+                        } else {
+                            var about = $("#friendstable tr:last").attr("about");
+                            var lastFriend = about != undefined? about.replace(/.*friend/, "") : -1;
+                            lastFriend++;
+                            //alert (lastFriend)
+                            $("#friendstable tr:last").after("<tr about='<?= $webidbase ?>#friend"+lastFriend+"' typeof='foaf:Person' ><td>Friend</td><td><span property='foaf:name'></span></td><td><a rel='refs:seeAlso'></a></td><td about='<?= $webid ?>' rel='foaf:knows' href='<?= $webidbase ?>#friend"+lastFriend+"' ><a>x</a></td></tr>");
 
-		sparul();
-	}
-
-
-}
-// -->
-</script>
-
-	<table id="friendstable" about="<?= $webid ?>">
-	<tr>
-		<td></td>
-		<td>Name</td><td>URL</td>
-	</tr>
-
-	<? for ($i=0; $i<$friends; $i++) { ?>
+                            sparul();
+                        }
 
 
-		<? if (empty($webid)) {  ?>
+                    }
+                    // -->
+                </script>
 
-		<tr typeof="foaf:Person" about="<?= $webidbase ?>friend<?= $i ?>" >
-			<td>Friend: </td>
-			<td><input size="12" property="foaf:name" onchange="makeTags()" type="text" /></td>
-			<td><input size="12" rel="rdfs:seeAlso" onchange="makeTags()" type="text" /></td>
+                <table id="friendstable" about="<?= $webid ?>">
+                    <tr>
+                        <td></td>
+                        <td>Name</td><td>URL</td>
+                    </tr>
 
-		<? } else { $v = $auth['agent']['knows'][$i]; $about =  $v['about']?$v['about']  : $webidbase . "friend" . $i ; ?>
-
-		<tr typeof="foaf:Person" id="friend<?= $i ?>" about="<?= $about ?>" >
-			<td><a href="?webid=<?= $v['webid'] ?>">Friend</a>: </td>
-			<td><span property="foaf:name"><?= $v['name'] ?></span></td>
-			<td><span href="<?= $v['webid'] ?>" rel="rdfs:seeAlso" ><?= $v['webid'] ?></span></td>
-			<td about="<?= $webid ?>" rel="foaf:knows" href="<?= $webidbase ?>#friend<?= $i ?>"><a  id="delfriend<?= $i ?>" href="javascript:del('delfriend<?= $i ?>')" >x</a></td>
-		<? } ?>
-
-	</tr>
-
-	<? } ?>
+                    <? for ($i=0; $i<$friends; $i++) { ?>
 
 
-	</table>
-	<br/>
-	<a id="addf" href="#" onclick="javascript:addf(this)">Add</a>
+                        <? if (empty($webid)) {  ?>
+
+                    <tr typeof="foaf:Person" about="<?= $webidbase ?>friend<?= $i ?>" >
+                        <td>Friend: </td>
+                        <td><input size="12" property="foaf:name" onchange="makeTags()" type="text" /></td>
+                        <td><input size="12" rel="rdfs:seeAlso" onchange="makeTags()" type="text" /></td>
+
+                            <? } else { $v = $auth['agent']['knows'][$i]; $about =  $v['about']?$v['about']  : $webidbase . "friend" . $i ; ?>
+
+                    <tr typeof="foaf:Person" id="friend<?= $i ?>" about="<?= $about ?>" >
+                        <td><a href="?webid=<?= $v['webid'] ?>">Friend</a>: </td>
+                        <td><span property="foaf:name"><?= $v['name'] ?></span></td>
+                        <td><span href="<?= $v['webid'] ?>" rel="rdfs:seeAlso" ><?= $v['webid'] ?></span></td>
+                        <td about="<?= $webid ?>" rel="foaf:knows" href="<?= $webidbase ?>#friend<?= $i ?>"><a  id="delfriend<?= $i ?>" href="javascript:del('delfriend<?= $i ?>')" >x</a></td>
+                            <? } ?>
+
+                    </tr>
+
+                    <? } ?>
+
+
+                </table>
+                <br/>
+                <a id="addf" href="#" onclick="javascript:addf(this)">Add</a>
 
 <?
 
 // $headerLoaded is imported from the containter
 // determines whether we were called standalone or included
 if ( $headerLoaded != true ) {
-	include('footer.php'); 
+    include('footer.php');
 }
 ?>
 

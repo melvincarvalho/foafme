@@ -23,7 +23,7 @@
  */
 ?>
 
-<body id="tools_scrollable">
+<body>
     <div id="wrap">
         <div id="header">
             <a href="index.php">Home</a> | <a href="http://groups.google.com/group/foafme">Mailing List</a>
@@ -36,15 +36,15 @@
                 ?>
             <div id="user">
                 <a id="logout" href="http://foaf.me/clearSession.php?return_to=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]" ?>">
-                        <!-- Logout <strong><?= $_SESSION['auth']['subjectAltName'] ?> </strong> -->
-		Logout <strong><?= $_REQUEST['webid'] ?></strong>
+                <!-- Logout <strong><?= $_SESSION['auth']['subjectAltName'] ?> </strong> -->
+                    Logout <strong><?= $_REQUEST['webid'] ?></strong>
                 </a>
                 <br/>
             </div>
             <? } else { ?>
             <div id="user">
                 <a id="account" href="https://foafssl.org/srv/idp?authreqissuer=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]" ?>">
-					login to your <strong>account</strong>
+                    Login to your <strong>account</strong>
                 </a>
                 <br />
             </div>
