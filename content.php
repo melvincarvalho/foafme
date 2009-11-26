@@ -23,11 +23,11 @@
  */
 ?>
 
-		<!-- start tabs container -->
+	<!-- start tabs container -->
         <div style="display:none" typeof="foaf:PersonalProfileDocument" about="">
 		    <span rel="foaf:maker" href="#me"></span>
 		    <span rel="foaf:primaryTopic" href="#me"></span>
-		</div>
+	</div>
 
         <div id="container" typeof="foaf:Person" about="me">
 		<ul>
@@ -35,20 +35,24 @@
 			<li style="list-style-image: none"><a href="#friends"><span>Friends</span></a></li>
 			<li style="list-style-image: none"><a href="#accounts"><span>Accounts</span></a></li>
 			<li style="list-style-image: none"><a href="#security"><span>Security</span></a></li>
-<?php
+<?
 if ($agent) {
 ?>
 			<li style="list-style-image: none"><a href="#activity"><span>Activity</span></a></li>
 <? } else { ?>
 			<li style="list-style-image: none"><a href="#interests"><span>Interests</span></a></li>
 <? } ?>
+<? if ($loggedIn) { ?>
+
+			<li style="list-style-image: none"><a href="#rawdata"><span>Raw Data</span></a></li>
+<? } ?>
 		</ul>
 
-            <!-- start me tab -->
-			<div id="me" class="inputArea">
-                <?php include('tabme.php'); ?>
-			</div>
-            <!-- end me tab -->
+	<!-- start me tab -->
+	<div id="me" class="inputArea">
+		<?php include('tabme.php'); ?>
+	</div>
+	<!-- end me tab -->
 
 
             <!-- start friends tab -->
@@ -62,6 +66,11 @@ if ($agent) {
 ?>
             <!-- start activites tab -->
             <div id="activity">Loading...
+            </div>
+            <!-- end activities tab -->
+            <!-- start activites tab -->
+            <div id="rawdata">
+		<?php include('tabdata.php'); ?>
             </div>
             <!-- end activities tab -->
 <? } ?>
