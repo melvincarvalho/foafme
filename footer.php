@@ -22,14 +22,11 @@
  *
  */
 ?>		
-<div class="footer">Powered by <a href="http://foaf.me">foaf.me</a></div>
 
-</div>
-</div>
-
+        <div class="footer">Powered&nbsp;by&nbsp;<a href="http://foaf.me">foaf.me</a> (pre-alpha)</div>
+    </div>
 
 </body>
 
 </html>
 
-<? $footerLoaded = true ?>

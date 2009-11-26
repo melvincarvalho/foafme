@@ -3,7 +3,7 @@
 
 /*************************************
 	 +Entry
-	 *************************************/
+*************************************/
 .required {
     color: blue;
     font-weight: bold;
@@ -58,10 +58,13 @@ ul.smaller li {
     list-style-image: url(foaf.png);
 }
 
-
+.clear {
+    clear: both;
+}
 /* FLOW */
 
-
+#content {
+}
 
 
 /*{{{ very basic styles */
@@ -71,21 +74,26 @@ body, p, div, a {
     font-family:"Arial","Lucida Sans Unicode","bitstream vera sans","trebuchet ms",verdana,arial,sans-serif;
     font-size:12px;
 }
+
 #content {
     float:left;
     min-height:400px;
     padding:20px;
     width:748px;
     background:#fff url(../images/content_top.jpg) no-repeat;
-    margin-top: 40px;
+    margin-top: 20px;
 }
 
 #wrap {
     margin:10px auto;
-    width:982px;
+    width:800px;
 }
 
 /* username | logout */
+
+#header {
+    margin: 10px;
+}
 
 #user {
     margin-right:6px;

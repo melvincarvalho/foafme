@@ -32,11 +32,8 @@
 
 // $headerLoaded is imported from the containter
 // determines whether we were called standalone or included
-if ( $headerLoaded != true ) {
-    include('head.php');
-    include('header.php');
-    $headerLoaded = false;
-}
+require_once('head.php');
+require_once('header.php');
 
 
 // Authenticate
@@ -132,14 +129,4 @@ if (!empty($webid)) {
                 </table>
                 <br/>
                 <a id="addf" href="#" onclick="javascript:addf(this)">Add</a>
-
-<?
-
-// $headerLoaded is imported from the containter
-// determines whether we were called standalone or included
-if ( $headerLoaded != true ) {
-    include('footer.php');
-}
-?>
-
 

@@ -30,24 +30,24 @@
 // SPARUL, the complexity is abstracted from the developer and you left with 
 // a rich array of profile and relationship data out of the box
 //
-include('head.php'); 
+require_once('head.php');
 
 
 // header.php is a short customisable header bar with login/logout button
 //
-include('header.php'); 
+require_once('header.php');
 
 
 // content.php is general purpose content, in this case it links to a tabbed 
 // FOAF creator new applications can be added to the framework simply by 
 // replacing content.php
 //
-include('content.php'); 		
+require_once('content.php');
 
 
 // footer.php is a general purpose footer
 //
-include('footer.php'); 
+require_once('footer.php');
 
 
 ?>

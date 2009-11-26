@@ -24,9 +24,9 @@
  */
 
 // includes
-include ('config.php');
-include ('db.class.php');
-include ('lib/libAuthentication.php');
+require_once('config.php');
+require_once('db.class.php');
+require_once('lib/libAuthentication.php');
 
 // set up db connection
 $db = new db_class();

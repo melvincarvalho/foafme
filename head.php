@@ -30,7 +30,7 @@ $loggedIn = false;
 
 // Include libraries
 // TODO: include libAuthentication, and set up FOAF:Agent from a REQUEST
-include ("lib/libImport.php");
+require_once("lib/libImport.php");
 
 
 // Check to see if we are importing a WebID, if so populate $import
@@ -319,5 +319,3 @@ $webidbase = preg_replace('/#.*/', '', $webid);
 
 
     </head>
-
-<? $headerLoaded = true ?>

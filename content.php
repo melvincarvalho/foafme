@@ -36,15 +36,12 @@
                     <li style="list-style-image: none"><a href="#friends"><span>Friends</span></a></li>
                     <li style="list-style-image: none"><a href="#accounts"><span>Accounts</span></a></li>
                     <li style="list-style-image: none"><a href="#security"><span>Security</span></a></li>
-                    <?
-                    if ($agent) {
-                        ?>
+                    <? if ($agent) { ?>
                     <li style="list-style-image: none"><a href="#activity"><span>Activity</span></a></li>
                     <? } else { ?>
                     <li style="list-style-image: none"><a href="#interests"><span>Interests</span></a></li>
                     <? } ?>
                     <? if ($loggedIn) { ?>
-
                     <li style="list-style-image: none"><a href="#rawdata"><span>Raw Data</span></a></li>
                     <? } ?>
                 </ul>
@@ -62,16 +59,14 @@
                 </div>
                 <!-- end friends tab -->
 
-                <?
-                if ($agent) {
-                    ?>
+                <? if ($agent) { ?>
                 <!-- start activites tab -->
                 <div id="activity">Loading...
                 </div>
                 <!-- end activities tab -->
                 <!-- start activites tab -->
                 <div id="rawdata">
-                        <?php include('tabdata.php'); ?>
+                    <?php include('tabdata.php'); ?>
                 </div>
                 <!-- end activities tab -->
                 <? } ?>
@@ -104,9 +99,7 @@
             <script type="text/javascript"> $("#activity").load("tabactivity.php?webid=<?= $agent ?>");</script>
             <script type="text/javascript"> $("#security").load("tabsecurity.php?webid=<?= $agent ?>");</script>
 
-            <?php
-            if ($agent) {
-                ?>
+            <?php if ($agent) { ?>
             <? } else { ?>
             <!-- start foaf file -->
             <div id="form">
@@ -124,6 +117,9 @@
             </div>
             <!-- end foaf file -->
             <? } ?>
+        </div>
+        <div class="clear"></div>
+
 
 
 

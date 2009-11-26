@@ -25,8 +25,8 @@
 //
 //-----------------------------------------------------------------------------------------------------------------------------------
 
-include_once("config.php");
-include_once("arc/ARC2.php");
+require_once("config.php");
+require_once("arc/ARC2.php");
 
 
 
