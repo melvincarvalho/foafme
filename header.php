@@ -25,29 +25,32 @@
 
 <body id="tools_scrollable">
     <div id="wrap">
-        <a href="index.php">Home</a> | <a href="http://groups.google.com/group/foafme">Mailing List</a>
+        <div id="header">
+            <a href="index.php">Home</a> | <a href="http://groups.google.com/group/foafme">Mailing List</a>
 
-        <?php
-        //if (!empty($_SESSION['auth']) && $_SESSION['auth']['subjectAltName']) {
+            <?php
+            //if (!empty($_SESSION['auth']) && $_SESSION['auth']['subjectAltName']) {
 
-        // If logged in
-        if (!empty($webid) ) {
-            ?>
-        <div id="user">
-            <a id="logout" href="http://foaf.me/clearSession.php?return_to=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]" ?>">
-                    <!-- Logout <strong><?= $_SESSION['auth']['subjectAltName'] ?> </strong> -->
+            // If logged in
+            if (!empty($webid) ) {
+                ?>
+            <div id="user">
+                <a id="logout" href="http://foaf.me/clearSession.php?return_to=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]" ?>">
+                        <!-- Logout <strong><?= $_SESSION['auth']['subjectAltName'] ?> </strong> -->
 		Logout <strong><?= $_REQUEST['webid'] ?></strong>
-            </a>
-            <br/>
-        </div>
-        <? } else { ?>
-        <div id="user">
-            <a id="account" href="https://foafssl.org/srv/idp?authreqissuer=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]" ?>">
+                </a>
+                <br/>
+            </div>
+            <? } else { ?>
+            <div id="user">
+                <a id="account" href="https://foafssl.org/srv/idp?authreqissuer=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]" ?>">
 					login to your <strong>account</strong>
-            </a>
-            <br />
+                </a>
+                <br />
+            </div>
+            <? } ?>
+
         </div>
-        <? } ?>
 
 
         <div id="content">
