@@ -1,41 +1,26 @@
 <?php
-/*
-homepage: http://arc.semsol.org/
-license:  http://arc.semsol.org/license
-
-class:    ARC2 core class (static, not instantiated)
-author:   Benjamin Nowack
-version:  2008-11-18 (
-                      Fix: x() method works with \xA0 and \xC2 in leading whitespace now
-                      Fix in ARC2_RDFExtractor
-                      Fix in ARC2_TurtleParser
-                      Fix in ARC2_LegacyXMLParser
-                      Fix in ARC2_Store and Query Handlers
-                      Addition: inc() method accepts custom paths now. Thanks to Alexandre Passant
-                      Addition: ARC2_PoshRdfExtractor
-                      Addition in ARC2_SemHTMLParser
-                      Addition in ARC2_Store
-                      Rewrite: Replaced individual microformats extractors with generic ARC2_MicroformatsExtractor
-                      Tweak in ARC2_SemHTMLParser
-                      Tweak in ARC2_TurtleParser
-                      Tweak in ARC2_SPARQLParser
-                      Tweak in ARC2_POSHRDFSerializer
-                      Tweak in ARC2_SPARQLScriptProcessor
-)
+/**
+ * ARC2 core class (static, not instantiated)
+ *
+ * @author Benjamin Nowack
+ * @license <http://arc.semsol.org/license>
+ * @homepage <http://arc.semsol.org/>
+ * @package ARC2
+ * @version 2009-11-24
 */
 
 class ARC2 {
 
   function getVersion() {
-    return '2008-11-18';
+    return '2009-11-24';
   }
 
   /*  */
   
   function setStatic($val) {
     static $arc_static = '';
-    if ($val) $arc_static = $val;
-    if (!$val) return $arc_static;
+    if ($val) $arc_static = $val;   /* set */
+    if (!$val) return $arc_static;  /* get */
   }
   
   function getStatic() {
@@ -57,7 +42,8 @@ class ARC2 {
     );
     foreach ($dirs as $k => $dir) {
       if (preg_match('/' . $k . '/i', $f)) {
-        return $r .= $dir . '/';
+        $r .= $dir . '/';
+        return $r;
       }
     }
     return $r;
@@ -65,12 +51,25 @@ class ARC2 {
   
   function getScriptURI() {
     if (isset($_SERVER) && isset($_SERVER['SERVER_NAME'])) {
-      return preg_replace('/^([a-z]+)\/.*$/', '\\1', strtolower($_SERVER['SERVER_PROTOCOL'])) . '://' . $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME'];
+      return preg_replace('/^([a-z]+)\/.*$/', '\\1', strtolower($_SERVER['SERVER_PROTOCOL'])) . 
+        '://' . $_SERVER['SERVER_NAME'] .
+        ($_SERVER['SERVER_PORT'] != 80 ? ':' . $_SERVER['SERVER_PORT'] : '') .
+        $_SERVER['SCRIPT_NAME'];
     }
     elseif (isset($_SERVER['SCRIPT_FILENAME'])) {
       return 'file://' . realpath($_SERVER['SCRIPT_FILENAME']);
     }
     return 'http://localhost/unknown_path';
+  }
+
+  function getRequestURI() {
+    if (isset($_SERVER) && isset($_SERVER['REQUEST_URI'])) {
+      return preg_replace('/^([a-z]+)\/.*$/', '\\1', strtolower($_SERVER['SERVER_PROTOCOL'])) . 
+        '://' . $_SERVER['SERVER_NAME'] .
+        ($_SERVER['SERVER_PORT'] != 80 ? ':' . $_SERVER['SERVER_PORT'] : '') .
+        $_SERVER['REQUEST_URI'];
+    }
+    return ARC2::getScriptURI();
   }
   
   function inc($f, $path = '') {
@@ -103,7 +102,7 @@ class ARC2 {
   }
   
   function x($re, $v, $options = 'si') {
-    return preg_match("/^\s*" . $re . "(.*)$/" . $options, str_replace(array("\xA0", "\xC2"), ' ', $v), $m) ? $m : false;
+    return preg_match("/^\s*" . $re . "(.*)$/" . $options, $v, $m) ? $m : false;
   }
 
   /*  */
@@ -127,26 +126,32 @@ class ARC2 {
   }
   
   function getUTF8Char($v) {
-    $v = $v[1];
-    return (strlen($v) === 1) ? utf8_encode($v) : $v;
+    $val = $v[1];
+    return (strlen(trim($val)) === 1) ? utf8_encode($val) : $val;
   }
 
   /*  */
 
   function splitURI($v) {
-    $parts = preg_match('/^(.*[\/\#])([^\/\#]+)$/', $v, $m) ? array($m[1], $m[2]) : array($v);
-    $specials = array(
-      'http://www.w3.org/XML/1998/namespace',
-      //'http://www.w3.org/1999/xhtml',
-    );
-    foreach ($specials as $ns) {
-      if (strpos($ns, $parts[0]) === 0) {
-        $suffix = substr($ns, strrpos($ns, '/')+1);
-        $parts[0] .= $suffix;
-        $parts[1] = substr($parts[1], strlen($suffix));
+    /* the following namespaces lead to conflated URIs,
+     * we have to set the split position manually
+    */
+    if (strpos($v, 'www.w3.org')) {
+      $specials = array(
+        'http://www.w3.org/XML/1998/namespace',
+        'http://www.w3.org/2005/Atom',
+        'http://www.w3.org/1999/xhtml',
+      );
+      foreach ($specials as $ns) {
+        if (strpos($v, $ns) === 0) {
+          return array($ns, substr($v, strlen($ns)));
+        }
       }
     }
-    return $parts;
+    /* auto-splitting on / or # */
+    $re = '^(.*[\/\#])([^\/\#]+)$';
+    //$re = '^(.*?)([A-Z_a-z][-A-Z_a-z0-9.]*)$';
+    return preg_match('/' . $re . '/', $v, $m) ? array($m[1], $m[2]) : array($v);
   }
   
   /*  */
@@ -218,7 +223,7 @@ class ARC2 {
     }
     return $r;
   }
-  
+
   function getMergedIndex() {
     $r = array();
     foreach (func_get_args() as $index) {
@@ -314,8 +319,14 @@ class ARC2 {
     return new $cls($a, new stdClass());
   }
   
+  /* resource */
+
+  function getResource($a = '') {
+    return ARC2::getComponent('Resource', $a);
+  }
+
   /* parsers */
-  
+
   function getParser($prefix, $a = '') {
     return ARC2::getComponent($prefix . 'Parser', $a);
   }
@@ -352,6 +363,10 @@ class ARC2 {
     return ARC2::getParser('SPARQLXMLResult', $a);
   }
 
+  function getJSONParser($a = '') {
+    return ARC2::getParser('JSON', $a);
+  }
+
   function getSGAJSONParser($a = '') {
     return ARC2::getParser('SGAJSON', $a);
   }
@@ -370,12 +385,16 @@ class ARC2 {
     return ARC2::getComponent('Store', $a);
   }
 
+  function getStoreEndpoint($a = '') {
+    return ARC2::getComponent('StoreEndpoint', $a);
+  }
+
   function getRemoteStore($a = '') {
     return ARC2::getComponent('RemoteStore', $a);
   }
 
-  function getStoreEndpoint($a = '') {
-    return ARC2::getComponent('StoreEndpoint', $a);
+  function getMemStore($a = '') {
+    return ARC2::getComponent('MemStore', $a);
   }
   
   /* serializers */
@@ -402,6 +421,10 @@ class ARC2 {
 
   function getPOSHRDFSerializer($a = '') {
     return ARC2::getSer('POSHRDF', $a);
+  }
+
+  function getRSS10Serializer($a = '') {
+    return ARC2::getSer('RSS10', $a);
   }
 
   /* sparqlscript */

@@ -5,7 +5,7 @@ license:  http://arc.semsol.org/license
 
 class:    ARC2 SPARQL Parser
 author:   Benjamin Nowack
-version:  2008-10-06 (Tweak: LIMIT accepts placeholder now)
+version:  2009-10-05
 */
 
 ARC2::inc('TurtleParser');
@@ -31,7 +31,7 @@ class ARC2_SPARQLParser extends ARC2_TurtleParser {
 
   function parse($q, $src = '') {
     $this->setDefaultPrefixes();
-    $this->base = $src ? $this->calcBase($src) : ARC2::getScriptURI();
+    $this->base = $src ? $this->calcBase($src) : ARC2::getRequestURI();
     $this->r = array(
       'base' => '',
       'vars' => array(),
@@ -760,5 +760,17 @@ class ARC2_SPARQLParser extends ARC2_TurtleParser {
       return array(array('type' => 'uri', 'uri' => $r), $sub_v);
     }
   }
+
+  /* 70.. */
   
+  function xIRI_REF($v) {
+    if (($r = $this->x('\<(\$\{[^\>]*\})\>', $v)) && ($sub_r = $this->xPlaceholder($r[1]))) {
+      return array($r[1], $r[2]);
+    }
+    elseif ($r = $this->x('\<([^\<\>\s\"\|\^`]*)\>', $v)) {
+      return array($r[1] ? $r[1] : true, $r[2]);
+    }
+    return array(0, $v);
+  }
+    
 }  

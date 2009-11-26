@@ -102,9 +102,9 @@ class ARC2_StoreConstructQueryHandler extends ARC2_StoreSelectQueryHandler {
               $o[$suffix] = $t['o_' . $suffix];
             }
           }
-          if (!isset($added[md5($s . ' ' . $p . ' ' . print_r($o, 1))])) {
+          if (!isset($added[md5($s . ' ' . $p . ' ' . serialize($o))])) {
             $r[$s][$p][] = $o;
-            $added[md5($s . ' ' . $p . ' ' . print_r($o, 1))] = 1;
+            $added[md5($s . ' ' . $p . ' ' . serialize($o))] = 1;
           }
         }
       }

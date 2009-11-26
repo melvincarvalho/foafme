@@ -1,11 +1,12 @@
 <?php
-/*
-homepage: http://arc.semsol.org/
-license:  http://arc.semsol.org/license
-
-class:    ARC2 RDF Store LOAD Query Handler
-author:   Benjamin Nowack
-version:  2008-09-26 (Addition: Atom support)
+/**
+ * ARC2 RDF Store LOAD Query Handler
+ *
+ * @author Benjamin Nowack
+ * @license <http://arc.semsol.org/license>
+ * @homepage <http://arc.semsol.org/>
+ * @package ARC2
+ * @version 2009-10-05
 */
 
 ARC2::inc('StoreQueryHandler');
@@ -23,8 +24,11 @@ class ARC2_StoreLoadQueryHandler extends ARC2_StoreQueryHandler {
   function __init() {/* db_con, store_log_inserts */
     parent::__init();
     $this->store =& $this->caller;
-    $this->write_buffer_size = $this->v('store_write_buffer', 5000, $this->a);
+    $this->write_buffer_size = $this->v('store_write_buffer', 2500, $this->a);
     $this->keep_time_limit = $this->v('keep_time_limit', 0, $this->a);
+    $this->split_threshold = $this->v('store_split_threshold', 0, $this->a);
+    $this->has_pcre_unicode = @preg_match('/\pL/u', 'test');
+    $this->strip_mb_comp_str = $this->v('store_strip_mb_comp_str', 0, $this->a);
   }
 
   /*  */
@@ -79,6 +83,8 @@ class ARC2_StoreLoadQueryHandler extends ARC2_StoreQueryHandler {
     /* load and parse */
     $this->max_term_id = $this->getMaxTermID();
     $this->max_triple_id = $this->getMaxTripleID();
+    $this->column_type = $this->store->getColumnType();
+    $this->createMergeTable();
     $this->term_ids = array();
     $this->triple_ids = array();
     $this->sql_buffers = array();
@@ -89,6 +95,7 @@ class ARC2_StoreLoadQueryHandler extends ARC2_StoreQueryHandler {
       $this->logInserts();
     }
     $this->store->releaseLock();
+    $this->dropMergeTable();
     if ((rand(1, 10) == 1)) $this->store->optimizeTables();
     $t2 = ARC2::mtime();
     $dur = round($t2 - $this->t_start, 4);
@@ -127,12 +134,6 @@ class ARC2_StoreLoadQueryHandler extends ARC2_StoreQueryHandler {
     }
     else {
       $this->bufferTripleSQL($t);
-      /* triple_backup */
-      $tb = array(
-        't' => $t['t'],
-        'data' => serialize(array($t['t'], $t['s'], $t['p'], $t['o'], $t['o_lang_dt'], $t['s_type'], $t['o_type']))
-      );
-      $this->bufferTripleBackupSQL($tb);
     }
     /* g2t */
     $g2t = array('g' => $g, 't' => $t['t']);
@@ -184,7 +185,7 @@ class ARC2_StoreLoadQueryHandler extends ARC2_StoreQueryHandler {
     }
     return 1;
   }
-  
+
   function getTermID($val, $type_id, $tbl) {
     $con = $this->store->getDBCon();
     /* buffered */
@@ -201,12 +202,12 @@ class ARC2_StoreLoadQueryHandler extends ARC2_StoreQueryHandler {
       return $this->term_ids[$val][$tbl];
     }
     /* db */
+    $tbl_prefix = $this->store->getTablePrefix();
     $sub_tbls = ($tbl == 'id') ? array('id2val', 's2val', 'o2val') : ($tbl == 's' ? array('s2val', 'id2val', 'o2val') : array('o2val', 'id2val', 's2val'));
     foreach ($sub_tbls as $sub_tbl) {
-      $cid_suffix = preg_match('/^(s|o)/', $sub_tbl) ? ', cid AS `cid`' : ', id AS `cid`';
-      $sql = "SELECT id AS `id`" . $cid_suffix . ", '" . $sub_tbl . "' AS `tbl` FROM " . $this->store->getTablePrefix() . $sub_tbl . " WHERE val = BINARY '" . mysql_real_escape_string($val, $con) . "'";
+      $sql = "SELECT id AS `id`, '" . $sub_tbl . "' AS `tbl` FROM " . $tbl_prefix . $sub_tbl . " WHERE val = BINARY '" . mysql_real_escape_string($val, $con) . "'";
       if (($rs = mysql_query($sql . ' LIMIT 1', $con)) && mysql_num_rows($rs) && ($row = mysql_fetch_array($rs))) {
-        $this->term_ids[$val] = array($tbl => isset($row['cid']) ? $row['cid'] : $row['id']);
+        $this->term_ids[$val] = array($tbl => $row['id']);
         if ($row['tbl'] != $tbl) {
           $this->bufferIDSQL($tbl, $row['id'], $val, $type_id);
         }
@@ -218,13 +219,18 @@ class ARC2_StoreLoadQueryHandler extends ARC2_StoreQueryHandler {
       $this->term_ids[$val] = array($tbl => $this->max_term_id);
       $this->bufferIDSQL($tbl, $this->max_term_id, $val, $type_id);
       $this->max_term_id++;
+      /* upgrade tables ? */
+      if (($this->column_type == 'mediumint') && ($this->max_term_id >= 16750000)) {
+        $this->store->extendColumns();
+        $this->column_type = 'int';
+      }
     }
     return $this->term_ids[$val][$tbl];
   }
- 
+
   function getTripleID($t) {
     $con = $this->store->getDBCon();
-    $val = print_r($t, 1);
+    $val = serialize($t);
     /* buffered */
     if (isset($this->triple_ids[$val])) {
       return array($this->triple_ids[$val]);/* hack for "don't insert this triple" */
@@ -242,6 +248,12 @@ class ARC2_StoreLoadQueryHandler extends ARC2_StoreQueryHandler {
     else {
       $this->triple_ids[$val] = $this->max_triple_id;
       $this->max_triple_id++;
+      /* split tables ? */
+      if ($this->split_threshold && !($this->max_triple_id % $this->split_threshold)) {
+        $this->store->splitTables();
+        $this->dropMergeTable();
+        $this->createMergeTable();
+      }
       return $this->triple_ids[$val];
     }
   }
@@ -251,6 +263,29 @@ class ARC2_StoreLoadQueryHandler extends ARC2_StoreQueryHandler {
     if (preg_match('/^[0-9]{1,2}\s+[a-z]+\s+[0-9]{4}/i', $val) && ($uts = strtotime($val)) && ($uts !== -1)) {
       return date("Y-m-d\TH:i:s", $uts);
     }
+    /* xsd date (e.g. 2009-05-28T18:03:38+09:00 2009-05-28T18:03:38GMT) */
+    if (preg_match('/^([0-9]{4}\-[0-9]{2}\-[0-9]{2}\T)([0-9\:]+)?([0-9\+\-\:\Z]+)?(\s*[a-z]{2,3})?$/si', $val, $m)) {
+      /* yyyy-mm-dd */
+      $val = $m[1];
+      /* hh:ss */
+      if ($m[2]) {
+        $val .= $m[2];
+        /* timezone offset */
+        if (isset($m[3]) && ($m[3] != 'Z')) {
+          $uts = strtotime(str_replace('T', ' ', $val));
+          if (preg_match('/([\+\-])([0-9]{2})\:?([0-9]{2})$/', $m[3], $sub_m)) {
+            $diff_mins = (3600 * ltrim($sub_m[2], '0')) + ltrim($sub_m[3], '0');
+            $uts = ($m[1] == '-') ? $uts + $diff_mins : $uts - $diff_mins;
+            $val = date('Y-m-d\TH:i:s\Z', $uts);
+          }
+        }
+        else {
+          $val .= 'Z';
+        }
+      }
+      return $val;
+    }
+    /* fallback & backup w/o UTC calculation, to be removed in later revision */
     if (preg_match('/^[0-9]{4}[0-9\-\:\T\Z\+]+([a-z]{2,3})?$/i', $val)) {
       return $val;
     }
@@ -264,9 +299,15 @@ class ARC2_StoreLoadQueryHandler extends ARC2_StoreQueryHandler {
       }
       return $val;
     }
-		/* any other string: remove tags, linebreaks etc.  */
-    $val = substr(trim(preg_replace('/[\W\s]+/is', '-', strip_tags($val))), 0, 35);
-    return ARC2::toUTF8($val);
+		/* any other string: remove tags, linebreaks etc., but keep MB-chars  */
+    //$val = substr(trim(preg_replace('/[\W\s]+/is', '-', strip_tags($val))), 0, 35);
+    $re = $this->has_pcre_unicode ? '/[\PL\s]+/isu' : '/[\s\'\"\´\`]+/is';
+    $val = trim(preg_replace($re, '-', strip_tags($val)));
+    $val = function_exists("mb_substr") ? mb_substr($val, 0, 35) : substr($val, 0, 35);
+    if ($this->strip_mb_comp_str) {
+      $val = urldecode(preg_replace('/\%[0-9A-F]{2}/', '', urlencode($val)));
+    }
+    return $this->toUTF8($val);
   }
   
   /*  */
@@ -280,18 +321,6 @@ class ARC2_StoreLoadQueryHandler extends ARC2_StoreQueryHandler {
       $sql = " ";
     }
     $this->sql_buffers[$tbl] .= $sql . "(" . $t['t'] . ", " . $t['s'] . ", " . $t['p'] . ", " . $t['o'] . ", " . $t['o_lang_dt'] . ", '" . mysql_real_escape_string($t['o_comp'], $con) . "', " . $t['s_type'] . ", " . $t['o_type'] . ")";
-  }
-  
-  function bufferTripleBackupSQL($tb) {
-    return 1;
-    $con = $this->store->getDBCon();
-    $tbl = 'triple_backup';
-    $sql = ", ";
-    if (!isset($this->sql_buffers[$tbl])) {
-      $this->sql_buffers[$tbl] = "INSERT INTO " . $this->store->getTablePrefix() . $tbl . " (t, data) VALUES";
-      $sql = " ";
-    }
-    $this->sql_buffers[$tbl] .= $sql . "(" . $tb['t'] . ", '" . mysql_real_escape_string($tb['data'], $con) . "')";
   }
   
   function bufferGraphSQL($g2t) {
@@ -309,7 +338,7 @@ class ARC2_StoreLoadQueryHandler extends ARC2_StoreQueryHandler {
     $tbl = $tbl . '2val';
     $sql = ", ";
     if (!isset($this->sql_buffers[$tbl])) {
-      $cols = ($tbl == 'id2val') ? "id, val, val_type" : "id, cid, val";
+      $cols = ($tbl == 'id2val') ? "id, val, val_type" : "id, val";
       $this->sql_buffers[$tbl] = "INSERT IGNORE INTO " . $this->store->getTablePrefix() . $tbl . "(" . $cols . ") VALUES";
       $sql = " ";
     }
@@ -317,7 +346,7 @@ class ARC2_StoreLoadQueryHandler extends ARC2_StoreQueryHandler {
       $sql .= "(" . $id . ", '" . mysql_real_escape_string($val, $con) . "', " . $val_type . ")";
     }
     else {
-      $sql .= "(" . $id . ", " . $id . ", '" . mysql_real_escape_string($val, $con) . "')";
+      $sql .= "(" . $id . ", '" . mysql_real_escape_string($val, $con) . "')";
     }
     $this->sql_buffers[$tbl] .= $sql;
   }

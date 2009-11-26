@@ -56,6 +56,7 @@ class ARC2_SPOGParser extends ARC2_RDFParser {
     $this->target_encoding = xml_parser_get_option($this->xml_parser, XML_OPTION_TARGET_ENCODING);
     xml_parser_free($this->xml_parser);
     $this->reader->closeStream();
+    unset($this->reader);
     return $this->done();
   }
   
@@ -96,7 +97,7 @@ class ARC2_SPOGParser extends ARC2_RDFParser {
     //echo "-----\nadding $s / $p / $o\n-----\n";
     $t = array('s' => $s, 'p' => $p, 'o' => $o, 's_type' => $s_type, 'o_type' => $o_type, 'o_datatype' => $o_dt, 'o_lang' => $o_lang, 'g' => $g);
     if ($this->skip_dupes) {
-      $h = md5(print_r($t, 1));
+      $h = md5(serialize($t));
       if (!isset($this->added_triples[$h])) {
         $this->triples[$this->t_count] = $t;
         $this->t_count++;

@@ -83,6 +83,7 @@ class ARC2_LegacyXMLParser extends ARC2_Class {
     $this->target_encoding = xml_parser_get_option($this->xml_parser, XML_OPTION_TARGET_ENCODING);
     xml_parser_free($this->xml_parser);
     $this->reader->closeStream();
+    unset($this->reader);
     return $this->done();
   }
   
@@ -214,9 +215,10 @@ class ARC2_LegacyXMLParser extends ARC2_Class {
   /*  */
   
   function open($p, $t, $a) {
+    $t_exact = $t;
     //echo "<br />\n".'opening '.$t . ' ' . print_r($a, 1); flush();
     //echo "<br />\n".'opening '.$t; flush();
-    $t = strtolower($t);
+    $t = strpos($t, ':') ? $t : strtolower($t);
     /* base check */
     $base = '';
     if (($t == 'base') && isset($a['href'])) {
@@ -226,7 +228,7 @@ class ARC2_LegacyXMLParser extends ARC2_Class {
     /* URIs */
     foreach (array('href', 'src', 'id') as $uri_a) {
       if (isset($a[$uri_a])) {
-        $a[$uri_a . ' uri'] = ($uri_a == 'id') ? $this->calcUri('#'.$a[$uri_a]) : $this->calcUri($a[$uri_a]);
+        $a[$uri_a . ' uri'] = ($uri_a == 'id') ? $this->calcURI('#'.$a[$uri_a]) : $this->calcURI($a[$uri_a]);
       }
     }
     /* ns */
@@ -239,7 +241,8 @@ class ARC2_LegacyXMLParser extends ARC2_Class {
     }
     /* node */
     $node = array(
-      'tag' => $t, 
+      'tag' => $t,
+      'tag_exact' => $t_exact,
       'a' => $a, 
       'level' => $this->level, 
       'pos' => 0,

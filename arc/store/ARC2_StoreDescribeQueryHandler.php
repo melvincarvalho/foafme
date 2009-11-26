@@ -94,7 +94,7 @@ class ARC2_StoreDescribeQueryHandler extends ARC2_StoreSelectQueryHandler {
       foreach ($ps as $p => $os) {
         if (!isset($this->r[$s][$p])) $this->r[$s][$p] = array();
         foreach ($os as $o) {
-          $id = md5($s . ' ' . $p . ' ' . print_r($o, 1));
+          $id = md5($s . ' ' . $p . ' ' . serialize($o));
           if (!isset($this->added_triples[$id])) {
             if (1 || !$is_sub_describe) {
               $this->r[$s][$p][] = $o;

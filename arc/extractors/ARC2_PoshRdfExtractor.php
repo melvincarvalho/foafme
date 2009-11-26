@@ -51,6 +51,7 @@ class ARC2_PoshRdfExtractor extends ARC2_RDFExtractor {
   /*  */
   
   function extractRDF() {
+    if (!isset($this->caller->detected_formats['posh-rdf'])) return 0;
     $n = $this->getRootNode();
     $base = $this->getDocBase();
     $context = array(
@@ -75,7 +76,7 @@ class ARC2_PoshRdfExtractor extends ARC2_RDFExtractor {
         return $node;
       }
     }
-    return 0;
+    return $this->nodes[0];
   }
   
   /*  */
@@ -102,10 +103,10 @@ class ARC2_PoshRdfExtractor extends ARC2_RDFExtractor {
     /* new s */
     if ($this->hasClass($n, 'rdf-s')) {
       $lct['next_s'] = array($n['a']['class'], $this->getSubject($n, $lct));
+      //echo "\ns: " . print_r($lct['next_s'], 1);
     }
     /* p */
     if ($this->hasClass($n, 'rdf-p') || $this->hasRel($n, 'rdf-p')) {
-      /* try class */
       if ($ps = $this->getPredicates($n, $lct['ns'])) {
         $lct['ps'] = $ps;
         $this->addPoshTypes($lct);
@@ -113,7 +114,7 @@ class ARC2_PoshRdfExtractor extends ARC2_RDFExtractor {
     }
     /* o */
     $cls = $this->v('class', '', $n['a']);
-    if ($lct['ps'] && preg_match('/(^|\s)rdf-(o|o-(xml|dateTime|float|integer|boolean))($|\s)/s', $cls, $m)) {
+    if ($lct['ps'] && preg_match('/(^|\s)rdf\-(o|o\-(xml|dateTime|float|integer|boolean))($|\s)/s', $cls, $m)) {
       $this->addTriples($n, $lct, $m[3]);
     }
     /* sub-nodes */
@@ -125,6 +126,7 @@ class ARC2_PoshRdfExtractor extends ARC2_RDFExtractor {
         $sub_ct = $this->processNode($sub_node, $cur_ct, $level + 1, $sub_pos);
         $sub_pos++;
         $cur_ct['next_s'] = $sub_ct['next_s'];
+        $cur_ct['ps'] = $sub_ct['ps'];
       }
     }
     return $lct;
@@ -149,6 +151,15 @@ class ARC2_PoshRdfExtractor extends ARC2_RDFExtractor {
       if (!isset($ns[$m[1]])) continue;
       if (preg_match('/^rdf-(s|p|o|o-(xml|dateTime|float|integer|boolean))$/', $val)) continue;
       $r[] = $ns[$m[1]] . $m[2];
+    }
+    /* try other attributes */
+    if (!$r) {
+      foreach (array('href uri', 'title') as $k) {
+        if (isset($n['a'][$k])) {
+          $r[] = $n['a'][$k];
+          break;
+        }
+      }
     }
     return $r;
   }

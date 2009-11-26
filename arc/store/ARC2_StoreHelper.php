@@ -48,7 +48,7 @@ class ARC2_StoreHelper extends ARC2_Class {
             else {
               $t_tbls = $this->store->getTables();
               foreach ($t_tbls as $t_tbl) {
-                if (preg_match('/^triple_/', $t_tbl) && !preg_match('/^triple_backup/', $t_tbl)) {
+                if (preg_match('/^triple_/', $t_tbl)) {
                   foreach (array('s', 'p', 'o', 'o_lang_dt') as $t_col) {
                     $sub_sql = "UPDATE " . $this->store->getTablePrefix() . $t_tbl . " SET " . $t_col . " = " . $new_id . " WHERE " . $t_col . " = " . $row['id'];
                     $sub_r = mysql_query($sub_sql, $con);

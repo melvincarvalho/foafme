@@ -1,11 +1,11 @@
 <?php
-/*
-homepage: http://arc.semsol.org/
-license:  http://arc.semsol.org/license
-
-function: format detection
-author:   Benjamin Nowack
-version:  2008-07-17 (Addition: Support for CrunchBase JSON)
+/**
+ * ARC2 format detection function
+ *
+ * @author Benjamin Nowack <bnowack@semsol.com>
+ * @license http://arc.semsol.org/license
+ * @package ARC2
+ * @version 2009-10-16
 */
 
 function ARC2_getFormat($v, $mtype = '', $ext = '') {
@@ -16,7 +16,15 @@ function ARC2_getFormat($v, $mtype = '', $ext = '') {
   $r = (!$r && preg_match('/\/(x\-)?turtle/', $mtype)) ? 'turtle' : $r;
   $r = (!$r && preg_match('/\/rdf\+n3/', $mtype)) ? 'n3' : $r;
   /* xml sniffing */
-  if (!$r && preg_match('/^\s*\<[^\s]/s', $v) && (preg_match('/\<\/[a-z0-9\_\:\-]+\>/i', $v) || preg_match('/\sxmlns\:?/', $v))) {
+  if (
+    !$r &&
+    /* starts with angle brackets */
+    preg_match('/^\s*\<[^\s]/s', $v) &&
+    /* has an xmlns:* declaration or a matching pair of tags */
+    (preg_match('/\sxmlns\:?/', $v) || preg_match('/\<([^\s]+).+\<\/\\1\>/s', $v)) &&
+    /* not a typical ntriples/turtle/n3 file */
+    !preg_match('/\.\s*$/s', $v)
+  ) {
     while (preg_match('/^\s*\<\?xml[^\r\n]+\?\>\s*/s', $v)) {
       $v = preg_replace('/^\s*\<\?xml[^\r\n]+\?\>\s*/s', '', $v);
     }
@@ -53,7 +61,7 @@ function ARC2_getFormat($v, $mtype = '', $ext = '') {
   $r = (!$r && preg_match('/^(ttl)$/', $ext)) ? 'turtle' : $r;
   $r = (!$r && preg_match('/^(n3)$/', $ext)) ? 'n3' : $r;
   /* ntriples */
-  $r = (!$r && preg_match('/^\s*(_:|<).+?\s+<[^>]+?>\s+\S.+?\s*\.\s*$/m', $v)) ? 'ntriples' : $r;
+  $r = (!$r && preg_match('/^\s*(_:|<).+?\s+<[^>]+?>\s+\S.+?\s*\.\s*$/sm', $v)) ? 'ntriples' : $r;
   $r = (!$r && preg_match('/^(nt)$/', $ext)) ? 'ntriples' : $r;
   return $r;
 }

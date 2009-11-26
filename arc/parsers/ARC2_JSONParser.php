@@ -5,7 +5,7 @@ license:  http://arc.semsol.org/license
 
 class:    ARC2 JSON Parser
 author:   Benjamin Nowack
-version:  2008-07-17
+version:  2009-02-12 Tweak: "null" is now supported by extractValue
 */
 
 ARC2::inc('RDFParser');
@@ -50,6 +50,7 @@ class ARC2_JSONParser extends ARC2_RDFParser {
       $doc .= $d;
     }
     $this->reader->closeStream();
+    unset($this->reader);
     $doc = preg_replace('/^[^\{]*(.*\})[^\}]*$/is', '\\1', $doc);
     $this->unparsed_code = $doc;
     list($this->struct, $rest) = $this->extractObject($doc);
@@ -99,6 +100,12 @@ class ARC2_JSONParser extends ARC2_RDFParser {
   
   function extractValue($v) {
     if ($r = $this->x('\,', $v)) $v = $r[1];
+    if ($sub_r = $this->x('null', $v)) {
+      return array(null, $sub_r[1]);
+    }
+    if ($sub_r = $this->x('([0-9\.]+)', $v)) {
+      return array($sub_r[1], $sub_r[2]);
+    }
     if ($sub_r = $this->x('\"', $v)) {
       $rest = $sub_r[1];
       if (preg_match('/^([^\x5c]*|.*[^\x5c]|.*\x5c{2})\"(.*)$/sU', $rest, $m)) {
@@ -109,6 +116,10 @@ class ARC2_JSONParser extends ARC2_RDFParser {
   }
   
   /*  */
+
+  function getObject() {
+    return $this->v('struct', array());
+  }
   
   function getTriples() {
     return $this->v('triples', array());
@@ -122,7 +133,7 @@ class ARC2_JSONParser extends ARC2_RDFParser {
     //echo str_replace($this->base, '', "-----\n adding $s / $p / $o\n-----\n");
     $t = array('s' => $s, 'p' => $p, 'o' => $o, 's_type' => $s_type, 'o_type' => $o_type, 'o_datatype' => $o_dt, 'o_lang' => $o_lang);
     if ($this->skip_dupes) {
-      $h = md5(print_r($t, 1));
+      $h = md5(serialize($t));
       if (!isset($this->added_triples[$h])) {
         $this->triples[$this->t_count] = $t;
         $this->t_count++;

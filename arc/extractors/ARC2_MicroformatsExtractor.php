@@ -25,12 +25,15 @@ class ARC2_MicroformatsExtractor extends ARC2_PoshRdfExtractor {
     $this->terms = $this->getTerms();
     $this->ns_prefix = 'mf';
     $this->a['ns']['mf'] = 'http://poshrdf.org/ns/mf#';
+    $this->caller->detected_formats['posh-rdf'] = 1;
   }
 
   /*  */
   
   function preProcessNode($n) {
+    if (!$n) return $n;
     /* remove existing poshRDF hooks */
+    if (!is_array($n['a'])) $n['a'] = array();
     $n['a']['class'] = isset($n['a']['class']) ? preg_replace('/\s?rdf\-(s|p|o|o-xml)/', '', $n['a']['class']): '';
     if (!isset($n['a']['rel'])) $n['a']['rel'] = '';
     /* inject poshRDF hooks */
@@ -77,6 +80,7 @@ class ARC2_MicroformatsExtractor extends ARC2_PoshRdfExtractor {
       'affiliation' => array('s', 'o', 'scope' => array('hresume')),
       'author' => array('s', 'o', 'scope' => array('hentry')),
       'bday' => array('o', 'scope' => array('vcard')),
+      'bio' => array('o', 'scope' => array('vcard')),
       'best' => array('o', 'scope' => array('hreview')),
       'bookmark' => array('o', 'scope' => array('_doc', 'hentry', 'hreview')),
       'class' => array('o', 'scope' => array('vcard', 'vevent')),

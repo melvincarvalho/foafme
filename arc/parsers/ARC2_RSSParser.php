@@ -53,7 +53,7 @@ class ARC2_RSSParser extends ARC2_LegacyXMLParser {
   function addT($t) {
     //if (!isset($t['o_datatype']))
     if ($this->skip_dupes) {
-      $h = md5(print_r($t, 1));
+      $h = md5(serialize($t));
       if (!isset($this->added_triples[$h])) {
         $this->triples[$this->t_count] = $t;
         $this->t_count++;
@@ -155,6 +155,7 @@ class ARC2_RSSParser extends ARC2_LegacyXMLParser {
       /* val */
       $v = $info['cdata'];
       if (!$v) $v = $this->v('url', '', $info['a']);
+      if (!$v) $v = $this->v('href', '', $info['a']);
       /* prop */
       if ($k) {
         /* enclosure handling */

@@ -5,7 +5,7 @@ license:  http://arc.semsol.org/license
 
 class:    ARC2 Atom Parser
 author:   Benjamin Nowack
-version:  2008-09-27
+version:  2009-04-21 (Addition: support for link types)
 */
 
 ARC2::inc('LegacyXMLParser');
@@ -53,7 +53,8 @@ class ARC2_AtomParser extends ARC2_LegacyXMLParser {
   function addT($t) {
     //if (!isset($t['o_datatype']))
     if ($this->skip_dupes) {
-      $h = md5(print_r($t, 1));
+      //$h = md5(print_r($t, 1));
+      $h = md5(serialize($t));
       if (!isset($this->added_triples[$h])) {
         $this->triples[$this->t_count] = $t;
         $this->t_count++;
@@ -84,9 +85,10 @@ class ARC2_AtomParser extends ARC2_LegacyXMLParser {
     $index = $this->getNodeIndex();
     //print_r($index);
     $this->rdf = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
-    $this->atom = 'http://www.w3.org/2005/atom';
+    $this->atom = 'http://www.w3.org/2005/Atom';
     $this->rss = 'http://purl.org/rss/1.0/';
     $this->dc = 'http://purl.org/dc/elements/1.1/';
+    $this->sioc = 'http://rdfs.org/sioc/ns#';
     $this->dct = 'http://purl.org/dc/terms/';
     $this->content = 'http://purl.org/rss/1.0/modules/content/';
     $this->enc = 'http://purl.oclc.org/net/rss_2.0/enc#';
@@ -129,19 +131,20 @@ class ARC2_AtomParser extends ARC2_LegacyXMLParser {
   }
   
   function extractChannel($els) {
-    $res = array($this->rdf . 'type' => array(array('value' => $this->rss . 'channel', 'type' => 'uri')));
-    $res = array_merge($res, $this->extractProps($els, 'channel'));
-    return array($res[$this->rss . 'link'][0]['value'] => $res);
+    list($props, $sub_index) = $this->extractProps($els, 'channel');
+    $uri = $props[$this->rss . 'link'][0]['value'];
+    return ARC2::getMergedIndex(array($uri => $props), $sub_index);
   }
   
   function extractItem($els) {
-    $res = array($this->rdf . 'type' => array(array('value' => $this->rss . 'item', 'type' => 'uri')));
-    $res = array_merge($res, $this->extractProps($els, 'item'));
-    return array($res[$this->rss . 'link'][0]['value'] => $res);
+    list($props, $sub_index) = $this->extractProps($els, 'item');
+    $uri = $props[$this->rss . 'link'][0]['value'];
+    return ARC2::getMergedIndex(array($uri => $props), $sub_index);
   }
   
   function extractProps($els, $container) {
-    $res = array();
+    $r = array($this->rdf . 'type' => array(array('value' => $this->rss . $container, 'type' => 'uri')));
+    $sub_index = array();
     foreach ($els as $info) {
       /* key */
       $tag = $info['tag'];
@@ -174,12 +177,27 @@ class ARC2_AtomParser extends ARC2_LegacyXMLParser {
             }
           }
         }
+        /* link handling */
+        elseif ($k == $this->rss . 'link') {
+          if ($link_type = $this->v('type', '', $info['a'])) {
+            $k2 = $this->dc . 'format';
+            if (!isset($sub_index[$v])) $sub_index[$v] = array();
+            if (!isset($sub_index[$v][$k2])) $sub_index[$v][$k2] = array();
+            $sub_index[$v][$k2][] = array('value' => $link_type, 'type' => 'literal');
+          }
+        }
         /* author handling */
         elseif ($k == $this->dc . 'creator') {
           $sub_nodes = $this->node_index[$info['id']];
           foreach ($sub_nodes as $sub_pos => $sub_info) {
             if ($sub_info['tag'] == 'name') {
               $v = trim($sub_info['cdata']);
+            }
+            if ($sub_info['tag'] == 'uri') {
+              $k2 = $this->sioc . 'has_creator';
+              $v2 = trim($sub_info['cdata']);
+              if (!isset($r[$k2])) $r[$k2] = array();
+              $r[$k2][] = array('value' => $v2, 'type' => 'uri');
             }
           }
         }
@@ -204,11 +222,11 @@ class ARC2_AtomParser extends ARC2_LegacyXMLParser {
             }
           }
         }
-        if (!isset($res[$k])) $res[$k] = array();
-        $res[$k][] = array('value' => $v, 'type' => in_array($k, $this->dt_props) || !preg_match('/^[a-z0-9]+\:[^\s]+$/is', $v) ? 'literal' : 'uri');
+        if (!isset($r[$k])) $r[$k] = array();
+        $r[$k][] = array('value' => $v, 'type' => in_array($k, $this->dt_props) || !preg_match('/^[a-z0-9]+\:[^\s]+$/is', $v) ? 'literal' : 'uri');
       }
     }
-    return $res;
+    return array($r, $sub_index);
   }
   
   function initXMLParser() {
@@ -224,9 +242,6 @@ class ARC2_AtomParser extends ARC2_LegacyXMLParser {
       $this->xml_parser =& $parser;
     }
   }
-
-  /*  */
-
 
   /*  */
 

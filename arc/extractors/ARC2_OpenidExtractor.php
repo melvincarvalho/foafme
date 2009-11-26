@@ -8,7 +8,7 @@ author:   Benjamin Nowack
 version:  2007-10-08
 */
 
-ARC2::inc('MicroformatsExtractor');
+ARC2::inc('RDFExtractor');
 
 class ARC2_OpenidExtractor extends ARC2_RDFExtractor {
 

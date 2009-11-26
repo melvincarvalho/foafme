@@ -1,28 +1,29 @@
 <?php
 /**
- * ARC2 Remote RDF Store
+ * ARC2 Memory Store
  *
  * @author Benjamin Nowack <bnowack@semsol.com>
  * @license http://arc.semsol.org/license
  * @package ARC2
- * @version 2009-10-16
+ * @version 2009-08-13
 */
 
 ARC2::inc('Class');
 
-class ARC2_RemoteStore extends ARC2_Class {
+class ARC2_MemStore extends ARC2_Class {
 
   function __construct($a = '', &$caller) {
     parent::__construct($a, $caller);
   }
   
-  function ARC2_RemoteStore($a = '', &$caller) {
+  function ARC2_MemStore($a = '', &$caller) {
     $this->__construct($a, $caller);
-    $this->is_remote = 1;
+    $this->is_mem = 1;
   }
 
   function __init() {
     parent::__init();
+    $this->data = array();
   }
 
   /*  */
@@ -35,23 +36,30 @@ class ARC2_RemoteStore extends ARC2_Class {
   
   /*  */
   
-  function reset() {}
-  
-  function drop() {}
-  
-  function insert($doc, $g, $keep_bnode_ids = 0) {
-    return $this->query('INSERT INTO <' . $g . '> { ' . $this->toNTriples($doc, '', 1) . ' }');
+  function reset() {
+    $this->data = array();
   }
   
-  function delete($doc, $g) {
-    if (!$doc) {
-      return $this->query('DELETE FROM <' . $g . '>');
-    }
-    else {
-      return $this->query('DELETE FROM <' . $g . '> { ' . $this->toNTriples($doc, '', 1) . ' }');
-    }
+  function drop() {
+    $this->reset();
+  }
+
+  /*  */
+
+  function insert($doc, $g = 'http://localhost/') {
+    $index = $this->v($g, array(), $this->data);
+    $this->data[$g] = ARC2::getMergedIndex($index, $this->toIndex($doc));
   }
   
+  /*  */
+  /*  */
+
+  
+  function delete($doc, $g = 'http://localhost/') {
+    $index = $this->v($g, array(), $this->data);
+    $this->data[$g] = ARC2::getCleanedIndex($index, $this->toIndex($doc));
+  }
+
   function replace($doc, $g, $doc_2) {
     return array($this->delete($doc, $g), $this->insert($doc_2, $g));
   }
@@ -67,7 +75,7 @@ class ARC2_RemoteStore extends ARC2_Class {
     $t1 = ARC2::mtime();
     if (!$errs = $p->getErrors()) {
       $qt = $infos['query']['type'];
-      $r = array('query_type' => $qt, 'result' => $this->runQuery($q, $qt, $infos));
+      $r = array('query_type' => $qt, 'result' => $this->runQuery($q, $qt));
     }
     else {
       $r = array('result' => '');
@@ -82,23 +90,28 @@ class ARC2_RemoteStore extends ARC2_Class {
       return $this->v('rows', array(), $r['result']);
     }
     if ($result_format == 'row') {
-      if (!isset($r['result']['rows'])) return array();
       return $r['result']['rows'] ? $r['result']['rows'][0] : array();
     }
     return $r;
   }
 
-  function runQuery($q, $qt = '', $infos = '') {
+  function runQuery($q, $qt = '') {
     /* ep */
     $ep = $this->v('remote_store_endpoint', 0, $this->a);
     if (!$ep) return false;
     /* prefixes */
-    $q = $this->completeQuery($q);
-    /* custom handling */
-    $mthd = 'run' . $this->camelCase($qt) . 'Query';
-    if (method_exists($this, $mthd)) {
-      return $this->$mthd($q, $infos);
+    $ns = isset($this->a['ns']) ? $this->a['ns'] : array();
+    $added_prefixes = array();
+    $prologue = '';
+    foreach ($ns as $k => $v) {
+      $k = rtrim($k, ':');
+      if (in_array($k, $added_prefixes)) continue;
+      if (preg_match('/(^|\s)' . $k . ':/s', $q) && !preg_match('/PREFIX\s+' . $k . '\:/is', $q)) {
+        $prologue .=  "\n" . 'PREFIX ' . $k . ': <' . $v . '>';
+      }
+      $added_prefixes[] = $k;
     }
+    $q = $prologue . "\n" . $q;
     /* http verb */
     $mthd = in_array($qt, array('load', 'insert', 'delete')) ? 'POST' : 'GET';
     /* reader */
@@ -181,15 +194,5 @@ class ARC2_RemoteStore extends ARC2_Class {
     $this->resource_labels[$res] = $r;
     return $r;
   }
-  
-  function getDomains($p) {
-    $r = array();
-    foreach($this->query('SELECT DISTINCT ?type WHERE {?s <' . $p . '> ?o ; a ?type . }', 'rows') as $row) {
-      $r[] = $row['type'];
-    }
-    return $r;
-  }
 
-  /*  */
-  
 }

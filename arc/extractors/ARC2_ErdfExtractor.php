@@ -5,7 +5,7 @@ license:  http://arc.semsol.org/license
 
 class:    ARC2 eRDF Extractor (w/o link title generation)
 author:   Benjamin Nowack
-version:  2008-05-16 (Fix: Anchors didn't generate label triples)
+version:  2009-02-09 (Tweak: getRootNode returns 1st node if html tag is not found)
 */
 
 ARC2::inc('RDFExtractor');
@@ -49,7 +49,7 @@ class ARC2_ErdfExtractor extends ARC2_RDFExtractor {
         return $node;
       }
     }
-    return 0;
+    return $this->nodes[0];
   }
   
   function getNamespaces() {

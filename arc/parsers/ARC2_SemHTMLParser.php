@@ -5,8 +5,7 @@ license:  http://arc.semsol.org/license
 
 class:    ARC2 RDF/XML Parser
 author:   Benjamin Nowack
-version:  2008-11-18 (Addition: Support for RDFa detection via xmlns
-                      Tweak: adjusted default_sem_html_formats)
+version:  2009-02-09 (Addition: Support for RDFa detection via typeof/property/about)
 */
 
 ARC2::inc('LegacyXMLParser');
@@ -73,7 +72,7 @@ class ARC2_SemHTMLParser extends ARC2_LegacyXMLParser {
       $t['o'] = html_entity_decode($t['o']);
     }
     if ($this->skip_dupes) {
-      $h = md5(print_r($t, 1));
+      $h = md5(serialize($t));
       if (!isset($this->added_triples[$h])) {
         $this->triples[$this->t_count] = $t;
         $this->t_count++;
@@ -122,6 +121,7 @@ class ARC2_SemHTMLParser extends ARC2_LegacyXMLParser {
       $rest = $this->processData($rest . $d);
     }
     $this->reader->closeStream();
+    unset($this->reader);
     return $this->done();
   }
   
@@ -168,10 +168,13 @@ class ARC2_SemHTMLParser extends ARC2_LegacyXMLParser {
           $this->cur_tag = '';
         }
         /* eRDF detection */
-        if (isset($sub_r['a']['profile m']) && in_array('http://purl.org/NET/erdf/profile', $sub_r['a']['profile m'])) $this->detected_formats['erdf'] = 1;
+        if (!isset($this->detected_formats['erdf']) && isset($sub_r['a']['profile m']) && in_array('http://purl.org/NET/erdf/profile', $sub_r['a']['profile m'])) $this->detected_formats['erdf'] = 1;
+        /* poshRDF detection */
+        if (!isset($this->detected_formats['posh-rdf']) && isset($sub_r['a']['class m']) && in_array('rdf-p', $sub_r['a']['class m'])) $this->detected_formats['posh-rdf'] = 1;
         /* RDFa detection */
-        if (($this->cur_tag == 'html') && isset($sub_r['a']['version m']) && in_array('XHTML+RDFa', $sub_r['a']['version m'])) $this->detected_formats['rdfa'] = 1;
-        if (isset($sub_r['a']['xmlns']) && $sub_r['a']['xmlns']) $this->detected_formats['rdfa'] = 1;
+        if (!isset($this->detected_formats['rdfa']) && ($this->cur_tag == 'html') && isset($sub_r['a']['version m']) && in_array('XHTML+RDFa', $sub_r['a']['version m'])) $this->detected_formats['rdfa'] = 1;
+        if (!isset($this->detected_formats['rdfa']) && isset($sub_r['a']['xmlns']) && $sub_r['a']['xmlns'] && $this->isRDFNSDecl($sub_r['a']['xmlns'])) $this->detected_formats['rdfa'] = 1;
+        if (!isset($this->detected_formats['rdfa']) && array_intersect(array('about', 'typeof', 'property'), array_keys($sub_r['a']))) $this->detected_formats['rdfa'] = 1;
       }
       elseif ((list($sub_r, $sub_v) = $this->xClose($sub_v)) && $sub_r) {
         if (preg_match('/^(area|base|br|col|frame|hr|input|img|link|xmeta|param)$/', $sub_r['tag'])) {
@@ -193,7 +196,16 @@ class ARC2_SemHTMLParser extends ARC2_LegacyXMLParser {
   }
 
   /*  */
-  
+
+  function isRDFNSDecl($ns) {
+    foreach ($ns as $k => $v) {
+      if ($k) return 1;
+    }
+    return 0;
+  }
+
+  /*  */
+
   function xComment($v) {
     if ($r = $this->x('\<\!\-\-', $v)) {
       if ($sub_r = $this->x('(.*)\-\-\>', $r[1], 'Us')) {

@@ -5,9 +5,7 @@ license:  http://arc.semsol.org/license
 
 class:    ARC2 RDF Store
 author:   Benjamin Nowack
-version:  2008-11-14 (Addition: support for store_triggers_path config option
-                      Fix: mysql_* functions explicitly use the store's DB connection, Thanks to Davide Principi
-                      )
+version:  2009-02-13 (Tweak: removed Inferencer calls)
 */
 
 ARC2::inc('Class');
@@ -28,6 +26,8 @@ class ARC2_Store extends ARC2_Class {
     $this->triggers = $this->v('store_triggers', array(), $this->a);
     $this->queue_queries = $this->v('store_queue_queries', 0, $this->a);
     $this->is_win = (strtolower(substr(PHP_OS, 0, 3)) == 'win') ? true : false;
+    $this->max_split_tables = $this->v('store_max_split_tables', 10, $this->a);
+    $this->split_predicates = $this->v('store_split_predicates', array(), $this->a);
   }
 
   /*  */
@@ -59,26 +59,27 @@ class ARC2_Store extends ARC2_Class {
     if (!mysql_select_db($this->a['db_name'], $db_con)) {
       return $this->addError(mysql_error($db_con));
     }
-    if ($this->getDBVersion() >= '04-01-00') {
+    if (preg_match('/^utf8/', $this->getCollation())) {
       mysql_query("SET NAMES 'utf8'", $db_con);
     }
     return true;
   }
   
-  function getDBCon() {
-    if (!isset($this->a['db_con'])) {
+  function getDBCon($force = 0) {
+    if ($force || !isset($this->a['db_con'])) {
       if (!$this->createDBCon()) {
         return false;
       }
     }
+    if (!$force && !@mysql_thread_id($this->a['db_con'])) return $this->getDBCon(1);
     return $this->a['db_con'];
   }
   
   function closeDBCon() {
     if ($this->v('db_con', false, $this->a)) {
       @mysql_close($this->a['db_con']);
-      unset($this->a['db_con']);
     }
+    unset($this->a['db_con']);
   }
   
   function getDBVersion() {
@@ -89,10 +90,32 @@ class ARC2_Store extends ARC2_Class {
   }
   
   /*  */
+  
+  function getCollation() {
+    $rs = mysql_query('SHOW TABLE STATUS LIKE "' . $this->getTablePrefix(). 'setting"', $this->getDBCon());
+    return ($rs && ($row = mysql_fetch_array($rs)) && isset($row['Collation'])) ? $row['Collation'] : '';
+  }
+
+  function getColumnType() {
+    if (!$this->v('column_type')) {
+      $tbl = $this->getTablePrefix() . 'g2t';
+      $rs = mysql_query('SHOW COLUMNS FROM ' . $tbl . ' LIKE "t"', $this->getDBCon());
+      $row = $rs ? mysql_fetch_array($rs) : array('Type' => 'mediumint');
+      $this->column_type = preg_match('/mediumint/', $row['Type']) ? 'mediumint' : 'int';
+    }
+    return $this->column_type;
+  }
+
+  /*  */
+
+  function countDBProcesses() {
+    return ($rs = mysql_query('SHOW PROCESSLIST', $this->getDBCon())) ? mysql_num_rows($rs) : 0;
+  }
+  
+  /*  */
 
   function getTables() {
     return array('triple', 'g2t', 'id2val', 's2val', 'o2val', 'setting');
-    return array('triple', 'triple_backup', 'g2t', 'id2val', 's2val', 'o2val', 'setting');
   }  
   
   /*  */
@@ -114,6 +137,19 @@ class ARC2_Store extends ARC2_Class {
       $mgr = new ARC2_StoreTableManager($this->a, $this);
       $mgr->createTables();
     }
+  }
+
+  function extendColumns() {
+    ARC2::inc('StoreTableManager');
+    $mgr = new ARC2_StoreTableManager($this->a, $this);
+    $mgr->extendColumns();
+    $this->column_type = 'int';
+  }
+
+  function splitTables() {
+    ARC2::inc('StoreTableManager');
+    $mgr = new ARC2_StoreTableManager($this->a, $this);
+    $mgr->splitTables();
   }
   
   /*  */
@@ -199,6 +235,14 @@ class ARC2_Store extends ARC2_Class {
     $con = $this->getDBCon();
     $tbls = $this->getTables();
     $prefix = $this->getTablePrefix();
+    /* remove split tables */
+    $ps = $this->getSetting('split_predicates', array());
+    foreach ($ps as $p) {
+      $tbl = 'triple_' . abs(crc32($p));
+      mysql_query('DROP TABLE ' . $prefix . $tbl, $con);
+    }
+    $this->removeSetting('split_predicates');
+    /* truncate tables */
     foreach ($tbls as $tbl) {
       if ($keep_settings && ($tbl == 'setting')) {
         continue;
@@ -221,7 +265,7 @@ class ARC2_Store extends ARC2_Class {
     $infos = array('query' => array('url' => $g, 'target_graph' => $g));
     ARC2::inc('StoreLoadQueryHandler');
     $h =& new ARC2_StoreLoadQueryHandler($this->a, $this);
-    $r = $h->runQuery($infos, $doc, $keep_bnode_ids); 
+    $r = $h->runQuery($infos, $doc, $keep_bnode_ids);
     $this->processTriggers('insert', $infos);
     return $r;
   }
@@ -333,8 +377,16 @@ class ARC2_Store extends ARC2_Class {
     $cls = 'ARC2_Store' . ucfirst($type) . 'QueryHandler';
     $h =& new $cls($this->a, $this);
     $ticket = 1;
+    $r = array();
     if ($q && ($type == 'select')) $ticket = $this->getQueueTicket($q);
-    $r = $ticket ? $h->runQuery($infos, $keep_bnode_ids) : array();
+    if ($ticket) {
+      if ($type == 'load') {/* the LoadQH supports raw data as 2nd parameter */
+        $r = $h->runQuery($infos, '', $keep_bnode_ids);
+      }
+      else {
+        $r = $h->runQuery($infos, $keep_bnode_ids);
+      }
+    }
     if ($q && ($type == 'select')) $this->removeQueueTicket($ticket);
     $trigger_r = $this->processTriggers($type, $infos);
     return $r;
@@ -366,11 +418,10 @@ class ARC2_Store extends ARC2_Class {
   
   /*  */
   
-  function getTermID($val, $term = '', $id_col = 'cid') {
+  function getTermID($val, $term = '') {
     $tbl = preg_match('/^(s|o)$/', $term) ? $term . '2val' : 'id2val';
-    $col = preg_match('/^(s|o)$/', $term) ? $id_col : 'id';
     $con = $this->getDBCon();
-    $sql = "SELECT " . $col . " AS id FROM " . $this->getTablePrefix() . $tbl . " WHERE val = BINARY '" . mysql_real_escape_string($val, $con) . "' LIMIT 1";
+    $sql = "SELECT id FROM " . $this->getTablePrefix() . $tbl . " WHERE val = BINARY '" . mysql_real_escape_string($val, $con) . "' LIMIT 1";
     if (($rs = mysql_query($sql, $con)) && mysql_num_rows($rs) && ($row = mysql_fetch_array($rs))) {
       return $row['id'];
     }
@@ -423,30 +474,6 @@ class ARC2_Store extends ARC2_Class {
 
   /*  */
 
-  function isConsolidated($after = 0) {
-    return $this->getSetting('store_consolidation_uts') > $after ? 1 : 0;
-  }
-  
-  function consolidate($res = '') {
-    ARC2::inc('StoreInferencer');
-    $c = new ARC2_StoreInferencer($this->a, $this);
-    return $c->consolidate($res);
-  }
-  
-  function consolidateIFP($ifp, $res = '') {
-    ARC2::inc('StoreInferencer');
-    $c = new ARC2_StoreInferencer($this->a, $this);
-    return $c->consolidateIFP($ifp, $res);
-  }
-  
-  function inferLabels($res = '') {
-    ARC2::inc('StoreInferencer');
-    $c = new ARC2_StoreInferencer($this->a, $this);
-    return $c->inferLabels($res);
-  }
-  
-  /*  */
-  
   function changeNamespaceURI($old_uri, $new_uri) {
     ARC2::inc('StoreHelper');
     $c = new ARC2_StoreHelper($this->a, $this);
@@ -460,7 +487,9 @@ class ARC2_Store extends ARC2_Class {
     if (isset($this->resource_labels[$res])) return $this->resource_labels[$res];
     if (!preg_match('/^[a-z0-9\_]+\:[^\s]+$/si', $res)) return $res;/* literal */
     $ps = $this->getLabelProps();
-    if ($this->getSetting('store_label_properties', '-') != md5(print_r($ps, 1))) $this->inferLabelProps($ps);
+    if ($this->getSetting('store_label_properties', '-') != md5(serialize($ps))) {
+      $this->inferLabelProps($ps);
+    }
     //$sub_q .= $sub_q ? ' || ' : '';
     //$sub_q .= 'REGEX(str(?p), "(last_name|name|fn|title|label)$", "i")';
     $q = 'SELECT ?label WHERE { <' . $res . '> ?p ?label . ?p a <http://semsol.org/ns/arc#LabelProperty> } LIMIT 3';
@@ -475,6 +504,7 @@ class ARC2_Store extends ARC2_Class {
     }
     $r = $r ? $r : preg_replace("/^(.*[\/\#])([^\/\#]+)$/", '\\2', str_replace('#self', '', $res));
     $r = str_replace('_', ' ', $r);
+    $r = preg_replace('/([a-z])([A-Z])/e', '"\\1 " . strtolower("\\2")', $r);
     $this->resource_labels[$res] = $r;
     return $r;
   }
@@ -488,6 +518,7 @@ class ARC2_Store extends ARC2_Class {
         'http://purl.org/dc/elements/1.1/title',
         'http://purl.org/rss/1.0/title',
         'http://www.w3.org/2004/02/skos/core#prefLabel',
+        'http://xmlns.com/foaf/0.1/nick',
       )
     );
   }
@@ -499,7 +530,7 @@ class ARC2_Store extends ARC2_Class {
       $sub_q .= ' <' . $p . '> a <http://semsol.org/ns/arc#LabelProperty> . ';
     }
     $this->query('INSERT INTO <label-properties> { ' . $sub_q. ' }');
-    $this->setSetting('store_label_properties', md5(print_r($ps, 1)));
+    $this->setSetting('store_label_properties', md5(serialize($ps)));
   }
   
   /*  */
@@ -521,7 +552,12 @@ class ARC2_Store extends ARC2_Class {
     }
     return $r;
   }
-  
+
+  function getPredicateRange($p) {
+    $row = $this->query('SELECT ?val WHERE {<' . $p . '> rdfs:range ?val . } LIMIT 1', 'row');
+    return $row ? $row['val'] : '';
+  }
+
   /*  */
   
   function logQuery($q) {
