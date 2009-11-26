@@ -25,7 +25,7 @@
 
 <body id="tools_scrollable">
 	<div id="wrap">	
-<a href="index.php">Home</a> | <a href="http://groups.google.com/group/foafme?lnk=srg&amp;hl=en&amp;ie=UTF-8&amp;oe=utf-8">Mailing List</a> 
+<a href="index.php">Home</a> | <a href="about.php">About</a> | <a href="documentation.php">Documentation</a> | <a href="downloads.php">Downloads</a> | <a href="http://groups.google.com/group/foafme?lnk=srg&amp;hl=en&amp;ie=UTF-8&amp;oe=utf-8">Mailing List</a> 
 
 <?php
 //if (!empty($_SESSION['auth']) && $_SESSION['auth']['subjectAltName']) {

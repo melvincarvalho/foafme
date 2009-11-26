@@ -25,6 +25,7 @@
 
 // Start a session
 session_start();
+$loggedIn = false;
 
 
 // Include libraries
@@ -55,15 +56,15 @@ $idp_certificate = "foafssl.org-cert.pem";
 $webid = "";
 
 /* Reconstructs the signed message: the URI except the 'sig' parameter */
-$full_uri = ($_SERVER["HTTPS"] == "on" ? "https" : "http")
+$full_uri = ((isset($_SERVER["HTTPS"]) && ($_SERVER["HTTPS"] == "on")) ? "https" : "http")
 . "://" . $_SERVER["HTTP_HOST"]
-. ($_SERVER["SERVER_PORT"] != ($_SERVER["HTTPS"] == "on" ? 443 : 80) ? ":".$_SERVER["SERVER_PORT"] : "")
+. ($_SERVER["SERVER_PORT"] != ((isset($_SERVER["HTTPS"]) && ($_SERVER["HTTPS"] == "on")) ? 443 : 80) ? ":".$_SERVER["SERVER_PORT"] : "")
 . $_SERVER["REQUEST_URI"];
 
-$signed_info = substr($full_uri, 0, -5-strlen(urlencode($_GET["sig"])));
+$signed_info = substr($full_uri, 0, -5-strlen(urlencode(isset($_GET["sig"]) ? $_GET["sig"] : NULL)));
 
 /* Extracts the signature */
-$signature = base64_decode($_GET["sig"]);
+$signature = base64_decode(isset($_GET["sig"]) ? $_GET["sig"] : NULL);
 
 /* Only rsa-sha1 is supported at the moment. */
 if ($sigalg == "rsa-sha1") {
@@ -82,6 +83,9 @@ if ($sigalg == "rsa-sha1") {
         if ($verified == 1) {
                 // The verification was successful.
                 $webid = $_GET["webid"];
+		$agent = $_GET["webid"];
+		$loggedIn = true;
+
         } elseif ($verified == 0) {
                 // The signature didn't match.
                 $webid = "";
