@@ -21,6 +21,9 @@
  * -- Albert Einstein
  *
  */
+require_once('config.php');
+require_once('db.class.php');
+require_once('lib/libAuthentication.php');
 
 
 // Start a session
@@ -141,7 +144,7 @@ $webidbase = preg_replace('/#.*/', '', $webid);
 
 
         <link rel="stylesheet" href="css/jquery.tabs-ie.css" type="text/css" media="projection, screen" />
-
+        <link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
         <script type="text/javascript">
             // <!--

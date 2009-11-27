@@ -26,8 +26,8 @@
 //-----------------------------------------------------------------------------------------------------------------------------------
 
 // includes
-require_once('config.php');
-require_once('lib/libAuthentication.php');
+require_once('head.php');
+require_once('header.php');
 
 $auth = $_SESSION['auth'];
 

@@ -90,6 +90,7 @@
 
                 <!-- start security tab -->
                 <div id="security">Loading...
+                    <?php include ("tabsecurity.php"); ?>
                 </div>
                 <!-- end security tab -->
 
@@ -97,7 +98,6 @@
             <!-- end tabs container -->
 
             <script type="text/javascript"> $("#activity").load("tabactivity.php?webid=<?= $agent ?>");</script>
-            <script type="text/javascript"> $("#security").load("tabsecurity.php?webid=<?= $agent ?>");</script>
 
             <?php if ($agent) { ?>
             <? } else { ?>

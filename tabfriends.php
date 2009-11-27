@@ -35,10 +35,6 @@
 require_once('head.php');
 require_once('header.php');
 
-
-// Authenticate
-require_once('lib/libAuthentication.php');
-
 // init
 $friends = 2;
 

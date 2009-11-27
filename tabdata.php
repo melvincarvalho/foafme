@@ -24,9 +24,8 @@
  */
 
 // includes
-require_once('config.php');
-require_once('db.class.php');
-require_once('lib/libAuthentication.php');
+require_once('head.php');
+require_once('header.php');
 
 // set up db connection
 $db = new db_class();
@@ -38,7 +37,7 @@ $auth = $_SESSION['auth'];
 
 // get webid from db
 $res = $db->select(" select * from foaf where CONCAT('http://foaf.me/', username, '#me') = '$webid' or CONCAT('http://foaf.me/', username) = '$webid' ");
-while ($row = mysql_fetch_assoc($res)) {
+while ($row && $row = mysql_fetch_assoc($res)) {
     if (!empty($row) && !empty($row['rdf'])) {
         $rdf = $row['rdf'];
         $searchstring = '<?xml version="1.0"?>' . "\n";

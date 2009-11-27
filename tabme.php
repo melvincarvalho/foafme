@@ -25,7 +25,9 @@
 //
 //-----------------------------------------------------------------------------------------------------------------------------------
 
-require_once('lib/libAuthentication.php');
+require_once('head.php');
+require_once('header.php');
+
 
 $auth = isset($_SESSION['auth']) ? $_SESSION['auth'] : NULL;
 
