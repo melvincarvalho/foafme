@@ -140,7 +140,7 @@ $webidbase = preg_replace('/#.*/', '', $webid);
         <script type="text/javascript" src="js/jquery.json-1.3.js"></script>
 
 
-        <link rel="stylesheet" href="jquery.tabs-ie.css" type="text/css" media="projection, screen" />
+        <link rel="stylesheet" href="css/jquery.tabs-ie.css" type="text/css" media="projection, screen" />
 
 
         <script type="text/javascript">
