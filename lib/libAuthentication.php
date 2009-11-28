@@ -581,43 +581,114 @@ function get_agent($agenturi)
 	}
 }
 
+function setAuthenticatedWebID($webid)
+{
+	if (!is_null($webid))
+	{
+		$authSession = session_name();
+
+		if (isset($authSession))
+		{
+			if (session_start())
+			{
+				$_SESSION['libAuthentication_isAuthenticated'] = 1;
+				$_SESSION['libAuthentication_webid'] = $webid;
+				$_SESSION['libAuthentication_agent'] = $NULL;
+			}
+		}
+	}
+}
+
+function unsetAuthenticatedWebID()
+{
+	$authSession = session_name();
+
+	if (isset($authSession))
+	{
+		if (session_start())
+		{
+			$_SESSION['libAuthentication_isAuthenticated'] = 0;
+			$_SESSION['libAuthentication_webid'] = NULL;
+			$_SESSION['libAuthentication_agent'] = NULL;
+		}
+	}
+}
+
 function getAuth()
 {
-	if (!$_SERVER['HTTPS'])
-		return ( array( 'isAuthenticated'=>0 , 'authDiagnostic'=>'No client certificate supplied on an unsecure connection') );
+	$isAuthenticated = 0;
+	$foafuri = NULL;
+	$agent = NULL;
 
-	if (!$_SERVER['SSL_CLIENT_CERT'])
-		return ( array( 'isAuthenticated'=>0 , 'authDiagnostic'=>'No client certificate supplied') );
+	$authSession = session_name();
 
-	$certrsakey = openssl_pkey_get_public_hex();
+	if (isset($authSession))
+	{
+		if (session_start())
+		{
+			if ( (isset($_SESSION['libAuthentication_isAuthenticated'])) && ($_SESSION['libAuthentication_isAuthenticated']==1) )
+			{
+				if (isset($_SESSION['libAuthentication_webid']))
+				{
+					$isAuthenticated = 1;
+					$foafuri = isset($_SESSION['libAuthentication_webid'])?$_SESSION['libAuthentication_webid']:NULL;
+					$agent = isset($_SESSION['libAuthentication_agent'])?$_SESSION['libAuthentication_agent']:NULL;
+					print "previously logged in<br/>";
+				}
+			}
+		}
+	}
 
-	if (!$certrsakey)
-		return ( array( 'isAuthenticated'=>0 , 'authDiagnostic'=>'No RSA Key in the supplied client certificate') );
+	if ( ($isAuthenticated == 0) || (is_null($foafuri)) )
+	{
+		if (!$_SERVER['HTTPS'])
+			return ( array( 'isAuthenticated'=>0 , 'authDiagnostic'=>'No client certificate supplied on an unsecure connection') );
 
-	$result = array('certRSAKey'=>$certrsakey);
+		if (!$_SERVER['SSL_CLIENT_CERT'])
+			return ( array( 'isAuthenticated'=>0 , 'authDiagnostic'=>'No client certificate supplied') );
 
-	$san     = openssl_get_subjectAltName();
-	$foafuri = $san['URI'];
-//	$foafuri = 'http://www.w3.org/People/Berners-Lee/card#i';
-//  $foafuri = 'http://bblfish.net/people/henry/card#me';
-//	$foafuri = 'http://danbri.org/foaf.rdf#danbri';
-//	$foafuri = 'http://foafbuilder.qdos.com/people/melvster.com/foaf.rdf';
-//	$foafuri = 'http://test.foaf-ssl.org/certs/1235593768725.rdf#accnt';
-//	$foafuri = 'http://myopenlink.net/dataspace/person/kidehen#this';
+		$certrsakey = openssl_pkey_get_public_hex();
 
-	$result = safe_array_merge($result, array('subjectAltName'=>$foafuri));
+		if (!$certrsakey)
+			return ( array( 'isAuthenticated'=>0 , 'authDiagnostic'=>'No RSA Key in the supplied client certificate') );
 
-//	$foafrsakey = get_foaf_rsakey($foafuri);
-//	$result = array_merge($result, array('subjectAltNameRSAKey'=>$foafrsakey));
+		$result = array('certRSAKey'=>$certrsakey);
 
-	if ($agent = get_agent($foafuri))
+		$san     = openssl_get_subjectAltName();
+		$foafuri = $san['URI'];
+
+		//	$foafuri = 'http://www.w3.org/People/Berners-Lee/card#i';
+		//  $foafuri = 'http://bblfish.net/people/henry/card#me';
+		//	$foafuri = 'http://danbri.org/foaf.rdf#danbri';
+		//	$foafuri = 'http://foafbuilder.qdos.com/people/melvster.com/foaf.rdf';
+		//	$foafuri = 'http://test.foaf-ssl.org/certs/1235593768725.rdf#accnt';
+		//	$foafuri = 'http://myopenlink.net/dataspace/person/kidehen#this';
+
+		$result = safe_array_merge($result, array('subjectAltName'=>$foafuri));
+
+		//	$foafrsakey = get_foaf_rsakey($foafuri);
+		//	$result = array_merge($result, array('subjectAltNameRSAKey'=>$foafrsakey));
+	}
+
+	if (is_null($agent))
+	{
+		$agent = get_agent($foafuri);
+	}
+
+	if ($agent)
 	{
 		$result = safe_array_merge($result, $agent);
 
 		if ($agent['agent']['RSAKey'])
 		{
-			if ( equal_rsa_keys($certrsakey, $agent['agent']['RSAKey']) )
+			if ( ($isAuthenticated == 1) || (equal_rsa_keys($certrsakey, $agent['agent']['RSAKey'])) )
+			{
+				$_SESSION['libAuthentication_isAuthenticated'] = 1;
+				$_SESSION['libAuthentication_webid'] = $foafuri;
+				$_SESSION['libAuthentication_agent'] = $agent;
+
 				$result = safe_array_merge($result, array( 'isAuthenticated'=>1,  'authDiagnostic'=>'Client Certificate RSAkey matches SAN RSAkey'));
+			}
 			else
 				$result = safe_array_merge($result, array( 'isAuthenticated'=>0,  'authDiagnostic'=>'Client Certificate RSAkey does not match SAN RSAkey'));
 		}
