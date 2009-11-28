@@ -107,7 +107,7 @@
                     <p>Your FOAF file:</p>
                     <textarea id="rdf" name="rdf" cols="80" rows="20"></textarea>
                     <br/>
-                        <? echo $_SERVER['HTTP_HOST'] ?>/<input id="uri" value="" type="text" name="uri"> <button type="submit">Save!</button>
+                        <? echo $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']); ?>/<input id="username" value="" type="text" name="username"> <button type="submit">Save!</button>
 
                     <br/><br/>
                     <p style='display:none' id="saving">Saving will give you the <a href="http://esw.w3.org/topic/WebID">Web ID</a> = <span style="color:blue" id="displayname"></span></p>

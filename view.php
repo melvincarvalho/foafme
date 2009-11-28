@@ -29,38 +29,42 @@ require_once("config.php");
 require_once("db.class.php");
 require_once('lib/libAuthentication.php');
 
+// set up db
 $db = new db_class();
 $db->connect('localhost', $config['db_user'], $config['db_pwd'], $config['db_name']);
 
+// init
+$username = $_GET['username'];
+$URI = "http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/' . $username;
+$webid = $webid . '#me';
 
-function detect_ie()
-{
-    if (isset($_SERVER['HTTP_USER_AGENT']) && 
-    (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false))
+
+
+function detect_ie() {
+    if (isset($_SERVER['HTTP_USER_AGENT']) &&
+        (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false))
         return true;
     else
         return false;
 }
 
-function detect_safari()
-{
-    if (isset($_SERVER['HTTP_USER_AGENT']) && 
-    (strpos($_SERVER['HTTP_USER_AGENT'], 'Safari') !== false))
+function detect_safari() {
+    if (isset($_SERVER['HTTP_USER_AGENT']) &&
+        (strpos($_SERVER['HTTP_USER_AGENT'], 'Safari') !== false))
         return true;
     else
         return false;
 }
 
-function logger($actionlog, $webid, $nickname)
-{
-	$fp = fopen($actionlog, 'a');
-	$now = time();
-	fwrite($fp, date('Y-m-d H:i:s', $now) . ' : webid : ' . $webid . ' : nickname : ' . $nickname . "\r\n");
-	fclose($fp);
+function logger($actionlog, $webid, $nickname) {
+    $fp = fopen($actionlog, 'a');
+    $now = time();
+    fwrite($fp, date('Y-m-d H:i:s', $now) . ' : webid : ' . $webid . ' : nickname : ' . $nickname . "\r\n");
+    fclose($fp);
 }
 
 function sparulLog($page, $webid, $sparul) {
-	//   return 1;
+//   return 1;
     $fp = fopen('/home/foaf/www/datawiki/sparul.log', 'a');
     $now = time();
     fwrite($fp, date('Y-m-d H:i:s', $now) . ' : webid : ' . $webid . ' : uri : ' . $page . ' : sparul : ' . $sparul . '' . "\r\n");
@@ -68,7 +72,7 @@ function sparulLog($page, $webid, $sparul) {
 }
 
 function rdfLog($cmd, $page, $webid, $sparul = NULL, $rdf = NULL) {
-	//   return 1;
+//   return 1;
     $fp = fopen('/home/foaf/www/datawiki/rdf.log', 'a');
     $now = time();
     fwrite($fp, date('Y-m-d H:i:s', $now) . ' : action : ' . $cmd . ' : webid : ' . $webid . ' : uri : ' . $page . ' : sparul : ' . $sparul . ' : rdf : ' . $rdf . '' . "\r\n");
@@ -76,14 +80,12 @@ function rdfLog($cmd, $page, $webid, $sparul = NULL, $rdf = NULL) {
 }
 
 function xmlheader($xsl) {
-	print '<?xml version="1.0" encoding="ISO-8859-1"?>' . "\n";
-	if (false) {
-  	    print '<?xml-stylesheet type="text/xsl" href="'. $xsl .'"?>' . "\n";
-	}
+    print '<?xml version="1.0" encoding="ISO-8859-1"?>' . "\n";
+    if (false) {
+        print '<?xml-stylesheet type="text/xsl" href="'. $xsl .'"?>' . "\n";
+    }
 }
 
-$username = $_GET['username'];
-$page    = 'http://' . $_SERVER['HTTP_HOST'] . '/' . $username;
 
 /*
 if ( $username == 'julietasself' ) $username = 'juliet';
@@ -92,89 +94,74 @@ if ( $username == 'romeoasself' ) $username = 'romeo';
 if ( $username == 'romeoasfriend' ) $username = 'romeo';
 */
 
-if (preg_match('/^post$/i', $_SERVER['REQUEST_METHOD'])) 
-{
+
+// SPARUL
+if (preg_match('/^post$/i', $_SERVER['REQUEST_METHOD'])) {
 //	logger('/home/foaf/www/datawiki/post.log', $webid, $username);
 
-	include_once('arc/ARC2.php');
+    include_once('arc/ARC2.php');
 
 	/* configuration */ 
-	$config = array(
-		// no config needed for now
-	);
+    $config = array(
+        // no config needed for now
+    );
 
 	/* instantiation */
-	$wiki = ARC2::getComponent('DataWikiPlugin', $config);
+    $wiki = ARC2::getComponent('DataWikiPlugin', $config);
 
-	if ($_SERVER['HTTPS'] == 'on')
-		$foaf = 'https';
-	else
-		$foaf = 'http';
+    if ($_SERVER['HTTPS'] == 'on')
+        $foaf = 'https';
+    else
+        $foaf = 'http';
 
-	$foaf = $foaf . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    $foaf = $foaf . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
-	if ($q = @file_get_contents('php://input')) {
-	
-		$ret = $wiki->go($webid, $foaf);
+    if ($q = @file_get_contents('php://input')) {
 
-		if (file_exists($ret))
-		{
-			$rdf = file_get_contents($ret);
+        $ret = $wiki->go($webid, $foaf);
 
-			if (strcmp($rdf,'')!=0)
-			{
-				//rdfLog('sparul', $username, $webid, $q, $rdf);
+        if (file_exists($ret)) {
+            $rdf = file_get_contents($ret);
 
-				$sql = " update foaf set rdf = '$rdf' , rdf2 = '$rdf' where username like '$username'  ";
+            if (strcmp($rdf,'')!=0) {
+            //rdfLog('sparul', $username, $webid, $q, $rdf);
 
-				$res = dbinsertquery($sql);
-			}
-		}
-	}
+                $sql = " update foaf set rdf = '$rdf' , rdf2 = '$rdf' where username like '$username'  ";
+
+                $res = dbinsertquery($sql);
+            }
+        }
+    }
 }
-else
-{
-	if (detect_ie() or detect_safari()) {
-		header('Content-Type: application/xml');
-	} else {
-		header('Content-Type: application/rdf+xml');
-	}
+// RDF
+else {
+    if (detect_ie() or detect_safari()) {
+        header('Content-Type: application/xml');
+    } else {
+        header('Content-Type: application/rdf+xml');
+    }
 
-	header('MS-Author-Via: SPARQL');
+    header('MS-Author-Via: SPARQL');
 
-	$xsl = 'foaf.xsl';
-	if ($_SERVER['HTTPS'] == 'on') $xsl = 'foaf_secure.xsl';
-	if ($auth['isAuthenticated'] == 1) $xsl = 'foaf_self.xsl';
-	
-	//if ($authentication_level == 'client_certificate_rsakey_matches_foaf_friend_rsakey') $xsl = 'foaf_friend.xsl';
 
-	// overrides
-	/*
-	if ($_SERVER['HTTPS'] == 'on' && $_GET[username] == 'julietasfriend' ) $xsl = 'foaf_friend.xsl';
-	if ($_SERVER['HTTPS'] == 'on' && $_GET[username] == 'romeoasfriend' ) $xsl = 'foaf_friend.xsl';
-	if ($_SERVER['HTTPS'] == 'on' && $_GET[username] == 'julietasself' ) $xsl = 'foaf_self.xsl';
-	if ($_SERVER['HTTPS'] == 'on' && $_GET[username] == 'romeoasself' ) $xsl = 'foaf_self.xsl';
-	*/
+    $res = $db->select(" select * from foaf where URI like '$URI' ");
 
-	$res = $db->select(" select * from foaf where username like '$username' ");
+    if ($row = mysql_fetch_assoc($res)) {
+    //logger('/home/foaf/www/datawiki/read.log', $webid, $username);
 
-	if ($row = mysql_fetch_assoc($res))
-	{
-		//logger('/home/foaf/www/datawiki/read.log', $webid, $username);
+        xmlheader($xsl);
 
-		xmlheader($xsl);
-		
-		$searchstring = '<?xml version="1.0"?>' . "\n";
+        $searchstring = '<?xml version="1.0"?>' . "\n";
 
-		$out = $row['rdf'];
-		$out = str_replace($searchstring, '', $out);
-		print $out;
-	}
-	else if ( strstr($username, 'mbox/') )
-	{
-//		logger('/home/foaf/www/datawiki/insert.log', $webid, $username);
+        $out = $row['rdf'];
+        $out = str_replace($searchstring, '', $out);
+        print $out;
+    }
+    // auto create mbox (tobyink)
+    else if ( strstr($username, 'mbox/') ) {
+        //		logger('/home/foaf/www/datawiki/insert.log', $webid, $username);
 
-		$rdf = '<rdf:RDF 
+            $rdf = '<rdf:RDF
 		xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
 		xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
 		xmlns:foaf="http://xmlns.com/foaf/0.1/" 
@@ -193,19 +180,19 @@ else
 		
 		</rdf:RDF>';
 
-		//rdfLog('insert', $username, $webid, NULL, $rdf);
+            //rdfLog('insert', $username, $webid, NULL, $rdf);
 
-		$db->insert_sql(" insert into foaf (id, username, rdf) VALUES (NULL, '$username', '$rdf')  ");
-		
-		xmlheader($xsl);
+            $db->insert_sql(" insert into foaf (id, username, rdf, URI) VALUES (NULL, '$username', '$rdf', '$URI')  ");
 
-		print $rdf;
-	}
-	else 
-	{
-//		logger('/home/foaf/www/datawiki/insert.log', $webid, $username);
+            xmlheader($xsl);
 
-		$rdf = '<rdf:RDF 
+            print $rdf;
+        }
+        // auto create
+        else {
+        //		logger('/home/foaf/www/datawiki/insert.log', $webid, $username);
+
+            $rdf = '<rdf:RDF
 		xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
 		xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
 		xmlns:foaf="http://xmlns.com/foaf/0.1/" 
@@ -227,14 +214,14 @@ else
 		
 		</rdf:RDF>';
 
-		//rdfLog('insert', $username, $webid, NULL, $rdf);
+            //rdfLog('insert', $username, $webid, NULL, $rdf);
 
-		$db->insert_sql(" insert into foaf (id, username, rdf) VALUES (NULL, '$username', '$rdf')  ");
+            $db->insert_sql(" insert into foaf (id, username, rdf, URI) VALUES (NULL, '$username', '$rdf', '$URI')  ");
 
-		xmlheader($xsl);
+            xmlheader($xsl);
 
-		print $rdf;
-	}
+            print $rdf;
+        }
 }
 
 ?>

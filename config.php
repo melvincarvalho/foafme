@@ -29,7 +29,7 @@
 $config = array(
 
         /* db */
-        'db_name'        => 'localhost',                     // db name
+        'db_name'        => 'foaf',                     // db name
         'db_user'        => 'root',                          // db username
         'db_pwd'         => '',                              // db password
 
