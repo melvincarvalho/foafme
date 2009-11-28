@@ -26,7 +26,6 @@
 //
 //-----------------------------------------------------------------------------------------------------------------------------------
 
-
 require_once("config.php");
 require_once("arc/ARC2.php");
 require_once("lib/libActivity.php");
@@ -582,7 +581,7 @@ function get_agent($agenturi)
 	}
 }
 
-function getAuth($foafuri = NULL)
+function getAuth()
 {
 	if (!$_SERVER['HTTPS'])
 		return ( array( 'isAuthenticated'=>0 , 'authDiagnostic'=>'No client certificate supplied on an unsecure connection') );
