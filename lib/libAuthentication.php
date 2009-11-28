@@ -26,9 +26,10 @@
 //
 //-----------------------------------------------------------------------------------------------------------------------------------
 
-include_once("config.php");
-include_once("arc/ARC2.php");
-include_once("lib/libActivity.php");
+
+require_once("config.php");
+require_once("arc/ARC2.php");
+require_once("lib/libActivity.php");
 
 
 /* Function to return the modulus and exponent of the supplied Client SSL Page */
