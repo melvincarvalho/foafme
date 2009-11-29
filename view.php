@@ -126,7 +126,7 @@ if (preg_match('/^post$/i', $_SERVER['REQUEST_METHOD'])) {
             if (strcmp($rdf,'')!=0) {
             //rdfLog('sparul', $username, $webid, $q, $rdf);
 
-                $sql = " update foaf set rdf = '$rdf' , rdf2 = '$rdf' where username like '$username'  ";
+                $sql = " update foaf set rdf = '$rdf' , rdf2 = '$rdf' where URI like '$URI'  ";
 
                 $res = dbinsertquery($sql);
             }

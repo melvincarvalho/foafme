@@ -218,7 +218,7 @@ $webidbase = preg_replace('/#.*/', '', $webid);
 
                 // set homepage from nick
                 if ( $("#homepage").val() == "") {
-                    $("#homepage").val( "http://<?php echo $_SERVER['HTTP_HOST'] ?>/" + $("#nick").val() );
+                    $("#homepage").val( "http://<?php echo $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) ?>/" + $("#nick").val() );
                     $("#displayname").html( "http://<?php echo $_SERVER['HTTP_HOST'] 
                         . dirname($_SERVER['PHP_SELF']) ?>/" + $("#nick").val() + "#me" );
                     $("#saving").css("display", "inline");;

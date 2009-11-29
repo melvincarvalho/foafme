@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * "Everything should be made as simple as possible, but no simpler." 
+ *
+ * "Everything should be made as simple as possible, but no simpler."
  * -- Albert Einstein
  *
  */
@@ -49,17 +49,18 @@ $r = $db->insert_sql('CREATE TABLE IF NOT EXISTS `foaf` (
 $r = $db->select('SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE, COLUMN_DEFAULT  FROM INFORMATION_SCHEMA.COLUMNS  WHERE table_name = "foaf"  AND COLUMN_NAME = "acl"');
 $numrows = $db->row_count;
 if ($numrows == 0) {
-	$db->select(" ALTER TABLE `foaf` ADD `acl` BLOB NULL AFTER `rdf2` ");
+    $db->select(" ALTER TABLE `foaf` ADD `acl` BLOB NULL AFTER `rdf2` ");
 }
 
 // upgrade path
 //
 // 1. initial, base table foaf
 // 2. add column webid
-$r = $db->select('SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE, COLUMN_DEFAULT  FROM INFORMATION_SCHEMA.COLUMNS  WHERE table_name = "foaf"  AND COLUMN_NAME = "webid"');
+$r = $db->select('SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE, COLUMN_DEFAULT  FROM INFORMATION_SCHEMA.COLUMNS  WHERE table_name = "foaf"  AND COLUMN_NAME = "URI"');
 $numrows = $db->row_count;
 if ($numrows == 0) {
-	$db->select(" ALTER TABLE `foaf` ADD `URI` varchar(255) NULL AFTER `acl` ");
+    $db->select(" ALTER TABLE `foaf` ADD `URI` varchar(255) NULL AFTER `acl` ");
+    echo "update foaf set URI = concat('http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "', username) WHERE URI IS NULL";
 }
 
 
