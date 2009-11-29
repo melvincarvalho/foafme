@@ -1,7 +1,64 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?php
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+/*
+ * Settings for the IdP. The following two variables may change with
+ * another IdP.
+ */
+
+$sigalg = "rsa-sha1";
+$idp_certificate = "foafssl.org-cert.pem";
+
+/*
+ * Verifies the WebID 
+ */
+
+$webid = "";
+
+/* Reconstructs the signed message: the URI except the 'sig' parameter */
+$full_uri = ($_SERVER["HTTPS"] == "on" ? "https" : "http")
+. "://" . $_SERVER["HTTP_HOST"]
+. ($_SERVER["SERVER_PORT"] != ($_SERVER["HTTPS"] == "on" ? 443 : 80) ? ":".$_SERVER["SERVER_PORT"] : "")
+. $_SERVER["REQUEST_URI"];
+
+$signed_info = substr($full_uri, 0, -5-strlen(urlencode($_GET["sig"])));
+
+/* Extracts the signature */
+$signature = base64_decode($_GET["sig"]);
+
+/* Only rsa-sha1 is supported at the moment. */
+if ($sigalg == "rsa-sha1") {
+	/* 
+	 * Loads the trusted certificate of the IdP: its public key is used to 
+	 * verify the integrity of the signed assertion.
+	 */
+	$fp = fopen($idp_certificate, "r");
+	$cert = fread($fp, 8192);
+	fclose($fp);
+	
+	$pubkeyid = openssl_get_publickey($cert);
+	
+	/* Verifies the signature */
+	$verified = openssl_verify($signed_info, $signature, $pubkeyid);
+	if ($verified == 1) {
+		// The verification was successful.
+		$webid = $_GET["webid"];
+	} elseif ($verified == 0) {
+		// The signature didn't match.
+		$webid = "";
+	} else {
+		// Error during the verification.
+		$webid = "";
+	}
+	
+	openssl_free_key($pubkeyid);
+} else {
+	// Unsupported signature algorithm.
+	$webid = "";
+}
+
+?><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
   	<title>Secure Web ID Login</title>
@@ -76,7 +133,7 @@
 	<div class="tab">
 		<ul class="login">
 	    	<li class="left">&nbsp;</li>
-	        <li><? print $_REQUEST['webid'] ? "<a href=index.php>Logout: $_REQUEST[webid]</a>" : "<a href=https://foafssl.org/srv/insecureLogin?return_to=http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI] />Login With Secure Web ID</a>" ?></li>
+	        <li><? print $webid ? "<a href=index.php>Logout: $webid</a>" : "<a href=https://foafssl.org/srv/idp?authreqissuer=http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI] />Login With Secure Web ID</a>" ?></li>
 			<li class="sep">|</li>
 			<li id="toggle">
 				<a id="open" class="open" href="#"> New Users</a>
@@ -93,8 +150,9 @@
 		<div id="content" style="padding-top:100px;">
 
 <?php			
-print $_REQUEST['webid'] ? "<h1>Welcome!</h1><script src=http://foaf-visualizer.org/embed/widget/?uri=$_REQUEST[webid] ></SCRIPT>" : "<h1>Welcome!</h1>  " ;
+print $webid ? "<h1>Welcome!</h1><script src=http://foaf-visualizer.org/embed/widget/?uri=$webid ></SCRIPT>" : "<h1>Welcome!</h1>  " ;
 ?>
+Login using the panel above.
 
 		</div><!-- / content -->		
 	</div><!-- / container -->

@@ -36,8 +36,8 @@ $webid = urldecode($_REQUEST['webid']);
 $auth = $_SESSION['auth'];
 
 // get webid from db
-$res = $db->select(" select * from foaf where CONCAT('http://foaf.me/', username, '#me') = '$webid' or CONCAT('http://foaf.me/', username) = '$webid' ");
-while ($row && $row = mysql_fetch_assoc($res)) {
+$res = $db->select(" select * from foaf where CONCAT(URI, '#me') = '$webid' or URI = '$webid' ");
+while ($res && $row = mysql_fetch_assoc($res)) {
     if (!empty($row) && !empty($row['rdf'])) {
         $rdf = $row['rdf'];
         $searchstring = '<?xml version="1.0"?>' . "\n";
@@ -47,7 +47,7 @@ while ($row && $row = mysql_fetch_assoc($res)) {
     }
     if (!empty ($_REQUEST['rdf'])) {
         $rdf = stripslashes($_REQUEST['rdf']);
-        $res = $db->update_sql(" update foaf set rdf = '$rdf' where CONCAT('http://foaf.me/', username, '#me') = '$webid' or CONCAT('http://foaf.me/', username) = '$webid' ");
+        $res = $db->update_sql(" update foaf set rdf = '$rdf' where CONCAT(URI, '#me') = '$webid' or URI = '$webid' ");
     }
 }
 ?>
