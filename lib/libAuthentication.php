@@ -525,63 +525,59 @@ function get_agent($agenturi) {
     }
 }
 
-function getAuthFromDelegatedFOAFSSL()
-{
+function getAuthFromDelegatedFOAFSSL() {
 	/*
 	* Settings for the IdP. The following two variables may change with
 	* another IdP.
 	*/
-	$sigalg = "rsa-sha1";
-	$idp_certificate = "foafssl.org-cert.pem";
- 
-	$webid = "";
- 
+    $sigalg = "rsa-sha1";
+    $idp_certificate = "foafssl.org-cert.pem";
+
+    $webid = "";
+
 	/* Reconstructs the signed message: the URI except the 'sig' parameter */
-	$full_uri = ((isset($_SERVER["HTTPS"]) && ($_SERVER["HTTPS"] == "on")) ? "https" : "http")
-				. "://" . $_SERVER["HTTP_HOST"]
-				. ($_SERVER["SERVER_PORT"] != ((isset($_SERVER["HTTPS"]) && ($_SERVER["HTTPS"] == "on")) ? 443 : 80) ? ":".$_SERVER["SERVER_PORT"] : "")
-				. $_SERVER["REQUEST_URI"];
- 
-	$signed_info = substr($full_uri, 0, -5-strlen(urlencode(isset($_GET["sig"]) ? $_GET["sig"] : NULL)));
- 
+    $full_uri = ((isset($_SERVER["HTTPS"]) && ($_SERVER["HTTPS"] == "on")) ? "https" : "http")
+        . "://" . $_SERVER["HTTP_HOST"]
+        . ($_SERVER["SERVER_PORT"] != ((isset($_SERVER["HTTPS"]) && ($_SERVER["HTTPS"] == "on")) ? 443 : 80) ? ":".$_SERVER["SERVER_PORT"] : "")
+        . $_SERVER["REQUEST_URI"];
+
+    $signed_info = substr($full_uri, 0, -5-strlen(urlencode(isset($_GET["sig"]) ? $_GET["sig"] : NULL)));
+
 	/* Extracts the signature */
-	$signature = base64_decode(isset($_GET["sig"]) ? $_GET["sig"] : NULL);
- 
+    $signature = base64_decode(isset($_GET["sig"]) ? $_GET["sig"] : NULL);
+
 	/* Only rsa-sha1 is supported at the moment. */
-	if ($sigalg == "rsa-sha1")
-	{
+    if ($sigalg == "rsa-sha1") {
 		/*
 		 * Loads the trusted certificate of the IdP: its public key is used to
 		 * verify the integrity of the signed assertion.
 		 */
-		$fp = fopen($idp_certificate, "r");
-		$cert = fread($fp, 8192);
-		fclose($fp);
-    
-		$pubkeyid = openssl_get_publickey($cert);
-    
+        $fp = fopen($idp_certificate, "r");
+        $cert = fread($fp, 8192);
+        fclose($fp);
+
+        $pubkeyid = openssl_get_publickey($cert);
+
         /* Verifies the signature */
-		 $verified = openssl_verify($signed_info, $signature, $pubkeyid);
-		if ($verified == 1) {
-			// The verification was successful.
-			setAuthenticatedWebID($_GET['webid']);
-		} 
-		elseif ($verified == 0)
-		{
-			// The signature didn't match.
-			unsetAuthenticatedWebID();
-		} 
-		else 
-		{
-			// Error during the verification.
-			unsetAuthenticatedWebID();
-		}
-    
-		openssl_free_key($pubkeyid);
-	} else {
-	// Unsupported signature algorithm.
-    unsetAuthenticatedWebID();
-	}
+        $verified = openssl_verify($signed_info, $signature, $pubkeyid);
+        if ($verified == 1) {
+        // The verification was successful.
+            setAuthenticatedWebID($_GET['webid']);
+        }
+        elseif ($verified == 0) {
+        // The signature didn't match.
+            unsetAuthenticatedWebID();
+        }
+        else {
+        // Error during the verification.
+            unsetAuthenticatedWebID();
+        }
+
+        openssl_free_key($pubkeyid);
+    } else {
+    // Unsupported signature algorithm.
+        unsetAuthenticatedWebID();
+    }
 }
 
 function setAuthenticatedWebID($webid) {
@@ -629,31 +625,28 @@ function getAuth() {
         }
     }
 
-	if (($isAuthenticated == 0) && (isset($_GET['sig'])) )
-	{
-		getAuthFromDelegatedFOAFSSL();
+    if (($isAuthenticated == 0) && (isset($_GET['sig'])) ) {
+        getAuthFromDelegatedFOAFSSL();
 
-		if ( (isset($_SESSION['libAuthentication_isAuthenticated'])) && ($_SESSION['libAuthentication_isAuthenticated']==1) ) 
-		{
-			if (isset($_SESSION['libAuthentication_webid'])) 
-			{
-				$isAuthenticated = 1;
-				$foafuri = isset($_SESSION['libAuthentication_webid'])?$_SESSION['libAuthentication_webid']:NULL;
-				$agent = isset($_SESSION['libAuthentication_agent'])?$_SESSION['libAuthentication_agent']:NULL;
-			}
-		}
-	}
+        if ( (isset($_SESSION['libAuthentication_isAuthenticated'])) && ($_SESSION['libAuthentication_isAuthenticated']==1) ) {
+            if (isset($_SESSION['libAuthentication_webid'])) {
+                $isAuthenticated = 1;
+                $foafuri = isset($_SESSION['libAuthentication_webid'])?$_SESSION['libAuthentication_webid']:NULL;
+                $agent = isset($_SESSION['libAuthentication_agent'])?$_SESSION['libAuthentication_agent']:NULL;
+            }
+        }
+    }
 
     if ( ($isAuthenticated == 0) || (is_null($foafuri)) ) {
 
 
-		if (!$_SERVER['HTTPS'])
-			return ( array( 'isAuthenticated'=>0 , 'authDiagnostic'=>'No client certificate supplied on an unsecure connection') );
+        if (!$_SERVER['HTTPS'])
+            return ( array( 'isAuthenticated'=>0 , 'authDiagnostic'=>'No client certificate supplied on an unsecure connection') );
 
-		if (!$_SERVER['SSL_CLIENT_CERT'])
-			return ( array( 'isAuthenticated'=>0 , 'authDiagnostic'=>'No client certificate supplied') );
+        if (!$_SERVER['SSL_CLIENT_CERT'])
+            return ( array( 'isAuthenticated'=>0 , 'authDiagnostic'=>'No client certificate supplied') );
 
-		$certrsakey = openssl_pkey_get_public_hex();
+        $certrsakey = openssl_pkey_get_public_hex();
 
         if (!$certrsakey)
             return ( array( 'isAuthenticated'=>0 , 'authDiagnostic'=>'No RSA Key in the supplied client certificate') );
