@@ -36,14 +36,14 @@
                     <li style="list-style-image: none"><a href="#friends"><span>Friends</span></a></li>
                     <li style="list-style-image: none"><a href="#accounts"><span>Accounts</span></a></li>
                     <li style="list-style-image: none"><a href="#security"><span>Security</span></a></li>
-                    <? if ($agent) { ?>
+                    <?php if ($agent) { ?>
                     <li style="list-style-image: none"><a href="#activity"><span>Activity</span></a></li>
-                    <? } else { ?>
+                    <?php } else { ?>
                     <li style="list-style-image: none"><a href="#interests"><span>Interests</span></a></li>
-                    <? } ?>
-                    <? if ($loggedIn) { ?>
+                    <?php } ?>
+                    <?php if ($loggedIn) { ?>
                     <li style="list-style-image: none"><a href="#rawdata"><span>Raw Data</span></a></li>
-                    <? } ?>
+                    <?php } ?>
                 </ul>
 
                 <!-- start me tab -->
@@ -59,7 +59,7 @@
                 </div>
                 <!-- end friends tab -->
 
-                <? if ($agent) { ?>
+                <?php if ($agent) { ?>
                 <!-- start activites tab -->
                 <div id="activity">Loading...
                 </div>
@@ -69,7 +69,7 @@
                     <?php include('tabdata.php'); ?>
                 </div>
                 <!-- end activities tab -->
-                <? } ?>
+                <?php } ?>
 
                 <!-- start accounts tab -->
                 <div id="accounts" class="inputArea">
@@ -100,14 +100,14 @@
             <script type="text/javascript"> $("#activity").load("tabactivity.php?webid=<?= $agent ?>");</script>
 
             <?php if ($agent) { ?>
-            <? } else { ?>
+            <?php } else { ?>
             <!-- start foaf file -->
             <div id="form">
                 <form name="results" action="store.php" method="POST" >
                     <p>Your FOAF file:</p>
                     <textarea id="rdf" name="rdf" cols="80" rows="20"></textarea>
                     <br/>
-                        <? echo $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']); ?>/<input id="username" value="" type="text" name="username"> <button type="submit">Save!</button>
+                        <php? echo $_SERVER['HTTP_HOST'] . ((dirname($_SERVER['PHP_SELF'])=='/')?'':dirname($_SERVER['PHP_SELF'])); ?>/<input id="username" value="" type="text" name="username"> <button type="submit">Save!</button>
 
                     <br/><br/>
                     <p style='display:none' id="saving">Saving will give you the <a href="http://esw.w3.org/topic/WebID">Web ID</a> = <span style="color:blue" id="displayname"></span></p>
@@ -116,7 +116,7 @@
                 </form>
             </div>
             <!-- end foaf file -->
-            <? } ?>
+            <?php } ?>
         </div>
         <div class="clear"></div>
 
