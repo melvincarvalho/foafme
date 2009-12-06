@@ -187,7 +187,8 @@ class ARC2_Reader extends ARC2_Class {
       $h_code = $http_mthd . ' ' . $this->v1('path', '/', $parts) . (($v = $this->v1('query', 0, $parts)) ? '?' . $v : '') . (($v = $this->v1('fragment', 0, $parts)) ? '#' . $v : '');
     }
     $h_code .= ' HTTP/1.0' . $nl.
-      'Host: ' . $parts['host'] . ':' . $parts['port'] . $nl .
+      'Host: ' . $parts['host'] . $nl .
+		// ':' . $parts['port'] . $nl .
       (($v = $this->http_accept_header) ? $v . $nl : '') .
       (($v = $this->http_user_agent_header) && !preg_match('/User\-Agent\:/', $this->http_custom_headers) ? $v . $nl : '') .
       (($http_mthd == 'POST') ? 'Content-Length: ' . strlen($this->message_body) . $nl : '') .
