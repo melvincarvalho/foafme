@@ -155,6 +155,8 @@ function get_all_friends($store, $agenturi) {
             foreach ($rows as $row) {
             //				print_r($row);
                 if (strcmp($row['y'],$agenturi)!=0) {
+					$res = NULL;
+
                     if (isset($row['name']))
                         $res = array('name'=>$row['name']);
 
