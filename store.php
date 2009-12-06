@@ -45,7 +45,7 @@ $db->connect('localhost', $config['db_user'], $config['db_pwd'], $config['db_nam
 // init
 $username = $_POST['username'];
 $rdf = $_POST['rdf'];
-$URI = "http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/' . $username;
+$URI = "http://" . $_SERVER['HTTP_HOST'] . ((dirname($_SERVER['PHP_SELF'])=='/')?'':dirname($_SERVER['PHP_SELF'])) . '/' . $username;
 $webid = $URI . '#me';
 
 $link = "http://" . $_SERVER['HTTP_HOST'] . str_replace('store.php', 'index.php', $_SERVER['PHP_SELF'])
