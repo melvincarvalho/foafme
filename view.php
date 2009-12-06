@@ -1,4 +1,4 @@
-<?
+<?php
 
 //-----------------------------------------------------------------------------------------------------------------------------------
 //
@@ -35,7 +35,7 @@ $db->connect('localhost', $config['db_user'], $config['db_pwd'], $config['db_nam
 
 // init
 $username = $_GET['username'];
-$URI = "http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/' . $username;
+$URI = "http://" . $_SERVER['HTTP_HOST'] . ((dirname($_SERVER['PHP_SELF'])=='/')?'':dirname($_SERVER['PHP_SELF'])) . '/' . $username;
 $webid = $webid . '#me';
 
 
