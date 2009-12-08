@@ -152,10 +152,12 @@ else {
 
         xmlheader($xsl);
 
-        $searchstring = '<?xml version="1.0"?>' . "\n";
+        $searchstring1 = '<?xml version="1.0"?>' . "\n";
+		$searchstring2 = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 
         $out = $row['rdf'];
-        $out = str_replace($searchstring, '', $out);
+        $out = str_replace($searchstring1, '', $out);
+        $out = str_replace($searchstring2, '', $out);
         print $out;
     }
     // auto create mbox (tobyink)
