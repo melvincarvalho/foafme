@@ -154,10 +154,12 @@ else {
 
         $searchstring1 = '<?xml version="1.0"?>' . "\n";
 		$searchstring2 = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+		$searchstring3 = '<?xml version="1.0" encoding="UTF-8"?>';
 
-        $out = $row['rdf'];
+		$out = $row['rdf'];
         $out = str_replace($searchstring1, '', $out);
         $out = str_replace($searchstring2, '', $out);
+        $out = str_replace($searchstring3, '', $out);
         print $out;
     }
     // auto create mbox (tobyink)

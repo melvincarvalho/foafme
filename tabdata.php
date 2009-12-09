@@ -31,23 +31,34 @@ require_once('header.php');
 $db = new db_class();
 $db->connect('localhost', $config['db_user'], $config['db_pwd'], $config['db_name']);
 
+$db2 = new db_class();
+$db2->connect('localhost', $config['db_user'], $config['db_pwd'], $config['db_name']);
+
 // get query string variables
 $webid = urldecode($_REQUEST['webid']);
 $auth = $_SESSION['auth'];
 
 // get webid from db
 $res = $db->select(" select * from foaf where CONCAT(URI, '#me') = '$webid' or URI = '$webid' ");
-while ($res && $row = mysql_fetch_assoc($res)) {
+
+while ($res && ($row = $db->get_row($res))) {
     if (!empty($row) && !empty($row['rdf'])) {
-        $rdf = $row['rdf'];
-        $searchstring = '<?xml version="1.0"?>' . "\n";
+
+		$searchstring1 = '<?xml version="1.0"?>' . "\n";
+		$searchstring2 = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+		$searchstring3 = '<?xml version="1.0" encoding="UTF-8"?>';
+
+		$rdf = $row['rdf'];
+        $rdf = str_replace($searchstring1, '', $rdf);
+        $rdf = str_replace($searchstring2, '', $rdf);
+        $rdf = str_replace($searchstring3, '', $rdf);
 
         $rdf = str_replace($searchstring, '', $rdf);
 
     }
     if (!empty ($_REQUEST['rdf'])) {
         $rdf = stripslashes($_REQUEST['rdf']);
-        $res = $db->update_sql(" update foaf set rdf = '$rdf' where CONCAT(URI, '#me') = '$webid' or URI = '$webid' ");
+        $res2 = $db2->update_sql(" update foaf set rdf = '$rdf' where CONCAT(URI, '#me') = '$webid' or URI = '$webid' ");
     }
 }
 ?>
@@ -64,7 +75,7 @@ while ($res && $row = mysql_fetch_assoc($res)) {
                 </form>
 
                 <div>webid : <a rel="webid" href="<?= $webid ?>"><?= $webid ?></a></div>
-
+                <div>validate + graph : <a rel="webid" href="<?= "http://www.w3.org/RDF/Validator/ARPServlet?URI=" . urlencode($webid) .  "&PARSE=Parse+URI%3A+&TRIPLES_AND_GRAPH=PRINT_BOTH&FORMAT=PNG_EMBED"  ?>">Go</a></div>
 
 
 
