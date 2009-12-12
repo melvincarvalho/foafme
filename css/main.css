@@ -79,14 +79,14 @@ body, p, div, a {
     float:left;
     min-height:400px;
     padding:20px;
-    width:748px;
-    background:#fff url(../images/content_top.jpg) no-repeat;
+    width:708px;
+    background:#fff url(../images/content_top.png) no-repeat;
     margin-top: 20px;
 }
 
 #wrap {
     margin:10px auto;
-    width:800px;
+    width:750px;
 }
 
 /* username | logout */
