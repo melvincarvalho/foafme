@@ -24,8 +24,8 @@
  */
 
 // includes
-require_once('head.php');
-require_once('header.php');
+require_once('../head.php');
+require_once('../header.php');
 
 // set up db connection
 $db = new db_class();
