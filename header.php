@@ -24,7 +24,7 @@
 
  if ($auth['isAuthenticated'] == 1) {
      $webid = $auth['agent']['webid'];
-     $name = $auth['agent']['name'];
+     $name = !empty($auth['agent']['name'])?$auth['agent']['name']:$webid;
 }
 
 
