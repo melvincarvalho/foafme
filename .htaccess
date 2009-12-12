@@ -1,5 +1,5 @@
-SSLOptions +StdEnvVars
-SSLOptions +ExportCertData
+#SSLOptions +StdEnvVars
+#SSLOptions +ExportCertData
 
 
 RewriteEngine on
