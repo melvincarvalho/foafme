@@ -21,6 +21,13 @@
  * -- Albert Einstein
  *
  */
+
+ if ($auth['isAuthenticated'] == 1) {
+     $webid = $auth['agent']['webid'];
+     $name = $auth['agent']['name'];
+}
+
+
 ?>
 
 <body bgcolor="#CCE9FA">
@@ -37,7 +44,7 @@
             <span id="user">
                 <a id="logout" href="http://foaf.me/clearSession.php?return_to=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]" ?>">
                 <!-- Logout <strong><?= $_SESSION['auth']['subjectAltName'] ?> </strong> -->
-                    Logout <strong><?= $_REQUEST['webid'] ?></strong>
+                    Logout <strong><?= $name ?></strong>
                 </a>
                 <br/>
             </span>
