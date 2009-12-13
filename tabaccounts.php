@@ -25,13 +25,24 @@
 //
 //-----------------------------------------------------------------------------------------------------------------------------------
 
+// This tab can act as a standalone page or be included from a containter
 require_once('head.php');
 require_once('header.php');
+require_once('lib/libAuthentication.php');
 
-$auth = isset($_SESSION['auth']) ? $_SESSION['auth'] : NULL;
+// init
+$auth = getAuth();
+if ($auth['isAuthenticated'] == 1) {
+    $webid = $auth['agent']['webid'];
+}
 
 if (!empty($_REQUEST['webid'])) {
     $auth = get_agent($_REQUEST['webid']);
+    $webid = $auth['agent']['webid'];
+}
+
+
+if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
 
 
     $a1 = replace_with_rss(isset($auth['agent']['holdsAccount']) ? $auth['agent']['holdsAccount'] : NULL);

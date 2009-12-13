@@ -26,25 +26,27 @@
 //-----------------------------------------------------------------------------------------------------------------------------------
 
 // This tab can act as a standalone page or be included from a containter
-//
-// If included from a container the header and footer are not repeated
-
-
-// $headerLoaded is imported from the containter
-// determines whether we were called standalone or included
 require_once('head.php');
 require_once('header.php');
+require_once('lib/libAuthentication.php');
 
 // init
 $friends = 2;
 
-// Have we found a webid?
-$webid = $_REQUEST['webid'];
-$webidbase = preg_replace('/#.*/', '', $webid);
-if (!empty($webid)) {
 
-// get webid details
-    $auth = get_agent($webid);
+$auth = getAuth();
+if ($auth['isAuthenticated'] == 1) {
+    $webid = $auth['agent']['webid'];
+}
+
+if (!empty($_REQUEST['webid'])) {
+    $auth = get_agent($_REQUEST['webid']);
+    $webid = $auth['agent']['webid'];
+}
+
+
+if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
+
     $friends = count($auth['agent']['knows']);
 
 } 
