@@ -21,6 +21,14 @@
  * -- Albert Einstein
  *
  */
+  if ($auth['isAuthenticated'] == 1) {
+     $webid = $auth['agent']['webid'];
+     $name = !empty($auth['agent']['name'])?$auth['agent']['name']:$webid;
+     if ($webid == $_REQUEST['webid']) {
+        $loggedIn = true;
+     }
+}
+
 ?>
 
             <!-- personal profile document -->
