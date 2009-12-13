@@ -24,7 +24,6 @@
 
 
 
-session_name('phpMyID_Server');
 session_start();
 session_destroy();
 
