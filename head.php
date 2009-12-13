@@ -39,68 +39,18 @@ require_once("lib/libImport.php");
 // Check to see if we are importing a WebID, if so populate $import
 $import = getImport();
 
-// Get FOAF:Agent From Session
-$agent = (!empty($_SESSION['auth']) && $_SESSION['auth']['subjectAltName'])? $_SESSION['auth']['subjectAltName'] : '';
-$agent = isset($_REQUEST['webid']) ? $_REQUEST['webid'] : $agent;
+// init
+$auth = getAuth();
 
+if ($auth['isAuthenticated'] == 1) {
+    $webid = $auth['agent']['webid'];
+    $agent = $auth['agent']['webid'];
+}
 
-/*
- * Settings for the IdP. The following two variables may change with
- * another IdP.
- */
-
-$sigalg = "rsa-sha1";
-$idp_certificate = "foafssl.org-cert.pem";
-
-/*
- * Populates the WebID
- * TODO: move this to libAuthentication
- */
-$webid = "";
-
-/* Reconstructs the signed message: the URI except the 'sig' parameter */
-$full_uri = ((isset($_SERVER["HTTPS"]) && ($_SERVER["HTTPS"] == "on")) ? "https" : "http")
-    . "://" . $_SERVER["HTTP_HOST"]
-    . ($_SERVER["SERVER_PORT"] != ((isset($_SERVER["HTTPS"]) && ($_SERVER["HTTPS"] == "on")) ? 443 : 80) ? ":".$_SERVER["SERVER_PORT"] : "")
-    . $_SERVER["REQUEST_URI"];
-
-$signed_info = substr($full_uri, 0, -5-strlen(urlencode(isset($_GET["sig"]) ? $_GET["sig"] : NULL)));
-
-/* Extracts the signature */
-$signature = base64_decode(isset($_GET["sig"]) ? $_GET["sig"] : NULL);
-
-/* Only rsa-sha1 is supported at the moment. */
-if ($sigalg == "rsa-sha1") {
-        /*
-         * Loads the trusted certificate of the IdP: its public key is used to
-         * verify the integrity of the signed assertion.
-         */
-    $fp = fopen($idp_certificate, "r");
-    $cert = fread($fp, 8192);
-    fclose($fp);
-    
-    $pubkeyid = openssl_get_publickey($cert);
-    
-        /* Verifies the signature */
-    $verified = openssl_verify($signed_info, $signature, $pubkeyid);
-    if ($verified == 1) {
-    // The verification was successful.
-        $webid = $_GET["webid"];
-        $agent = $_GET["webid"];
-        $loggedIn = true;
-        
-    } elseif ($verified == 0) {
-    // The signature didn't match.
-        $webid = "";
-    } else {
-    // Error during the verification.
-        $webid = "";
-    }
-    
-    openssl_free_key($pubkeyid);
-} else {
-// Unsupported signature algorithm.
-    $webid = "";
+if (!empty($_REQUEST['webid'])) {
+    $auth = get_agent($_REQUEST['webid']);
+    $webid = $auth['agent']['webid'];
+    $agent = $auth['agent']['webid'];
 }
 $webidbase = preg_replace('/#.*/', '', $webid);
 

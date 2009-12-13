@@ -113,7 +113,7 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
                             <? } else { $v = $auth['agent']['knows'][$i]; $about =  $v['about']?$v['about']  : $webidbase . "friend" . $i ; ?>
 
                     <tr typeof="foaf:Person" id="friend<?= $i ?>" about="<?= $about ?>" >
-                        <td><a href="?webid=<?= $v['webid'] ?>">Friend</a>: </td>
+                        <td><a href="?webid=<?= $v['webid'] ?>">View</a>: </td>
                         <td><span property="foaf:name"><?= $v['name'] ?></span></td>
                         <td><span href="<?= $v['webid'] ?>" rel="rdfs:seeAlso" ><?= $v['webid'] ?></span></td>
                         <td about="<?= $webid ?>" rel="foaf:knows" href="<?= $webidbase ?>#friend<?= $i ?>"><a  id="delfriend<?= $i ?>" href="javascript:del('delfriend<?= $i ?>')" >x</a></td>
