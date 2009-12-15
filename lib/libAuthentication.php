@@ -191,6 +191,24 @@ function get_all_friends($store, $agenturi) {
                     $results[] = $res;
                 }
             }
+
+			foreach ($results as $key => $row) {
+			    $name[$key]  = isset($row['name'])?$row['name']:str_replace('mailto:', '', $row['webid']);
+				$seeAlso[$key] = $row['seeAlso'];
+				$mbox[$key] = $row['mbox'];
+				$homepage[$key] = $row['homepage'];
+				$about[$key] = $row['about'];
+				$webid[$key] = $row['webid'];
+			}
+
+			$name_lowercase = array_map('strtolower', $name);
+
+			// Sort the data with volume descending, edition ascending
+			// Add $data as the last parameter, to sort by the common key
+			array_multisort($name_lowercase, SORT_ASC, SORT_STRING, $results);
+			// print "<pre>";
+			// print_r($results);
+			// print "</pre>";
         }
     }
 
