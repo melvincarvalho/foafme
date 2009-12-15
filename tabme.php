@@ -43,6 +43,14 @@ if (!empty($_REQUEST['webid'])) {
 if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
     if (!empty($webid)) {
         print "<script type='text/javascript' src='http://foaf-visualizer.org/embed/widget/?uri=$webid' ></script>";
+        ?>
+            <script type='text/javascript'>
+            $("a").each( function() {
+               this.href = this.href.replace(/foaf-visualizer.org..uri=/g,"foaf.me/index.php?webid=");
+            });
+            </script>
+
+<?php
     } else {
         print "No profile discovered yet";
     }
@@ -56,4 +64,6 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
                     <tr><td>Picture</td><td><input rel="foaf:depiction" id="depiction" onChange="makeTags()" type="text" name="depiction"></td></tr>
                     <tr><td>Homepage</td><td><input rel="foaf:homepage" id="homepage" onChange="makeTags()" type="text" name="homepage"/></tr>
                 </table>
+                <br/>
+                <div class="blue">* required field (all other fields are optional)</div>
 <?php } ?>

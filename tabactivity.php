@@ -39,12 +39,13 @@ if (isset($_REQUEST['webid'])) {
 
 $a1 = replace_with_rss($auth['agent']['holdsAccount']);
 $a2 = replace_with_rss($auth['agent']['accountProfilePage']);
+$a3 = array($auth['agent']['weblog']);
 
-if ( $a1 || $a2 ) {
+if ( $a1 || $a2 || $a3 ) {
 // Initialize some feeds for use.
     $feed = new SimplePie();
 
-    $feed->set_feed_url(array_merge(  $a1?$a1:array(), $a2?$a2:array() ));
+    $feed->set_feed_url(array_merge(  $a1?$a1:array(), $a2?$a2:array(), !empty($a3)?$a3:array() ));
     $no_feed = FALSE;
 
     // When we set these, we need to make sure that the handler_image.php file is also trying to read from the same cache directory that we are.
@@ -84,7 +85,10 @@ if ( $a1 || $a2 ) {
         ?>
 
                 <div class="chunk">
+                    <?php $icon = $feed->get_favicon(); ?>
+                    <?php if (!empty($icon)) { ?>
                     <img src="<?php echo $feed->get_favicon(); ?>" width="16" height="16" class="activity-favicon" alt="[icon]" />
+                    <?php } ?>
                     <h4><a href="<?php echo $item->get_permalink(); ?>"><?php echo html_entity_decode($item->get_title(), ENT_QUOTES, 'UTF-8'); ?></a></h4>
                     <!-- get_content() prefers full content over summaries -->
                             <?php echo $item->get_content(); ?>
@@ -104,3 +108,4 @@ if ( $a1 || $a2 ) {
     <?php endforeach ?>
 
 	<?php endif ?>
+

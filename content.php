@@ -97,7 +97,7 @@
                 <!-- end interests tab -->
 
                 <!-- start security tab -->
-                <div id="security">Loading...
+                <div id="security">
                     <?php include ("tabsecurity.php"); ?>
                 </div>
                 <!-- end security tab -->
