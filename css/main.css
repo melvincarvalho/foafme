@@ -52,7 +52,8 @@ input
     background-image: url('../images/png/Knob Cancel.png');
 }
 
-.red { background: red; color: green;}
+
+.blue { color: blue;}
 
 ul.smaller li {
     list-style-image: url(foaf.png);
