@@ -51,11 +51,11 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
             </script>
         <?php
         print "<h2>Other Visualisations</h2>";
-        print "<a target='_blank' href='http://foafmap.net/?foaf=" . $webid . "'>Foaf MAP</a><br/>";
         print "<a target='_blank' href='http://www.foafer.org/?file=" . $webid . "'>Foafer</a><br/>";
-        print "<a target='_blank' href='http://xml.mfd-consult.dk/foaf/explorer/?foaf=" . $webid . "'>Foaf Explorer</a><br/>";
-        print "<a target='_blank' href='http://dataviewer.zitgist.com/?uri=" . $webid . "'>Zitgist</a><br/>";
         print "<a target='_blank' href='http://www5.wiwiss.fu-berlin.de/marbles?uri=" . $webid . "'>Marbles</a><br/>";
+        print "<a target='_blank' href='http://xml.mfd-consult.dk/foaf/explorer/?foaf=" . $webid . "'>Foaf Explorer</a><br/>";
+        print "<a target='_blank' href='http://foafmap.net/?foaf=" . $webid . "'>Foaf MAP</a><br/>";
+        print "<a target='_blank' href='http://dataviewer.zitgist.com/?uri=" . $webid . "'>Zitgist</a><br/>";
         ?>
 
 <?php
