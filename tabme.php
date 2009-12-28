@@ -53,7 +53,7 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
         print "<h2>Other Visualisations</h2>";
         print "<a target='_blank' href='http://www.foafer.org/?file=" . $webid . "'>Foafer</a><br/>";
         print "<a target='_blank' href='http://foaf.qdos.com/find/?q=" . $webid . "'>Qdos</a><br/>";
-        print "<a target='_blank' href='http://www5.wiwiss.fu-berlin.de/marbles?uri=" . $webid . "'>Marbles</a><br/>";
+        print "<a target='_blank' href='http://www5.wiwiss.fu-berlin.de/marbles?uri=" . urlencode($webid) . "'>Marbles</a><br/>";
         print "<a target='_blank' href='http://sig.ma/search?q=" . urlencode($webid) . "'>Sig.ma</a><br/>";
         print "<br/>";
 
