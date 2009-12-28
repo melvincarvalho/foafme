@@ -39,6 +39,6 @@ require_once('header.php');
 $webid = 'http://foaf.me/git/gittest124';
 print "<pre>$webid";
 // get webid details
-$auth = get_agent($webid);
+$auth = getAuth();
 print_r($auth);
 

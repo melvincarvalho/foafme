@@ -28,7 +28,6 @@
 require_once("config.php");
 require_once("db.class.php");
 require_once('lib/libAuthentication.php');
-require_once('foafStore.php');
 
 // set up db
 $db = new db_class();
