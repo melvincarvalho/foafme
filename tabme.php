@@ -56,6 +56,7 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
         print "<a target='_blank' href='http://sig.ma/search?q=" . $webid . "'>Sig.ma</a><br/>";
         print "<a target='_blank' href='http://xml.mfd-consult.dk/foaf/explorer/?foaf=" . $webid . "'>Foaf Explorer</a><br/>";
         print "<a target='_blank' href='http://dataviewer.zitgist.com/?uri=" . $webid . "'>Zitgist</a><br/>";
+        print "<a target='_blank' href='http://linkeddata.uriburner.com/ode/?uri=" . $webid . "'>URI Burner</a><br/>";
         print "<a target='_blank' href='http://foafmap.net/?foaf=" . $webid . "'>Foaf MAP</a><br/>";
         ?>
 
