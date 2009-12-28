@@ -22,12 +22,9 @@
  *
  */
 
-$auth = getAuth();
-if ($auth['isAuthenticated'] == 1) {
+ if ($auth['isAuthenticated'] == 1) {
      $webid = $auth['agent']['webid'];
      $name = !empty($auth['agent']['name'])?$auth['agent']['name']:$webid;
-} else {
-    $webid= NULL;
 }
 
 
@@ -36,8 +33,7 @@ if ($auth['isAuthenticated'] == 1) {
 <body bgcolor="#CCE9FA">
     <div id="wrap">
         <div id="header">
-            <a href="index.php">Home</a> | <a href="http://foaf.me/index.php?webid=http://www.w3.org/People/Berners-Lee/card">Explore FOAFs</a> | <a href="about.php">About</a> | <a href="documentation.php">Documentation</a> | <a href="downloads.php">Downloads</a> | <a href="http://groups.google.com/group/foafme?lnk=srg&amp;hl=en&amp;ie=UTF-8&amp;oe=utf-8">Mailing List</a> 
-
+            <a href="index.php">Home</a> | <a href="http://groups.google.com/group/foafme">Mailing List</a>
 
             <?php
             //if (!empty($_SESSION['auth']) && $_SESSION['auth']['subjectAltName']) {
@@ -48,7 +44,7 @@ if ($auth['isAuthenticated'] == 1) {
             <span id="user">
                 <a id="logout" href="http://foaf.me/clearSession.php?return_to=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]" ?>">
                 <!-- Logout <strong><?= $_SESSION['auth']['subjectAltName'] ?> </strong> -->
-                    Logout <strong><?= $webid ?></strong>
+                    Logout <strong><?= $name ?></strong>
                 </a>
                 <br/>
             </span>

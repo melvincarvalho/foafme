@@ -266,10 +266,6 @@ $webidbase = preg_replace('/#.*/', '', $webid);
 
             }
 
-            $("a").each( function() {
-               this.href = this.href.replace(/foaf-visualizer.org..uri=/g,"foaf.me/index.php?webid=");
-            });
-
             // -->
         </script>
 
