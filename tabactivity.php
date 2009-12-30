@@ -39,13 +39,15 @@ if (isset($_REQUEST['webid'])) {
 
 $a1 = replace_with_rss($auth['agent']['holdsAccount']);
 $a2 = replace_with_rss($auth['agent']['accountProfilePage']);
-$a3 = array($auth['agent']['weblog']);
+$a3 = (array)$auth['agent']['weblog'];
 
-if ( $a1 || $a2 || $a3 ) {
+$feedArray = array_merge(  (array)$a1, (array)$a2, (array) $a3 );
+$feedArray = array_unique ($feedArray);
+
+if ( !empty($feedArray) ) {
 // Initialize some feeds for use.
     $feed = new SimplePie();
-
-    $feed->set_feed_url(array_merge(  $a1?$a1:array(), $a2?$a2:array(), !empty($a3)?$a3:array() ));
+    $feed->set_feed_url($feedArray);
     $no_feed = FALSE;
 
     // When we set these, we need to make sure that the handler_image.php file is also trying to read from the same cache directory that we are.
