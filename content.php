@@ -107,7 +107,7 @@
 
             <script type="text/javascript"> $("#activity").load("tabactivity.php?webid=<?= $agent ?>");</script>
 
-            <?php if ($agent) { ?>
+            <?php if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) { ?>
             <?php } else { ?>
             <!-- start foaf file -->
             <div id="form">
