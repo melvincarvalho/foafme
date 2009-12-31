@@ -24,7 +24,7 @@
   if ($auth['isAuthenticated'] == 1) {
      $webid = $auth['agent']['webid'];
      $name = !empty($auth['agent']['name'])?$auth['agent']['name']:$webid;
-     if ($webid == $_REQUEST['webid']) {
+     if ($webid == $_REQUEST['webid'] || empty($_REQUEST['webid']) ) {
         $loggedIn = true;
      }
 }
