@@ -65,7 +65,8 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
 
 <?php
     } else {
-        print "No profile discovered yet";
+        print "<h2>Profile</h2>No profile discovered for this WebID <br/><br/><a href='".
+        $_REQUEST['webid']. "'>" . $_REQUEST['webid'] . "</a>";
     }
   
 } else { ?>
