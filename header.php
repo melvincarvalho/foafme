@@ -42,7 +42,7 @@
             if (!empty($webid) ) {
                 ?>
             <span id="user">
-                <a id="logout" href="http://foaf.me/clearSession.php?return_to=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]" ?>">
+                <a id="logout" href="clearSession.php?return_to=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]" ?>">
                 <!-- Logout <strong><?= $_SESSION['auth']['subjectAltName'] ?> </strong> -->
                     Logout <strong><?= $name ?></strong>
                 </a>
