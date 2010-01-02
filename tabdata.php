@@ -27,6 +27,15 @@
 require_once('head.php');
 require_once('header.php');
 
+
+$auth = getAuth();
+
+if ($auth['isAuthenticated'] == 1) {
+     $webid = $auth['agent']['webid'];
+     $name = !empty($auth['agent']['name'])?$auth['agent']['name']:$webid;
+}
+
+
 // set up db connection
 $db = new db_class();
 $db->connect('localhost', $config['db_user'], $config['db_pwd'], $config['db_name']);
@@ -34,21 +43,17 @@ $db->connect('localhost', $config['db_user'], $config['db_pwd'], $config['db_nam
 $db2 = new db_class();
 $db2->connect('localhost', $config['db_user'], $config['db_pwd'], $config['db_name']);
 
-// get query string variables
-$webid = urldecode($_REQUEST['webid']);
-$auth = $_SESSION['auth'];
-
 // get webid from db
 $res = $db->select(" select * from foaf where CONCAT(URI, '#me') = '$webid' or URI = '$webid' ");
 
 while ($res && ($row = $db->get_row($res))) {
     if (!empty($row) && !empty($row['rdf'])) {
 
-		$searchstring1 = '<?xml version="1.0"?>' . "\n";
-		$searchstring2 = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-		$searchstring3 = '<?xml version="1.0" encoding="UTF-8"?>';
+        $searchstring1 = '<?xml version="1.0"?>' . "\n";
+        $searchstring2 = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        $searchstring3 = '<?xml version="1.0" encoding="UTF-8"?>';
 
-		$rdf = $row['rdf'];
+        $rdf = $row['rdf'];
         $rdf = str_replace($searchstring1, '', $rdf);
         $rdf = str_replace($searchstring2, '', $rdf);
         $rdf = str_replace($searchstring3, '', $rdf);
