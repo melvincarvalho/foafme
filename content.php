@@ -49,7 +49,7 @@ if ($auth['isAuthenticated'] == 1) {
                     <li style="list-style-image: none"><a href="#friends"><span>Friends</span></a></li>
                     <li style="list-style-image: none"><a href="#accounts"><span>Accounts</span></a></li>
                     <li style="list-style-image: none"><a href="#security"><span>Security</span></a></li>
-                    <?php if ($agent) { ?>
+                    <?php if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) { ?>
                     <li style="list-style-image: none"><a href="#activity"><span>Activity</span></a></li>
                     <?php } else { ?>
                     <li style="list-style-image: none"><a href="#interests"><span>Interests</span></a></li>
@@ -72,7 +72,7 @@ if ($auth['isAuthenticated'] == 1) {
                 </div>
                 <!-- end friends tab -->
 
-                <?php if ($agent) { ?>
+                <?php if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) { ?>
                 <!-- start activites tab -->
                 <div id="activity">Loading...
                 </div>
