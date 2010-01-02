@@ -55,7 +55,7 @@ function openssl_pkey_get_public_hex() {
         $exponent = split(":", $rsa_keys[2]);
 
         // return($modulus[3]);
-        return( array( 'modulus'=>$modulus[3], 'exponent'=>hexdec($exponent[3]) ) );
+        return( array( 'modulus'=>ltrim($modulus[3],'0'), 'exponent'=>hexdec($exponent[3]) ) );
     }
 }
 
@@ -85,6 +85,7 @@ function openssl_get_subjectAltName() {
 function cleanhex($hex) {
     $hex = eregi_replace("[^a-fA-F0-9]", "", $hex);
     $hex = strtoupper($hex);
+	$hex = ltrim($hex, '0');
 
     return($hex);
 }
