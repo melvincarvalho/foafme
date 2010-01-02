@@ -41,7 +41,6 @@
                 ?>
             <span id="user">
                 <a id="logout" href="clearSession.php?return_to=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]" ?>">
-                <!-- Logout <strong><?= $_SESSION['auth']['subjectAltName'] ?> </strong> -->
                     Logout <strong><?= $webid ?></strong>
                 </a>
                 <br/>
