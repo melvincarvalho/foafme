@@ -27,7 +27,6 @@
      $name = !empty($auth['agent']['name'])?$auth['agent']['name']:$webid;
 }
 
-
 ?>
 
 <body bgcolor="#CCE9FA">
@@ -36,7 +35,6 @@
             <a href="index.php">Home</a> | <a href="http://groups.google.com/group/foafme">Mailing List</a>
 
             <?php
-            //if (!empty($_SESSION['auth']) && $_SESSION['auth']['subjectAltName']) {
 
             // If logged in
             if (!empty($webid) ) {
@@ -44,7 +42,7 @@
             <span id="user">
                 <a id="logout" href="clearSession.php?return_to=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]" ?>">
                 <!-- Logout <strong><?= $_SESSION['auth']['subjectAltName'] ?> </strong> -->
-                    Logout <strong><?= $name ?></strong>
+                    Logout <strong><?= $webid ?></strong>
                 </a>
                 <br/>
             </span>
