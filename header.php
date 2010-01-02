@@ -21,6 +21,10 @@
  * -- Albert Einstein
  *
  */
+require_once('config.php');
+require_once('db.class.php');
+require_once('lib/libAuthentication.php');
+$auth = getAuth();
 
  if ($auth['isAuthenticated'] == 1) {
      $webid = $auth['agent']['webid'];
