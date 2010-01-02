@@ -1,4 +1,4 @@
-<?
+<?php
 
 //-----------------------------------------------------------------------------------------------------------------------------------
 //
@@ -41,7 +41,7 @@ if ($auth['isAuthenticated'] == 1) {
 
 if (!empty($_REQUEST['webid'])) {
     $auth = get_agent($_REQUEST['webid']);
-    $webid = $auth['agent']['webid'];
+    $webid = $_REQUEST['webid'];
 }
 
 
@@ -94,37 +94,52 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
                     // -->
                 </script>
 
+                <h2>Friends</h2>
                 <table id="friendstable" about="<?= $webid ?>">
+                    <?php if ( $friends > 0 ){ ?>
                     <tr>
                         <td></td>
                         <td>Name</td><td>URL</td>
                     </tr>
+                    <?php } else { ?>
+                        No Friends visible in FOAF file
+                    <?php } ?>
 
-                    <? for ($i=0; $i<$friends; $i++) { ?>
+                    <?php for ($i=0; $i<$friends; $i++) { ?>
 
 
-                        <? if (empty($webid)) {  ?>
+                        <?php if (empty($webid)) {  ?>
 
                     <tr typeof="foaf:Person" about="<?= $webidbase ?>friend<?= $i ?>" >
                         <td>Friend: </td>
                         <td><input size="12" property="foaf:name" onchange="makeTags()" type="text" /></td>
                         <td><input size="12" rel="rdfs:seeAlso" onchange="makeTags()" type="text" /></td>
 
-                            <? } else { $v = $auth['agent']['knows'][$i]; $about =  $v['about']?$v['about']  : $webidbase . "friend" . $i ; ?>
+                        <?php } else { $v = $auth['agent']['knows'][$i]; $about =  $v['about']?$v['about']  : $webidbase . "friend" . $i ; ?>
 
                     <tr typeof="foaf:Person" id="friend<?= $i ?>" about="<?= $about ?>" >
                         <td><a href="?webid=<?= $v['webid'] ?>">View</a>: </td>
                         <td><span property="foaf:name"><?= $v['name'] ?></span></td>
                         <td><span href="<?= $v['webid'] ?>" rel="rdfs:seeAlso" ><?= $v['webid'] ?></span></td>
-                        <td about="<?= $webid ?>" rel="foaf:knows" href="<?= $webidbase ?>#friend<?= $i ?>"><a  id="delfriend<?= $i ?>" href="javascript:del('delfriend<?= $i ?>')" >x</a></td>
-                            <? } ?>
+                        <td about="<?= $webid ?>" rel="foaf:knows" href="<?= $webidbase ?>#friend<?= $i ?>">
+                            <?php if ($auth['isAuthenticated'] == 1 && empty($_REQUEST['webid']) ) { ?>
+                                <a  id="delfriend<?= $i ?>" href="javascript:del('delfriend<?= $i ?>')" >x</a></td>
+                            <?php } ?>
+                        <?php } ?>
 
                     </tr>
 
-                    <? } ?>
+                    <?php } ?>
 
 
                 </table>
                 <br/>
-                <a id="addf" href="#" onclick="javascript:addf(this)">Add</a>
 
+                <?php
+                if ( $auth['isAuthenticated'] == 1 || empty($_REQUEST['webid']) ) {
+
+                    print '<a id="addf" href="#" onclick="javascript:addf(this)">Add</a>';
+
+                }
+
+                ?>
