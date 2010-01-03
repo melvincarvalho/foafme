@@ -54,7 +54,6 @@ function openssl_pkey_get_public_hex() {
         $modulus  = split(":", $rsa_keys[1]);
         $exponent = split(":", $rsa_keys[2]);
 
-        // return($modulus[3]);
         return( array( 'modulus'=>ltrim($modulus[3],'0'), 'exponent'=>hexdec($exponent[3]) ) );
     }
 }
