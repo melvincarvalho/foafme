@@ -37,15 +37,25 @@ $friends = 2;
 $auth = getAuth();
 if ($auth['isAuthenticated'] == 1) {
     $webid = $auth['agent']['webid'];
+    $webid_viewer = $auth['agent']['webid'];
 }
 
 if (!empty($_REQUEST['webid'])) {
-    $auth = get_agent($_REQUEST['webid']);
     $webid = $_REQUEST['webid'];
+    $webid_owner = $_REQUEST['webid'];
+    if ( $webid_owner != $webid_viewer) {
+        $auth = get_agent($_REQUEST['webid']);
+    }
 }
 
+$canEdit = false;
+if (!empty($webid)) {
+    if (empty($webid_owner) || $webid_owner == $webid_viewer) {
+        $canEdit = true;
+    }
+}
 
-if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
+if ( !empty($webid_owner) || !empty($webid_viewer) ) {
 
     $friends = count($auth['agent']['knows']);
 
@@ -54,6 +64,18 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
 
 
                 <script type="text/javascript">
+                    // TODO: make this more generic
+                    function sparul() {
+                        $("span[property]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' });
+                        $("span[rel]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' });
+                    }
+
+<?php if ($canEdit) { ?>
+                    $(function() {
+                        sparul();
+                    });
+<?php } ?>
+
                     <!--
                     // function to add a friend
                     function addf(el) {
@@ -122,7 +144,7 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
                         <td><span property="foaf:name"><?= $v['name'] ?></span></td>
                         <td><span href="<?= $v['webid'] ?>" rel="rdfs:seeAlso" ><?= $v['webid'] ?></span></td>
                         <td about="<?= $webid ?>" rel="foaf:knows" href="<?= $webidbase ?>#friend<?= $i ?>">
-                            <?php if ($auth['isAuthenticated'] == 1 && empty($_REQUEST['webid']) ) { ?>
+                            <?php if ($canEdit) { ?>
                                 <a  id="delfriend<?= $i ?>" href="javascript:del('delfriend<?= $i ?>')" >x</a></td>
                             <?php } ?>
                         <?php } ?>

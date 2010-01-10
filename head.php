@@ -107,16 +107,9 @@ $webidbase = preg_replace('/#.*/', '', $webid);
                 $('#container').tabs({ fxFade: true, fxSpeed: 'fast' });
                 gGeneratorAgent = 'http://<?php echo $_SERVER['HTTP_HOST'] ?>';
                 gErrorReportsTo = 'mailto:error@<?php echo $_SERVER['HTTP_HOST'] ?>';
-                sparul();
                 makeTags();
             });
 
-
-            // TODO: make this more generic
-            function sparul() {
-                $("span[property]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' });
-                $("span[rel]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' });
-            }
 
             // TODO: make this more generic
             function adda() {
