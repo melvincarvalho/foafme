@@ -89,7 +89,7 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
                         <td><input inner="cert:decimal" property="rsa:public_exponent"
                                    id="exponent" onchange="makeTags()" type="text" name="exponent" />
                                 (Default = 65537)
-
+                        </td>
                     </tr>
                 </table>
 
