@@ -115,8 +115,8 @@ if ($auth['isAuthenticated'] == 1) {
             <?php if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) { ?>
             <?php } else { ?>
             <!-- start foaf file -->
-            <div id="form">
-                <form name="results" action="store.php" method="post" >
+            <form name="results" action="store.php" method="post" >
+                <div id="form">
                     <p>Your FOAF file:</p>
                     <textarea id="rdf" name="rdf" cols="80" rows="20"></textarea>
                     <br/>
@@ -125,8 +125,8 @@ if ($auth['isAuthenticated'] == 1) {
                     <br/><br/>
                     <p style='display:none' id="saving">Saving will give you the <a href="http://esw.w3.org/topic/WebID">Web ID</a> = <span style="color:blue" id="displayname"></span></p>
 
-                </form>
-            </div>
+                </div>
+            </form>
             <!-- end foaf file -->
             <?php } ?>
         </div>
