@@ -75,8 +75,8 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
                     <tr typeof="foaf:OnlineAccount"><td>Account: </td><td><input size="40" rel="foaf:holdsAccount" id="account2" onchange="makeTags()" type="text" name="account2" value="<?= isset($import['holdsAccount']) ? $import['holdsAccount'] : NULL ?>"/></td></tr>
                     <tr typeof="foaf:OnlineAccount"><td>Account: </td><td><input size="40" rel="foaf:holdsAccount" id="account3" onchange="makeTags()" type="text" name="accounts3" /></td></tr>
 
-                    <a href="#" onclick="javascript:adda()">Add</a>
                 </table>
+                <a href="#" onclick="javascript:adda()">Add</a>
 
 
 <?
