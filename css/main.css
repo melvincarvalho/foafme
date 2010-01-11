@@ -76,6 +76,10 @@ body, p, div, a {
     font-size:12px;
 }
 
+body {
+    background-color: #CCE9FA;
+}
+
 #content {
     float:left;
     min-height:400px;

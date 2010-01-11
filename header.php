@@ -35,7 +35,7 @@ if ($auth['isAuthenticated'] == 1) {
 
 ?>
 
-<body bgcolor="#CCE9FA">
+<body>
     <div id="wrap">
         <div id="header">
             <a href="index.php">Home</a> | <a href="http://groups.google.com/group/foafme">Mailing List</a>
