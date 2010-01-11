@@ -125,7 +125,7 @@ if ($auth['isAuthenticated'] == 1) {
                     <br/><br/>
                     <p style='display:none' id="saving">Saving will give you the <a href="http://esw.w3.org/topic/WebID">Web ID</a> = <span style="color:blue" id="displayname"></span></p>
 
-                    <p style='display:none'><input value="" type="checkbox" name="spamProtect" checked> Protect email addresses from spammers</p>
+                    <p style='display:none'><input value="" type="checkbox" name="spamProtect" checked /> Protect email addresses from spammers</p>
                 </form>
             </div>
             <!-- end foaf file -->
