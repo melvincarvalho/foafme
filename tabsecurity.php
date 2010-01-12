@@ -80,13 +80,13 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
                     </tr>
                     <tr>
                         <td>Public Key:</td>
-                        <td><input inner="cert:hex" property="rsa:modulus" id="publicKey"
+                        <td><input class="cert:hex" property="rsa:modulus" id="publicKey"
                                    onchange="makeTags()" type="text" name="publicKey" />
                         </td>
                     </tr>
                     <tr>
                         <td>Exponent:</td>
-                        <td><input inner="cert:decimal" property="rsa:public_exponent"
+                        <td><input class="cert:decimal" property="rsa:public_exponent"
                                    id="exponent" onchange="makeTags()" type="text" name="exponent" />
                                 (Default = 65537)
                         </td>

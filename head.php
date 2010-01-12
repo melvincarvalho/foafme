@@ -249,7 +249,13 @@ $webidbase = preg_replace('/#.*/', '', $webid);
                 var about  = $(el).attr("about");
                 var rel    = $(el).attr("rel");
                 var val    = $(el).val();
-                var inner  = $(el).attr("inner");
+                var cl     = $(el).attr("class");
+
+                var inner  = '';
+                if (cl && cl.indexOf(':') != -1) {
+                    inner = cl;
+                }
+
                 var href   = $(el).attr("href")?$(el).attr("href"):val;
 
                 if (!val && !href) return '';
