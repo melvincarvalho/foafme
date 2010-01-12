@@ -136,6 +136,7 @@ if ( !empty($webid_owner) || !empty($webid_viewer) ) {
                         <td>Friend: </td>
                         <td><input size="12" property="foaf:name" onchange="makeTags()" type="text" /></td>
                         <td><input size="12" rel="rdfs:seeAlso" onchange="makeTags()" type="text" /></td>
+                    </tr>
 
                         <?php } else { $v = $auth['agent']['knows'][$i]; $about =  $v['about']?$v['about']  : $webidbase . "friend" . $i ; ?>
 
@@ -145,9 +146,10 @@ if ( !empty($webid_owner) || !empty($webid_viewer) ) {
                         <td><span href="<?= $v['webid'] ?>" rel="rdfs:seeAlso" ><?= $v['webid'] ?></span></td>
                         <td about="<?= $webid ?>" rel="foaf:knows" href="<?= $webidbase ?>#friend<?= $i ?>">
                             <?php if ($canEdit) { ?>
-                                <a  id="delfriend<?= $i ?>" href="javascript:del('delfriend<?= $i ?>')" >x</a></td>
+                                <a  id="delfriend<?= $i ?>" href="javascript:del('delfriend<?= $i ?>')" >x</a>
                             <?php } ?>
                         <?php } ?>
+                        </td>
 
                     </tr>
 
