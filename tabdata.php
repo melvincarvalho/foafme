@@ -68,7 +68,8 @@ while ($res && ($row = $db->get_row($res))) {
 }
 ?>
 
-                <form id="rawdata" name="results" action="" method="POST" >
+                <form name="results" action="" method="post" >
+                    <div>
                     <h3>Enter FOAF as Raw Data (Beta)  </h3>
                     <textarea style='height:400px' name="rdf" cols="80" rows="80"><? echo $rdf; ?></textarea>
 
@@ -77,6 +78,7 @@ while ($res && ($row = $db->get_row($res))) {
 
                     <?php if ($loggedIn) { echo '<input value="Update" type="submit" name="button"/>'; } ?>
                     <br/>
+                    </div>
                 </form>
 
                 <div>webid : <a rel="webid" href="<?= $webid ?>"><?= $webid ?></a></div>
