@@ -77,11 +77,14 @@ if ($auth['isAuthenticated'] == 1) {
                 <div id="activity">Loading...
                 </div>
                 <!-- end activities tab -->
-                <!-- start activites tab -->
+                <?php } ?>
+
+                <?php if ( $auth['isAuthenticated'] == 1 ) { ?>
+                <!-- start raw data tab -->
                 <div id="rawdata">
                     <?php include('tabdata.php'); ?>
                 </div>
-                <!-- end activities tab -->
+                <!-- end raw data tab -->
                 <?php } ?>
 
                 <!-- start accounts tab -->
