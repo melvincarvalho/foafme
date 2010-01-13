@@ -56,10 +56,12 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
     } else {
         print 'This identity is not yet protected.<form name="input" action="' . $config['certficate_uri'] .'" method="get">';
         ?>
+                <div>
                 <input type="hidden" size="25" id="foaf" name="foaf" value="<?= $_REQUEST['webid'] ?>">
                         Key Strength: <keygen name="pubkey" challenge="randomchars"></td><td></td><td></td>
                 <input type="hidden" id="commonName" name="commonName" value="FOAF ME Cert <?= $_REQUEST['webid'] ?>"><button id="generate" type="submit">Claim Account with SSL Certificate!</button>
                 <input type="hidden" id="uri" name="uri" value="<?= $_REQUEST['webid'] ?>">
+                </div>
                 </form>
                 <a href="https://foaf.me/simpleLogin.php">Test</a>
     <?
