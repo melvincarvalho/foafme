@@ -23,7 +23,17 @@
  */
 ?>		
 
-        <div class="footer">Powered&nbsp;by&nbsp;<a href="http://foaf.me">foaf.me</a> (alpha-ish)</div>
+        <div class="footer">
+  
+            Powered&nbsp;by&nbsp;<a href="http://foaf.me">foaf.me</a> (alpha)
+            <p about="" resource="http://www.w3.org/TR/rdfa-syntax"
+                rel="dct:conformsTo" xmlns:dc="http://purl.org/dc/terms/">
+                <a href="http://validator.w3.org/check?uri=referer"><img
+                    src="http://www.w3.org/Icons/valid-xhtml-rdfa-blue"
+                    alt="Valid XHTML + RDFa"   /></a>
+            </p>
+ 
+        </div>
     </div>
 
 </body>
