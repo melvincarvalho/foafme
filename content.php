@@ -132,8 +132,6 @@ if ($auth['isAuthenticated'] == 1) {
             </form>
             <!-- end foaf file -->
             <?php } ?>
-        </div>
-        <div class="clear"></div>
 
 
 

@@ -165,5 +165,9 @@ if ( !empty($webid_owner) || !empty($webid_viewer) ) {
                     print '<a id="addf" href="#" onclick="javascript:addf(this)">Add</a>';
 
                 }
-
+                
+                if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME'])) {
+                   require_once("footer.php");
+                }                
+ 
                 ?>

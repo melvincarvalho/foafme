@@ -23,6 +23,8 @@
  */
 ?>		
 
+            </div>
+        <div class="clear"></div>
         <div class="footer">
   
             Powered&nbsp;by&nbsp;<a href="http://foaf.me">foaf.me</a> (alpha)
