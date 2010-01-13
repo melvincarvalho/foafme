@@ -142,8 +142,8 @@ if ( !empty($webid_owner) || !empty($webid_viewer) ) {
 
                     <tr typeof="foaf:Person" id="friend<?= $i ?>" about="<?= $about ?>" >
                         <td><a href="?webid=<?= $v['webid'] ?>">View</a>: </td>
-                        <td><span property="foaf:name"><?= $v['name'] ?></span></td>
-                        <td><span href="<?= $v['webid'] ?>" rel="rdfs:seeAlso" ><?= $v['webid'] ?></span></td>
+                        <td><span property="foaf:name"><?= empty($v['name'])?'N/A':$v['name'] ?></span></td>
+                        <td><span href="<?= $v['webid'] ?>" rel="rdfs:seeAlso" ><?= empty($v['webid'])?'N/A':$v['webid'] ?></span></td>
                         <td about="<?= $webid ?>" rel="foaf:knows" href="<?= $webidbase ?>#friend<?= $i ?>">
                             <?php if ($canEdit) { ?>
                                 <a  id="delfriend<?= $i ?>" href="javascript:del('delfriend<?= $i ?>')" >x</a>
