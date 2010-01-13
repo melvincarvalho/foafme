@@ -82,7 +82,7 @@ while ($res && ($row = $db->get_row($res))) {
                 </form>
 
                 <div>webid : <a rel="webid" href="<?= $webid ?>"><?= $webid ?></a></div>
-                <div>validate + graph : <a rel="webid" href="<?= "http://www.w3.org/RDF/Validator/ARPServlet?URI=" . urlencode($webid) .  "&amp;PARSE=Parse+URI%3A+&amp;TRIPLES_AND_GRAPH=PRINT_BOTH&AMP;FORMAT=PNG_EMBED"  ?>">Go</a></div>
+                <div>validate + graph : <a rel="webid" href="<?= "http://www.w3.org/RDF/Validator/ARPServlet?URI=" . urlencode($webid) .  "&amp;PARSE=Parse+URI%3A+&amp;TRIPLES_AND_GRAPH=PRINT_BOTH&amp;FORMAT=PNG_EMBED"  ?>">Go</a></div>
 
 
 
