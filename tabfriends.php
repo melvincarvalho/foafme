@@ -148,8 +148,8 @@ if ( !empty($webid_owner) || !empty($webid_viewer) ) {
                             <?php if ($canEdit) { ?>
                                 <a  id="delfriend<?= $i ?>" href="javascript:del('delfriend<?= $i ?>')" >x</a>
                             <?php } ?>
-                        <?php } ?>
                         </td>
+                        <?php } ?>
 
                     </tr>
 
