@@ -149,9 +149,9 @@ if ( !empty($webid_owner) || !empty($webid_viewer) ) {
                                 <a  id="delfriend<?= $i ?>" href="javascript:del('delfriend<?= $i ?>')" >x</a>
                             <?php } ?>
                         </td>
+                    </tr>
                         <?php } ?>
 
-                    </tr>
 
                     <?php } ?>
 
