@@ -48,10 +48,10 @@ if (!empty($_REQUEST['webid'])) {
 	</table>
 	<a id="addf" href="#" onclick="javascript:addi(this)">Add</a>
 
-<?
-if ( $headedLoaded != true ) {
-	include('footer.php'); 
-}
+<?php
+                if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME'])) {
+                   require_once("footer.php");
+                }
 ?>
 
 

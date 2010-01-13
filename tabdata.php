@@ -85,4 +85,8 @@ while ($res && ($row = $db->get_row($res))) {
                 <div>validate + graph : <a rel="webid" href="<?= "http://www.w3.org/RDF/Validator/ARPServlet?URI=" . urlencode($webid) .  "&amp;PARSE=Parse+URI%3A+&amp;TRIPLES_AND_GRAPH=PRINT_BOTH&amp;FORMAT=PNG_EMBED"  ?>">Go</a></div>
 
 
-
+<?php
+                if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME'])) {
+                   require_once("footer.php");
+                }
+?>
