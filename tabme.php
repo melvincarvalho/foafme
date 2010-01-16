@@ -71,13 +71,18 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
   
 } else { ?>
                 <table>
-                    <tr><td><b>Create Profile!</b> </td><td></tr>
-                    <tr><td>Username/Nick:</td><td><input id="nick" onChange="makeTags()" property="foaf:nick" type="text" name="nick" value="<?= isset($import['nick']) ? $import['nick'] : NULL ?>" /><span class="required">*</span></tr>
-                    <tr><td>First Name</td><td><input property="foaf:firstName" id="firstname" onChange="makeTags()" type="text" name="firstName"></td></tr>
-                    <tr><td>Last Name</td><td><input property="foaf:givenname" id="surname" onChange="makeTags()" type="text" name="surname"></td></tr>
-                    <tr><td>Picture</td><td><input rel="foaf:depiction" id="depiction" onChange="makeTags()" type="text" name="depiction"></td></tr>
-                    <tr><td>Homepage</td><td><input rel="foaf:homepage" id="homepage" onChange="makeTags()" type="text" name="homepage"/></tr>
+                    <tr><td><b>Create Profile!</b> </td><td></td></tr>
+                    <tr><td>Username/Nick:</td><td><input id="nick" onchange="makeTags()" property="foaf:nick" type="text" name="nick" value="<?= isset($import['nick']) ? $import['nick'] : NULL ?>" /><span class="required">*</span></td></tr>
+                    <tr><td>First Name</td><td><input property="foaf:firstName" id="firstname" onchange="makeTags()" type="text" name="firstName" /></td></tr>
+                    <tr><td>Last Name</td><td><input property="foaf:givenname" id="surname" onchange="makeTags()" type="text" name="surname" /></td></tr>
+                    <tr><td>Picture</td><td><input rel="foaf:depiction" id="depiction" onchange="makeTags()" type="text" name="depiction" /></td></tr>
+                    <tr><td>Homepage</td><td><input rel="foaf:homepage" id="homepage" onchange="makeTags()" type="text" name="homepage" /></td></tr>
                 </table>
                 <br/>
                 <div class="blue">* required field (all other fields are optional)</div>
-<?php } ?>
+<?php }
+                if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME'])) {
+                   require_once("footer.php");
+                }
+
+?>

@@ -77,11 +77,14 @@ if ($auth['isAuthenticated'] == 1) {
                 <div id="activity">Loading...
                 </div>
                 <!-- end activities tab -->
-                <!-- start activites tab -->
+                <?php } ?>
+
+                <?php if ( $auth['isAuthenticated'] == 1 ) { ?>
+                <!-- start raw data tab -->
                 <div id="rawdata">
                     <?php include('tabdata.php'); ?>
                 </div>
-                <!-- end activities tab -->
+                <!-- end raw data tab -->
                 <?php } ?>
 
                 <!-- start accounts tab -->
@@ -115,23 +118,20 @@ if ($auth['isAuthenticated'] == 1) {
             <?php if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) { ?>
             <?php } else { ?>
             <!-- start foaf file -->
-            <div id="form">
-                <form name="results" action="store.php" method="POST" >
+            <form name="results" action="store.php" method="post" >
+                <div id="form">
                     <p>Your FOAF file:</p>
                     <textarea id="rdf" name="rdf" cols="80" rows="20"></textarea>
                     <br/>
-                        <?php echo $_SERVER['HTTP_HOST'] . ((dirname($_SERVER['PHP_SELF'])=='/')?'':dirname($_SERVER['PHP_SELF'])); ?>/<input id="username" value="" type="text" name="username"> <button type="submit">Save!</button>
+                        <?php echo $_SERVER['HTTP_HOST'] . ((dirname($_SERVER['PHP_SELF'])=='/')?'':dirname($_SERVER['PHP_SELF'])); ?>/<input id="username" value="" type="text" name="username" /> <button type="submit">Save!</button>
 
                     <br/><br/>
                     <p style='display:none' id="saving">Saving will give you the <a href="http://esw.w3.org/topic/WebID">Web ID</a> = <span style="color:blue" id="displayname"></span></p>
 
-                    <p style='display:none'><input value="" type="checkbox" name="spamProtect" checked> Protect email addresses from spammers</p>
-                </form>
-            </div>
+                </div>
+            </form>
             <!-- end foaf file -->
             <?php } ?>
-        </div>
-        <div class="clear"></div>
 
 
 

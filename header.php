@@ -26,14 +26,16 @@ require_once('db.class.php');
 require_once('lib/libAuthentication.php');
 $auth = getAuth();
 
- if ($auth['isAuthenticated'] == 1) {
-     $webid = $auth['agent']['webid'];
-     $name = !empty($auth['agent']['name'])?$auth['agent']['name']:$webid;
+if ($auth['isAuthenticated'] == 1) {
+    $webid = $auth['agent']['webid'];
+    $name = !empty($auth['agent']['name'])?$auth['agent']['name']:$webid;
+} else {
+    $webid = NULL;
 }
 
 ?>
 
-<body bgcolor="#CCE9FA">
+<body>
     <div id="wrap">
         <div id="header">
             <a href="index.php">Home</a> | <a href="http://groups.google.com/group/foafme">Mailing List</a>

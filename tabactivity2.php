@@ -37,11 +37,21 @@ if (isset($_REQUEST['webid'])) {
     $auth = get_agent($_REQUEST['webid']);
 }
 
-$a1 = replace_with_rss($auth['agent']['holdsAccount']);
-$a2 = replace_with_rss($auth['agent']['accountProfilePage']);
-$a3 = (array)$auth['agent']['weblog'];
+$knows = $auth['agent']['knows'];
 
-$feedArray = array_merge(  (array)$a1, (array)$a2, (array) $a3 );
+foreach ($knows as $k => $v) {
+    $auth = get_agent($v['webid']);
+    $a1 = replace_with_rss($auth['agent']['holdsAccount']);
+    $a2 = replace_with_rss($auth['agent']['accountProfilePage']);
+    $a3 = (array)$auth['agent']['weblog'];
+    $feedArray = array_merge( (array)$feedArray, (array)$a1, (array)$a2, (array) $a3 );
+}
+
+//$a1 = replace_with_rss($auth['agent']['holdsAccount']);
+//$a2 = replace_with_rss($auth['agent']['accountProfilePage']);
+//$a3 = (array)$auth['agent']['weblog'];
+
+//$feedArray = array_merge(  (array)$a1, (array)$a2, (array) $a3 );
 $feedArray = array_unique ($feedArray);
 
 if ( !empty($feedArray) ) {
@@ -80,7 +90,7 @@ if ( !empty($feedArray) ) {
 
     <?php
     // Let's loop through each item in the feed.
-    foreach($feed->get_items() as $item):
+    foreach($feed->get_items(0,0) as $item):
 
     // Let's give ourselves a reference to the parent $feed object for this particular item.
         $feed = $item->get_feed();

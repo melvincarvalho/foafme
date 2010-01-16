@@ -1,4 +1,4 @@
-<?
+<?php
 
 //-----------------------------------------------------------------------------------------------------------------------------------
 //
@@ -56,10 +56,12 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
     } else {
         print 'This identity is not yet protected.<form name="input" action="' . $config['certficate_uri'] .'" method="get">';
         ?>
+                <div>
                 <input type="hidden" size="25" id="foaf" name="foaf" value="<?= $_REQUEST['webid'] ?>">
                         Key Strength: <keygen name="pubkey" challenge="randomchars"></td><td></td><td></td>
                 <input type="hidden" id="commonName" name="commonName" value="FOAF ME Cert <?= $_REQUEST['webid'] ?>"><button id="generate" type="submit">Claim Account with SSL Certificate!</button>
                 <input type="hidden" id="uri" name="uri" value="<?= $_REQUEST['webid'] ?>">
+                </div>
                 </form>
                 <a href="https://foaf.me/simpleLogin.php">Test</a>
     <?
@@ -80,16 +82,16 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
                     </tr>
                     <tr>
                         <td>Public Key:</td>
-                        <td><input inner="cert:hex" property="rsa:modulus" id="publicKey"
-                                   onChange="makeTags()" type="text" name="publicKey" />
-
+                        <td><input class="cert:hex" property="rsa:modulus" id="publicKey"
+                                   onchange="makeTags()" type="text" name="publicKey" />
+                        </td>
                     </tr>
                     <tr>
                         <td>Exponent:</td>
-                        <td><input inner="cert:decimal" property="rsa:public_exponent"
-                                   id="exponent" onChange="makeTags()" type="text" name="exponent" />
+                        <td><input class="cert:decimal" property="rsa:public_exponent"
+                                   id="exponent" onchange="makeTags()" type="text" name="exponent" />
                                 (Default = 65537)
-
+                        </td>
                     </tr>
                 </table>
 
@@ -97,6 +99,10 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
 
 <?
 }
+                if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME'])) {
+                   require_once("footer.php");
+                }
+
 ?>
 
 

@@ -55,8 +55,8 @@ if (!empty($_REQUEST['webid'])) {
 $webidbase = preg_replace('/#.*/', '', $webid);
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">  
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
+    "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
 <!--
  * FOAF Me : FOAF Me Home Page and FOAF creator wizard.
  * Copyright (c) http://foaf.me/
@@ -107,16 +107,9 @@ $webidbase = preg_replace('/#.*/', '', $webid);
                 $('#container').tabs({ fxFade: true, fxSpeed: 'fast' });
                 gGeneratorAgent = 'http://<?php echo $_SERVER['HTTP_HOST'] ?>';
                 gErrorReportsTo = 'mailto:error@<?php echo $_SERVER['HTTP_HOST'] ?>';
-                sparul();
                 makeTags();
             });
 
-
-            // TODO: make this more generic
-            function sparul() {
-                $("span[property]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' });
-                $("span[rel]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' });
-            }
 
             // TODO: make this more generic
             function adda() {
@@ -256,7 +249,13 @@ $webidbase = preg_replace('/#.*/', '', $webid);
                 var about  = $(el).attr("about");
                 var rel    = $(el).attr("rel");
                 var val    = $(el).val();
-                var inner  = $(el).attr("inner");
+                var cl     = $(el).attr("class");
+
+                var inner  = '';
+                if (cl && cl.indexOf(':') != -1) {
+                    inner = cl;
+                }
+
                 var href   = $(el).attr("href")?$(el).attr("href"):val;
 
                 if (!val && !href) return '';

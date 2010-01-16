@@ -37,15 +37,25 @@ $friends = 2;
 $auth = getAuth();
 if ($auth['isAuthenticated'] == 1) {
     $webid = $auth['agent']['webid'];
+    $webid_viewer = $auth['agent']['webid'];
 }
 
 if (!empty($_REQUEST['webid'])) {
-    $auth = get_agent($_REQUEST['webid']);
     $webid = $_REQUEST['webid'];
+    $webid_owner = $_REQUEST['webid'];
+    if ( $webid_owner != $webid_viewer) {
+        $auth = get_agent($_REQUEST['webid']);
+    }
 }
 
+$canEdit = false;
+if (!empty($webid)) {
+    if (empty($webid_owner) || $webid_owner == $webid_viewer) {
+        $canEdit = true;
+    }
+}
 
-if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
+if ( !empty($webid_owner) || !empty($webid_viewer) ) {
 
     $friends = count($auth['agent']['knows']);
 
@@ -54,6 +64,18 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
 
 
                 <script type="text/javascript">
+                    // TODO: make this more generic
+                    function sparul() {
+                        $("span[property]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' });
+                        $("span[rel]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' });
+                    }
+
+<?php if ($canEdit) { ?>
+                    $(function() {
+                        sparul();
+                    });
+<?php } ?>
+
                     <!--
                     // function to add a friend
                     function addf(el) {
@@ -114,20 +136,22 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
                         <td>Friend: </td>
                         <td><input size="12" property="foaf:name" onchange="makeTags()" type="text" /></td>
                         <td><input size="12" rel="rdfs:seeAlso" onchange="makeTags()" type="text" /></td>
+                    </tr>
 
                         <?php } else { $v = $auth['agent']['knows'][$i]; $about =  $v['about']?$v['about']  : $webidbase . "friend" . $i ; ?>
 
                     <tr typeof="foaf:Person" id="friend<?= $i ?>" about="<?= $about ?>" >
                         <td><a href="?webid=<?= $v['webid'] ?>">View</a>: </td>
-                        <td><span property="foaf:name"><?= $v['name'] ?></span></td>
-                        <td><span href="<?= $v['webid'] ?>" rel="rdfs:seeAlso" ><?= $v['webid'] ?></span></td>
+                        <td><span property="foaf:name"><?= empty($v['name'])?'N/A':$v['name'] ?></span></td>
+                        <td><span href="<?= $v['webid'] ?>" rel="rdfs:seeAlso" ><?= empty($v['webid'])?'N/A':$v['webid'] ?></span></td>
                         <td about="<?= $webid ?>" rel="foaf:knows" href="<?= $webidbase ?>#friend<?= $i ?>">
-                            <?php if ($auth['isAuthenticated'] == 1 && empty($_REQUEST['webid']) ) { ?>
-                                <a  id="delfriend<?= $i ?>" href="javascript:del('delfriend<?= $i ?>')" >x</a></td>
+                            <?php if ($canEdit) { ?>
+                                <a  id="delfriend<?= $i ?>" href="javascript:del('delfriend<?= $i ?>')" >x</a>
                             <?php } ?>
+                        </td>
+                    </tr>
                         <?php } ?>
 
-                    </tr>
 
                     <?php } ?>
 
@@ -141,5 +165,9 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
                     print '<a id="addf" href="#" onclick="javascript:addf(this)">Add</a>';
 
                 }
-
+                
+                if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME'])) {
+                   require_once("footer.php");
+                }                
+ 
                 ?>
