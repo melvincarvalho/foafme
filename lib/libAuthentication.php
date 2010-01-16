@@ -508,6 +508,12 @@ function get_agent($agenturi) {
 
         $store = create_store($agenturi);
 
+		if (isset($store) && ($errs = $store->getErrors()))
+		{
+			$agent = safe_array_merge($agent, array('errors'=>$errs));
+			return $agent;
+		}
+
         if ($agentrsakey = get_foaf_rsakey($store, $agenturi))
             $agent = safe_array_merge($agent, array('RSAKey'=>$agentrsakey));
 
@@ -548,6 +554,10 @@ function get_agent($agenturi) {
 
             $agent = array('agent'=>$agent);
         }
+		else
+		{
+			$agent = array('errors'=>array('0'=>'Could not find FOAF details on the requested WebID'));
+		}
 
         return $agent;
     }
