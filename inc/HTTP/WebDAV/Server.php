@@ -1245,7 +1245,7 @@ class HTTP_WebDAV_Server
 						{
 							if ( $db->update_sql($sql) == FALSE )
 							{
-				                $stat = "409 Conflict";
+								$stat = "409 Conflict";
 
 								$fspath2 = $fspath . ".err";
 
