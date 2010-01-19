@@ -1,7 +1,7 @@
 <?php
 
 /* ARC2 static class inclusion */ 
-include_once('/home/foaf/www/arc/ARC2.php');
+include_once($_SERVER['DOCUMENT_ROOT'].'/arc/ARC2.php');
 
 
 /*
@@ -80,7 +80,7 @@ class ARC2_DataWikiPlugin extends ARC2_Class {
 	else {
 		$qs = array($q);
 	}
-	$tmpfname = tempnam("/home/foaf/www/datawiki/rdf", "rdf_");
+	$tmpfname = tempnam($_SERVER['DOCUMENT_ROOT']."/datawiki/rdf", "rdf_");
 	foreach ($qs as $q) {
 		$index = $this->getUpdatedIndex($index, $q, $uri);
 		if (!$this->getErrors()) {
@@ -136,7 +136,7 @@ class ARC2_DataWikiPlugin extends ARC2_Class {
 
   function writeLog($v) {
  //   return 1;
-    $fp = fopen('/home/foaf/www/datawiki/log.txt', 'a');
+    $fp = fopen($_SERVER['DOCUMENT_ROOT'].'/datawiki/log.txt', 'a');
     $now = time();
     fwrite($fp, date('Y-m-d H:i:s', $now) . ' : ' . $v . '' . "\r\n");
     fclose($fp);
@@ -145,7 +145,7 @@ class ARC2_DataWikiPlugin extends ARC2_Class {
 /*
   function sparulLog($page, $webid, $sparul) {
 	//   return 1;
-    $fp = fopen('/home/foaf/www/datawiki/sparul2.log', 'a');
+    $fp = fopen($_SERVER['DOCUMENT_ROOT'].'/datawiki/sparul2.log', 'a');
     $now = time();
     fwrite($fp, date('Y-m-d H:i:s', $now) . ' : webid : ' . $webid . ' : uri : ' . $page . ' : sparul : ' . $sparul . '' . "\r\n");
     fclose($fp);
