@@ -1,5 +1,4 @@
-<?
-/*
+<?php /*
  * clearSession.php
  *
  * Copyright 2008-2009 foaf.me

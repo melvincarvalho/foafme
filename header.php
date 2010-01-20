@@ -47,18 +47,18 @@ if ($auth['isAuthenticated'] == 1) {
                 ?>
             <span id="user">
                 <a id="logout" href="clearSession.php?return_to=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]" ?>">
-                    Logout <strong><?= $webid ?></strong>
+                    Logout <strong><?php echo $webid ?></strong>
                 </a>
                 <br/>
             </span>
-            <? } else { ?>
+            <?php } else { ?>
             <span id="user">
                 <a id="account" href="https://foafssl.org/srv/idp?authreqissuer=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]" ?>">
                     Login to your <strong>account</strong>
                 </a>
                 <br />
             </span>
-            <? } ?>
+            <?php } ?>
 
         </div>
 

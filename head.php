@@ -76,7 +76,7 @@ $webidbase = preg_replace('/#.*/', '', $webid);
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="Content-Style-Type" content="text/css" />
         <meta http-equiv="Content-Script-Type" content="text/javascript" />
-        <!-- <base href="<?= $agent ?>"> -->
+        <!-- <base href="<?php echo $agent ?>"> -->
         <title>FOAF Me</title>
         <link rel="stylesheet" href="css/jquery.tabs.css" type="text/css" media="print, projection, screen" />
         <!--
@@ -134,15 +134,15 @@ $webidbase = preg_replace('/#.*/', '', $webid);
                     resultArray = re.exec(str);
                 }
 
-                frag = "<?= $agent ?>#" + frag;
-                //alert("sparul.php?uri=<?= $agent ?>&delete=" + escape(frag));
-                //$.post("sparul.php?uri=<?= $agent ?>&delete=" + escape(frag));
+                frag = "<?php echo $agent ?>#" + frag;
+                //alert("sparul.php?uri=<?php echo $agent ?>&delete=" + escape(frag));
+                //$.post("sparul.php?uri=<?php echo $agent ?>&delete=" + escape(frag));
 
                 var sparul = 'DELETE { ';
                 $(str).parent().parent().rdf().databank.triples().each(function () { sparul += this + ' '; } );
                 sparul += ' } ';
                 //alert('DELETE:  This funcionality is in Alpha ' + sparul);
-                jQuery.post( '<?= $_REQUEST['webid'] ?>', sparul );
+                jQuery.post( '<?php echo $_REQUEST['webid'] ?>', sparul );
 
                 $(str).parent().parent().remove();
                 //location.reload();

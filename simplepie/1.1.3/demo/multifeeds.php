@@ -71,7 +71,7 @@ $feed->handle_content_type();
 <div id="site">
 
 	<?php if ($feed->error): ?>
-		<p><?=$feed->error()?></p>
+		<p><?php echo$feed->error()?></p>
 	<?php endif ?>
 
 

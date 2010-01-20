@@ -66,8 +66,8 @@ if ( !empty($webid_owner) || !empty($webid_viewer) ) {
                 <script type="text/javascript">
                     // TODO: make this more generic
                     function sparul() {
-                        $("span[property]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' });
-                        $("span[rel]").editInPlace({ url: 'sparul.php' , params: 'uri=<?= $agent ?>' });
+                        $("span[property]").editInPlace({ url: 'sparul.php' , params: 'uri=<?php echo $agent ?>' });
+                        $("span[rel]").editInPlace({ url: 'sparul.php' , params: 'uri=<?php echo $agent ?>' });
                     }
 
 <?php if ($canEdit) { ?>
@@ -106,7 +106,7 @@ if ( !empty($webid_owner) || !empty($webid_viewer) ) {
                             var lastFriend = about != undefined? about.replace(/.*friend/, "") : -1;
                             lastFriend++;
                             //alert (lastFriend)
-                            $("#friendstable tr:last").after("<tr about='<?= $webidbase ?>#friend"+lastFriend+"' typeof='foaf:Person' ><td>Friend</td><td><span property='foaf:name'></span></td><td><a rel='refs:seeAlso'></a></td><td about='<?= $webid ?>' rel='foaf:knows' href='<?= $webidbase ?>#friend"+lastFriend+"' ><a>x</a></td></tr>");
+                            $("#friendstable tr:last").after("<tr about='<?php echo $webidbase ?>#friend"+lastFriend+"' typeof='foaf:Person' ><td>Friend</td><td><span property='foaf:name'></span></td><td><a rel='refs:seeAlso'></a></td><td about='<?php echo $webid ?>' rel='foaf:knows' href='<?php echo $webidbase ?>#friend"+lastFriend+"' ><a>x</a></td></tr>");
 
                             sparul();
                         }
@@ -117,7 +117,7 @@ if ( !empty($webid_owner) || !empty($webid_viewer) ) {
                 </script>
 
                 <h2>Friends</h2>
-                <table id="friendstable" about="<?= $webid ?>">
+                <table id="friendstable" about="<?php echo $webid ?>">
                     <?php if ( $friends > 0 ){ ?>
                     <tr>
                         <td></td>
@@ -132,7 +132,7 @@ if ( !empty($webid_owner) || !empty($webid_viewer) ) {
 
                         <?php if (empty($webid)) {  ?>
 
-                    <tr typeof="foaf:Person" about="<?= $webidbase ?>friend<?= $i ?>" >
+                    <tr typeof="foaf:Person" about="<?php echo $webidbase ?>friend<?php echo $i ?>" >
                         <td>Friend: </td>
                         <td><input size="12" property="foaf:name" onchange="makeTags()" type="text" /></td>
                         <td><input size="12" rel="rdfs:seeAlso" onchange="makeTags()" type="text" /></td>
@@ -140,13 +140,13 @@ if ( !empty($webid_owner) || !empty($webid_viewer) ) {
 
                         <?php } else { $v = $auth['agent']['knows'][$i]; $about =  $v['about']?$v['about']  : $webidbase . "friend" . $i ; ?>
 
-                    <tr typeof="foaf:Person" id="friend<?= $i ?>" about="<?= $about ?>" >
-                        <td><a href="?webid=<?= $v['webid'] ?>">View</a>: </td>
-                        <td><span property="foaf:name"><?= empty($v['name'])?'N/A':$v['name'] ?></span></td>
-                        <td><span href="<?= $v['webid'] ?>" rel="rdfs:seeAlso" ><?= empty($v['webid'])?'N/A':$v['webid'] ?></span></td>
-                        <td about="<?= $webid ?>" rel="foaf:knows" href="<?= $webidbase ?>#friend<?= $i ?>">
+                    <tr typeof="foaf:Person" id="friend<?php echo $i ?>" about="<?php echo $about ?>" >
+                        <td><a href="?webid=<?php echo $v['webid'] ?>">View</a>: </td>
+                        <td><span property="foaf:name"><?php echo empty($v['name'])?'N/A':$v['name'] ?></span></td>
+                        <td><span href="<?php echo $v['webid'] ?>" rel="rdfs:seeAlso" ><?php echo empty($v['webid'])?'N/A':$v['webid'] ?></span></td>
+                        <td about="<?php echo $webid ?>" rel="foaf:knows" href="<?php echo $webidbase ?>#friend<?php echo $i ?>">
                             <?php if ($canEdit) { ?>
-                                <a  id="delfriend<?= $i ?>" href="javascript:del('delfriend<?= $i ?>')" >x</a>
+                                <a  id="delfriend<?php echo $i ?>" href="javascript:del('delfriend<?php echo $i ?>')" >x</a>
                             <?php } ?>
                         </td>
                     </tr>

@@ -432,10 +432,9 @@ class db_class {
  
       ?>
       <div style="border: 1px solid red; font-size: 9pt; font-family: monospace; color: red; padding: .5em; margin: 8px; background-color: #FFE2E2">
-         <span style="font-weight: bold">db.class.php Error:</span><br><?= $this->last_error ?>
+         <span style="font-weight: bold">db.class.php Error:</span><br><?php echo $this->last_error ?>
       </div>
-      <?
-      if ($show_query && (!empty($this->last_query))) {
+      <?php       if ($show_query && (!empty($this->last_query))) {
       $this->print_last_query();
       }
  
@@ -448,9 +447,9 @@ class db_class {
      
       ?>
       <div style="border: 1px solid blue; font-size: 9pt; font-family: monospace; color: blue; padding: .5em; margin: 8px; background-color: #E6E5FF">
-         <span style="font-weight: bold">Last SQL Query:</span><br><?= str_replace("\n", '<br>', $this->last_query) ?>
+         <span style="font-weight: bold">Last SQL Query:</span><br><?php echo str_replace("\n", '<br>', $this->last_query) ?>
       </div>
-      <?  
+      <?php  
    }
 } 
 

@@ -113,7 +113,7 @@ if ($auth['isAuthenticated'] == 1) {
             </div>
             <!-- end tabs container -->
 
-            <script type="text/javascript"> $("#activity").load("tabactivity.php?webid=<?= $agent ?>");</script>
+            <script type="text/javascript"> $("#activity").load("tabactivity.php?webid=<?php echo $agent ?>");</script>
 
             <?php if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) { ?>
             <?php } else { ?>

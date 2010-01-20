@@ -67,28 +67,27 @@ if ($numrows == 0) { ?>
 
 
     <div class="success">Congratulations, your new FOAF profile was created successfully.
-        You can now use the Web ID <a href='<?= $link ?>'><?= $webid ?></a> to refer to yourself. </div>
+        You can now use the Web ID <a href='<?php echo $link ?>'><?php echo $webid ?></a> to refer to yourself. </div>
     <br/>
 
-    <?
-    print 'This identity is not yet protected.<form name="input" action="'
+    <?php     print 'This identity is not yet protected.<form name="input" action="'
     . $config['certficate_uri'] .'" method="get">';
     ?>
     <br/>
-    <input type="hidden" size="25" id="foaf" name="foaf" value="<?= $URI ?>">
+    <input type="hidden" size="25" id="foaf" name="foaf" value="<?php echo $URI ?>">
     Key Strength: <keygen name="pubkey" challenge="randomchars"></td><td></td><td></td>
-    <input type="hidden" id="commonName" name="commonName" value="FOAF ME Cert <?= $URI ?>"><button id="generate" type="submit">Claim Account with SSL Certificate!</button>
-    <input type="hidden" id="uri" name="uri" value="<?= $URI ?>">
+    <input type="hidden" id="commonName" name="commonName" value="FOAF ME Cert <?php echo $URI ?>"><button id="generate" type="submit">Claim Account with SSL Certificate!</button>
+    <input type="hidden" id="uri" name="uri" value="<?php echo $URI ?>">
     </form>
 
     <a href="https://foaf.me/simpleLogin.php">Test</a>
 
 
-<? } else { ?>
+<?php } else { ?>
 
 Sorry, username already exists, please press back and try another username.
 
-<? }
+<?php }
 
 require_once("footer.php")
 

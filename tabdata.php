@@ -71,9 +71,9 @@ while ($res && ($row = $db->get_row($res))) {
                 <form name="results" action="" method="post" >
                     <div>
                     <h3>Enter FOAF as Raw Data (Beta)  </h3>
-                    <textarea style='height:400px' name="rdf" cols="80" rows="80"><? echo $rdf; ?></textarea>
+                    <textarea style='height:400px' name="rdf" cols="80" rows="80"><?php echo $rdf; ?></textarea>
 
-                    <br/><input id="webid" value="<?= $_REQUEST['webid'] ?>" type="hidden" name="webid" />
+                    <br/><input id="webid" value="<?php echo $_REQUEST['webid'] ?>" type="hidden" name="webid" />
 
 
                     <?php if ($loggedIn) { echo '<input value="Update" type="submit" name="button"/>'; } ?>
@@ -81,8 +81,8 @@ while ($res && ($row = $db->get_row($res))) {
                     </div>
                 </form>
 
-                <div>webid : <a rel="webid" href="<?= $webid ?>"><?= $webid ?></a></div>
-                <div>validate + graph : <a rel="webid" href="<?= "http://www.w3.org/RDF/Validator/ARPServlet?URI=" . urlencode($webid) .  "&amp;PARSE=Parse+URI%3A+&amp;TRIPLES_AND_GRAPH=PRINT_BOTH&amp;FORMAT=PNG_EMBED"  ?>">Go</a></div>
+                <div>webid : <a rel="webid" href="<?php echo $webid ?>"><?php echo $webid ?></a></div>
+                <div>validate + graph : <a rel="webid" href="<?php echo "http://www.w3.org/RDF/Validator/ARPServlet?URI=" . urlencode($webid) .  "&amp;PARSE=Parse+URI%3A+&amp;TRIPLES_AND_GRAPH=PRINT_BOTH&amp;FORMAT=PNG_EMBED"  ?>">Go</a></div>
 
 
 <?php

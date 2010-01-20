@@ -57,15 +57,14 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
         print 'This identity is not yet protected.<form name="input" action="' . $config['certficate_uri'] .'" method="get">';
         ?>
                 <div>
-                <input type="hidden" size="25" id="foaf" name="foaf" value="<?= $_REQUEST['webid'] ?>">
+                <input type="hidden" size="25" id="foaf" name="foaf" value="<?php echo $_REQUEST['webid'] ?>">
                         Key Strength: <keygen name="pubkey" challenge="randomchars"></td><td></td><td></td>
-                <input type="hidden" id="commonName" name="commonName" value="FOAF ME Cert <?= $_REQUEST['webid'] ?>"><button id="generate" type="submit">Claim Account with SSL Certificate!</button>
-                <input type="hidden" id="uri" name="uri" value="<?= $_REQUEST['webid'] ?>">
+                <input type="hidden" id="commonName" name="commonName" value="FOAF ME Cert <?php echo $_REQUEST['webid'] ?>"><button id="generate" type="submit">Claim Account with SSL Certificate!</button>
+                <input type="hidden" id="uri" name="uri" value="<?php echo $_REQUEST['webid'] ?>">
                 </div>
                 </form>
                 <a href="https://foaf.me/simpleLogin.php">Test</a>
-    <?
-    }
+    <?php     }
 
 
     print "<h3>Coming soon</h3>";
@@ -97,8 +96,7 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
 
 
 
-<?
-}
+<?php }
                 if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME'])) {
                    require_once("footer.php");
                 }

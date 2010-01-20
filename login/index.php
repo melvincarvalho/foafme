@@ -133,7 +133,7 @@ if ($sigalg == "rsa-sha1") {
 	<div class="tab">
 		<ul class="login">
 	    	<li class="left">&nbsp;</li>
-	        <li><? print $webid ? "<a href=index.php>Logout: $webid</a>" : "<a href=https://foafssl.org/srv/idp?authreqissuer=http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI] />Login With Secure Web ID</a>" ?></li>
+	        <li><?php print $webid ? "<a href=index.php>Logout: $webid</a>" : "<a href=https://foafssl.org/srv/idp?authreqissuer=http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI] />Login With Secure Web ID</a>" ?></li>
 			<li class="sep">|</li>
 			<li id="toggle">
 				<a id="open" class="open" href="#"> New Users</a>

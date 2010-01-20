@@ -1,5 +1,4 @@
-<?
-
+<?php 
 //-----------------------------------------------------------------------------------------------------------------------------------
 //
 // Filename   : tabaccounts.php                                                                                                  
@@ -72,15 +71,14 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
                 <table id="accountstable">
                     <tr><td></td><td>External Account URL</td></tr>
                     <tr typeof="foaf:OnlineAccount"><td>OpenID: </td><td><input size="40" rel="foaf:openid" id="account1" onchange="makeTags()" type="text" name="account1" /></td></tr>
-                    <tr typeof="foaf:OnlineAccount"><td>Account: </td><td><input size="40" rel="foaf:holdsAccount" id="account2" onchange="makeTags()" type="text" name="account2" value="<?= isset($import['holdsAccount']) ? $import['holdsAccount'] : NULL ?>"/></td></tr>
+                    <tr typeof="foaf:OnlineAccount"><td>Account: </td><td><input size="40" rel="foaf:holdsAccount" id="account2" onchange="makeTags()" type="text" name="account2" value="<?php echo isset($import['holdsAccount']) ? $import['holdsAccount'] : NULL ?>"/></td></tr>
                     <tr typeof="foaf:OnlineAccount"><td>Account: </td><td><input size="40" rel="foaf:holdsAccount" id="account3" onchange="makeTags()" type="text" name="accounts3" /></td></tr>
 
                 </table>
                 <a href="#" onclick="javascript:adda()">Add</a>
 
 
-<?
-}
+<?php }
                 if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME'])) {
                    require_once("footer.php");
                 }

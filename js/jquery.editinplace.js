@@ -144,7 +144,7 @@ jQuery(this).parent().parent().rdf().databank.triples().each(function () { ins_s
 ins_sparul += ' } ';
 
 //alert('DEL ' + sparul2);
-//jQuery.post( '<?= $_REQUEST['webid'] ?>', sparul );
+//jQuery.post( '<?php echo $_REQUEST['webid'] ?>', sparul );
 
 //$("[href^=http://foaf.me/melvincarvalho#friend7]").parent().rdf().databank.triples().each(function () { alert(this); })
 
@@ -238,7 +238,7 @@ ins_sparul += ' } ';
 ins_sparul = ins_sparul.replace(settings.default_text, new_html);
 ins_sparul = ins_sparul.replace(" <" + original_html + "> .", " <" + new_html + "> .");
 ins_sparul = ins_sparul.replace(" \"" + original_html + "\" .", " \"" + new_html + "\" .");
-//jQuery.post( '<?= $_REQUEST['webid'] ?>', del_sparul );
+//jQuery.post( '<?php echo $_REQUEST['webid'] ?>', del_sparul );
 jQuery.post( $("#friendstable").attr('about') , del_sparul );
 //alert(del_sparul);
 jQuery.post( $("#friendstable").attr('about') , ins_sparul );
