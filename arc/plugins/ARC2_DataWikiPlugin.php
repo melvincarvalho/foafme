@@ -89,6 +89,7 @@ class ARC2_DataWikiPlugin extends ARC2_Class {
 				/* todo: create dirs, if necessary */
 				$fp = fopen($tmpfname, 'w');
 				$doc = $parser->toRDFXML($index);
+				$doc = str_replace($uri, "", $doc);
 				fwrite($fp, $doc);
 				fclose($fp);
 			}
