@@ -95,20 +95,19 @@ if ( $username == 'romeoasself' ) $username = 'romeo';
 if ( $username == 'romeoasfriend' ) $username = 'romeo';
 */
 
-
 // SPARUL
 if (preg_match('/^post$/i', $_SERVER['REQUEST_METHOD'])) {
 //	logger('/home/foaf/www/datawiki/post.log', $webid, $username);
 
     include_once('arc/ARC2.php');
 
-	/* configuration */ 
-    $config = array(
-        // no config needed for now
-    );
+	//  configuration 
+	$conf = array(
+		// no config needed for now
+	);
 
-	/* instantiation */
-    $wiki = ARC2::getComponent('DataWikiPlugin', $config);
+	// instantiation 
+    $wiki = ARC2::getComponent('DataWikiPlugin', $conf);
 
     if ($_SERVER['HTTPS'] == 'on')
         $foaf = 'https';
@@ -117,7 +116,25 @@ if (preg_match('/^post$/i', $_SERVER['REQUEST_METHOD'])) {
 
     $foaf = $foaf . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
-    if ($q = @file_get_contents('php://input')) {
+	$process_process = false;
+	$agent = get_agent($foaf);
+
+	if (isset($agent['agent']['RSAKey']))
+	{
+		$auth = getAuth();
+
+		if ( (isset($auth['isAuthenticated'])) && ($auth['isAuthenticated']==1) )
+		{
+				if ( equal_rsa_keys($agent['agent']['RSAKey'], $auth['agent']['RSAKey']) )
+				{
+					$process_sparul = true;
+				}
+		}
+	}
+	else
+		$process_sparul = true;
+
+    if ( ($process_sparul) && ($q = @file_get_contents('php://input')) ) {
 
         $ret = $wiki->go($webid, $foaf);
 
@@ -129,7 +146,7 @@ if (preg_match('/^post$/i', $_SERVER['REQUEST_METHOD'])) {
 
                 $sql = " update foaf set rdf = '$rdf' , rdf2 = '$rdf' where URI like '$URI'  ";
 
-                $res = dbinsertquery($sql);
+                $db->update_sql($sql);
             }
         }
     }
@@ -160,6 +177,9 @@ else {
         $out = str_replace($searchstring1, '', $out);
         $out = str_replace($searchstring2, '', $out);
         $out = str_replace($searchstring3, '', $out);
+
+		$out = str_replace($URI, "", $out);
+
         print $out;
     }
     // auto create mbox (tobyink)
