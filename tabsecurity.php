@@ -50,7 +50,8 @@ if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
     if (!empty($key)) {
 
     // TODO: rdfa to match the table below
-        print "Public Key: $key[modulus]<br/>";
+        $wrapped_pub_key = wordwrap($key[modulus], 80, "<br />", true);
+        echo "Public Key:<br/>".$wrapped_pub_key."<br/>";
         print "Exponent: $key[exponent]<br/>";
 
     } else {
