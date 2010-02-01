@@ -15,5 +15,5 @@ else
     then
         $exclude_list="--exclude-from=rsync_exclude.txt"
     fi
-    rsync -vrR $exclude_list -e "ssh -p22" $1 $2;
+    rsync --progress -azC --force --delete $exclude_list -e "ssh -p22" $1 $2;
 fi

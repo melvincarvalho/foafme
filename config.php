@@ -31,7 +31,7 @@ $config = array(
         /* db */
         'db_name'        => 'foaf',                     // db name
         'db_user'        => 'root',                          // db username
-        'db_pwd'         => '',                              // db password
+        'db_pwd'         => 'rootpass',                              // db password
 
         /* store */
         'store_name'     => 'arc_tests',                     // tmp table name
