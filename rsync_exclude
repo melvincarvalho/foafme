@@ -1,4 +1,5 @@
 .git
+.gitignore
 nbproject/*
-rsync_exclude.txt
+rsync_exclude
 config.php
