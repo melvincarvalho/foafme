@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 if [ $# -lt 2 ]
 then
     echo ""
@@ -10,10 +9,9 @@ then
     echo "NOTE:"
     echo "Files(patterns) in ./rsync_exclude.txt will not be transferred."
 else
-    $exclude_list
     if test -f rsync_exclude.txt
     then
-        $exclude_list="--exclude-from=rsync_exclude.txt"
+        exclude_list="--exclude-from=rsync_exclude.txt"
     fi
-    rsync --progress -azC --force --delete $exclude_list -e "ssh -p22" $1 $2;
+    rsync --progress -azC --force --delete $exclude_list -e "ssh -p22 -i ~/.ssh/id_rsa" $1 $2;
 fi

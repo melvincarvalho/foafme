@@ -1,4 +1,4 @@
 .git
-/nbproject/*
+nbproject/*
 rsync_exclude.txt
 config.php
