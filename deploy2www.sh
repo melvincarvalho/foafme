@@ -7,7 +7,7 @@ then
     echo "Example: ./$0 . relay@relay.me:~/www/foaf.me/"
     echo ""
     echo "NOTE:"
-    echo "Files(patterns) in ./rsync_exclude.txt will not be transferred."
+    echo "Files(patterns) in ./rsync_exclude will not be transferred."
 else
     if test -f rsync_exclude
     then

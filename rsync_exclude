@@ -3,3 +3,4 @@
 nbproject/*
 rsync_exclude
 config.php
+view.php
