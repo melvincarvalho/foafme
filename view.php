@@ -43,7 +43,7 @@ $webid = $webid . '#me';
 
 function detect_ie() {
     if (isset($_SERVER['HTTP_USER_AGENT']) &&
-        (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false))
+            (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false))
         return true;
     else
         return false;
@@ -51,7 +51,7 @@ function detect_ie() {
 
 function detect_safari() {
     if (isset($_SERVER['HTTP_USER_AGENT']) &&
-        (strpos($_SERVER['HTTP_USER_AGENT'], 'Safari') !== false))
+            (strpos($_SERVER['HTTP_USER_AGENT'], 'Safari') !== false))
         return true;
     else
         return false;
@@ -101,12 +101,12 @@ if (preg_match('/^post$/i', $_SERVER['REQUEST_METHOD'])) {
 
     include_once('arc/ARC2.php');
 
-	//  configuration 
-	$conf = array(
-		// no config needed for now
-	);
+    //  configuration
+    $conf = array(
+            // no config needed for now
+    );
 
-	// instantiation 
+    // instantiation
     $wiki = ARC2::getComponent('DataWikiPlugin', $conf);
 
     if ($_SERVER['HTTPS'] == 'on')
@@ -116,23 +116,20 @@ if (preg_match('/^post$/i', $_SERVER['REQUEST_METHOD'])) {
 
     $foaf = $foaf . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
-	$process_process = false;
-	$agent = get_agent($foaf);
+    $process_process = false;
+    $agent = get_agent($foaf);
 
-	if (isset($agent['agent']['RSAKey']))
-	{
-		$auth = getAuth();
+    if (isset($agent['agent']['RSAKey'])) {
+        $auth = getAuth();
 
-		if ( (isset($auth['isAuthenticated'])) && ($auth['isAuthenticated']==1) )
-		{
-				if ( equal_rsa_keys($agent['agent']['RSAKey'], $auth['agent']['RSAKey']) )
-				{
-					$process_sparul = true;
-				}
-		}
-	}
-	else
-		$process_sparul = true;
+        if ( (isset($auth['isAuthenticated'])) && ($auth['isAuthenticated']==1) ) {
+            if ( equal_rsa_keys($agent['agent']['RSAKey'], $auth['agent']['RSAKey']) ) {
+                $process_sparul = true;
+            }
+        }
+    }
+    else
+        $process_sparul = true;
 
     if ( ($process_sparul) && ($q = @file_get_contents('php://input')) ) {
 
@@ -142,7 +139,7 @@ if (preg_match('/^post$/i', $_SERVER['REQUEST_METHOD'])) {
             $rdf = file_get_contents($ret);
 
             if (strcmp($rdf,'')!=0) {
-            //rdfLog('sparul', $username, $webid, $q, $rdf);
+                //rdfLog('sparul', $username, $webid, $q, $rdf);
 
                 $sql = " update foaf set rdf = '$rdf' , rdf2 = '$rdf' where URI like '$URI'  ";
 
@@ -165,20 +162,20 @@ else {
     $res = $db->select(" select * from foaf where URI like '$URI' ");
 
     if ($row = mysql_fetch_assoc($res)) {
-    //logger('/home/foaf/www/datawiki/read.log', $webid, $username);
+        //logger('/home/foaf/www/datawiki/read.log', $webid, $username);
 
         xmlheader($xsl);
 
         $searchstring1 = '<?xml version="1.0"?>' . "\n";
-		$searchstring2 = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-		$searchstring3 = '<?xml version="1.0" encoding="UTF-8"?>';
+        $searchstring2 = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        $searchstring3 = '<?xml version="1.0" encoding="UTF-8"?>';
 
-		$out = $row['rdf'];
+        $out = $row['rdf'];
         $out = str_replace($searchstring1, '', $out);
         $out = str_replace($searchstring2, '', $out);
         $out = str_replace($searchstring3, '', $out);
 
-		$out = str_replace($URI, "", $out);
+        $out = str_replace($URI, "", $out);
 
         print $out;
     }
@@ -186,7 +183,7 @@ else {
     else if ( strstr($username, 'mbox/') ) {
         //		logger('/home/foaf/www/datawiki/insert.log', $webid, $username);
 
-            $rdf = '<rdf:RDF
+        $rdf = '<rdf:RDF
 		xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
 		xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
 		xmlns:foaf="http://xmlns.com/foaf/0.1/" 
@@ -205,19 +202,19 @@ else {
 		
 		</rdf:RDF>';
 
-            //rdfLog('insert', $username, $webid, NULL, $rdf);
+        //rdfLog('insert', $username, $webid, NULL, $rdf);
 
-            $db->insert_sql(" insert into foaf (id, username, rdf, URI) VALUES (NULL, '$username', '$rdf', '$URI')  ");
+        $db->insert_sql(" insert into foaf (id, username, rdf, URI) VALUES (NULL, '$username', '$rdf', '$URI')  ");
 
-            xmlheader($xsl);
+        xmlheader($xsl);
 
-            print $rdf;
-        }
-        // auto create
-        else {
+        print $rdf;
+    }
+    // auto create
+    else {
         //		logger('/home/foaf/www/datawiki/insert.log', $webid, $username);
 
-            $rdf = '<rdf:RDF
+        $rdf = '<rdf:RDF
 		xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
 		xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
 		xmlns:foaf="http://xmlns.com/foaf/0.1/" 
@@ -232,21 +229,21 @@ else {
 		
 		<foaf:Person rdf:ID="me"> 
 		<foaf:nick>' . $username . '</foaf:nick> 
-		<foaf:firstName>firstname</foaf:firstName> 
-		<foaf:givenName>givenname</foaf:givenName> 
+		<foaf:givenname>firstname</foaf:givenname>
+		<foaf:family_name>familyname</foaf:family_name>
 		<foaf:homepage rdf:resource="http://'. $_SERVER['HTTP_HOST'] .'/' . $username . '"/> 
 		</foaf:Person> 
 		
 		</rdf:RDF>';
 
-            //rdfLog('insert', $username, $webid, NULL, $rdf);
+        //rdfLog('insert', $username, $webid, NULL, $rdf);
 
-            $db->insert_sql(" insert into foaf (id, username, rdf, URI) VALUES (NULL, '$username', '$rdf', '$URI')  ");
+        $db->insert_sql(" insert into foaf (id, username, rdf, URI) VALUES (NULL, '$username', '$rdf', '$URI')  ");
 
-            xmlheader($xsl);
+        xmlheader($xsl);
 
-            print $rdf;
-        }
+        print $rdf;
+    }
 }
 
 ?>
