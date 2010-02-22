@@ -1,3 +1,5 @@
 cache/*
 config.php
 datawiki/*
+webdav_data/*
+
