@@ -65,7 +65,7 @@ function logger($actionlog, $webid, $nickname) {
 
 function sparulLog($page, $webid, $sparul) {
 //   return 1;
-    $fp = fopen('/home/foaf/www/datawiki/sparul.log', 'a');
+    $fp = fopen(dirname(__FILE__).'/datawiki/sparul.log', 'a');
     $now = time();
     fwrite($fp, date('Y-m-d H:i:s', $now) . ' : webid : ' . $webid . ' : uri : ' . $page . ' : sparul : ' . $sparul . '' . "\r\n");
     fclose($fp);
@@ -73,7 +73,7 @@ function sparulLog($page, $webid, $sparul) {
 
 function rdfLog($cmd, $page, $webid, $sparul = NULL, $rdf = NULL) {
 //   return 1;
-    $fp = fopen('/home/foaf/www/datawiki/rdf.log', 'a');
+    $fp = fopen(dirname(__FILE__).'/datawiki/rdf.log', 'a');
     $now = time();
     fwrite($fp, date('Y-m-d H:i:s', $now) . ' : action : ' . $cmd . ' : webid : ' . $webid . ' : uri : ' . $page . ' : sparul : ' . $sparul . ' : rdf : ' . $rdf . '' . "\r\n");
     fclose($fp);
@@ -96,7 +96,7 @@ if ( $username == 'romeoasfriend' ) $username = 'romeo';
 
 // SPARUL
 if (preg_match('/^post$/i', $_SERVER['REQUEST_METHOD'])) {
-//	logger('/home/foaf/www/datawiki/post.log', $webid, $username);
+//	logger(dirname(__FILE__).'/datawiki/post.log', $webid, $username);
 
     include_once('arc/ARC2.php');
 
@@ -161,7 +161,7 @@ else {
     $res = $db->select(" select * from foaf where URI like '$URI' ");
 
     if ($row = mysql_fetch_assoc($res)) {
-        //logger('/home/foaf/www/datawiki/read.log', $webid, $username);
+        //logger(dirname(__FILE__).'/datawiki/read.log', $webid, $username);
 
         xmlheader($xsl);
 
@@ -180,7 +180,7 @@ else {
     }
     // auto create mbox (tobyink)
     else if ( strstr($username, 'mbox/') ) {
-        //		logger('/home/foaf/www/datawiki/insert.log', $webid, $username);
+        //		logger(dirname(__FILE__).'/datawiki/insert.log', $webid, $username);
 
         $rdf = '<rdf:RDF
 		xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
@@ -211,7 +211,7 @@ else {
     }
     // auto create
     else {
-        //		logger('/home/foaf/www/datawiki/insert.log', $webid, $username);
+        //		logger(dirname(__FILE__).'/datawiki/insert.log', $webid, $username);
 
         $rdf = '<rdf:RDF
 		xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
