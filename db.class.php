@@ -115,13 +115,24 @@ class db_class {
       if (!empty($db)) $this->db = $db; 
       
       if (!mysql_select_db($this->db)) {
-         $this->last_error = mysql_error();
-         return false;
+         if (!$this->create_db_if_not_exists($this->db)) {
+             $this->last_error = mysql_error();
+             return false;
+         }
+         if (!mysql_select_db($this->db)) {
+            $this->last_error = mysql_error();
+            return false;
+         }
       }
  
       return true;
    }
-   
+
+   function create_db_if_not_exists($db)
+   {
+       return $this->insert_sql('CREATE DATABASE IF NOT EXISTS '.$db.' CHARACTER SET utf8 COLLATE utf8_general_ci') ? true : false;
+   }
+
    function select($sql) {
       
       // Performs an SQL query and returns the result pointer or false

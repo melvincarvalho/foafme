@@ -41,7 +41,10 @@ $r = $db->insert_sql('CREATE TABLE IF NOT EXISTS `foaf` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1000 ;');
 
-
+if (!$r) {
+    echo $db->last_error.'\n';
+    exit -1;
+}
 // upgrade path
 //
 // 1. initial, base table foaf
