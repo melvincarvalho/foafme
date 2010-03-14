@@ -1,2 +1,7 @@
 # Run this script after every deployment in order to fix directory permissions
+
+chmod 777 cache
 chmod 777 webdav_data
+
+
+cp -f config.php.production config.php
