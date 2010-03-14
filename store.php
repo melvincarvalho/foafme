@@ -81,7 +81,7 @@ if ($numrows == 0) { ?>
         You can now use the Web ID <a href='<?php echo $link ?>'><?php echo $webid ?></a> to refer to yourself. </div>
     <br/>
 
-    <?php     print 'This identity is not yet protected.<form name="input" action="'
+    <?php     print 'This identity is not yet protected.<form action="'
     . $config['certficate_uri'] .'" method="get">';
     ?>
     <br/>
