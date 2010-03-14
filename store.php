@@ -38,13 +38,6 @@ function detect_ie() {
 }
 
 
-?>
-    <script type="text/javascript">
-        // redirect login link in the header to index.php, if necessary
-        $('a').each(function(){ this.href = this.href.replace(/store.php/g, 'index.php'); });
-    </script>
-<?php
-
 // set up db connection
 $db = new db_class();
 $db->connect('localhost', $config['db_user'], $config['db_pwd'], $config['db_name']);
@@ -71,6 +64,7 @@ if ($numrows == 0) {
 
 // New user
 if ($numrows == 0) { ?>
+
 
     <div class="success">Congratulations, your new FOAF profile was created successfully.
         You can now use the Web ID <a href='<?php echo $link ?>'><?php echo $webid ?></a> to refer to yourself. </div>
