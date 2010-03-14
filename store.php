@@ -37,6 +37,17 @@ function detect_ie() {
         return false;
 }
 
+?>
+
+    <script type="text/javascript">
+
+        // redirect login link in the header to index.php, if necessary
+
+        $('a').each(function(){ this.href = this.href.replace(/store.php/g, 'index.php'); });
+
+    </script>
+
+<?php
 
 // set up db connection
 $db = new db_class();
