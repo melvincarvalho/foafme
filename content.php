@@ -118,7 +118,7 @@ if ($auth['isAuthenticated'] == 1) {
             <?php if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) { ?>
             <?php } else { ?>
             <!-- start foaf file -->
-            <form name="results" action="store.php" method="post" >
+            <form action="store.php" method="post" >
                 <div id="form">
                     <p>Your FOAF file:</p>
                     <textarea id="rdf" name="rdf" cols="80" rows="20"></textarea>
