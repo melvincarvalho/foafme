@@ -101,7 +101,10 @@ if ( (!empty ($webid)) && (is_valid_url($webid)) ) {
     $ser = ARC2::getRDFXMLSerializer($conf);
 
     $doc = $ser->getSerializedIndex($index);
-
+    $doc = str_replace(':/vocab#', ':', $doc);
+    $doc = str_replace('foaf:givenName', 'foaf:givenname', $doc);
+    $doc = str_replace('foaf:familyName', 'foaf:family_name', $doc);
+    
     //$doc = $parser->toRDFXML($index);
 
     print $doc;
