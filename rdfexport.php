@@ -88,7 +88,21 @@ if ( (!empty ($webid)) && (is_valid_url($webid)) ) {
 
     $index = $parser->getSimpleIndex();
 
-    $doc = $parser->toRDFXML($index);
+    $ns = array(
+        'dc' => 'http://purl.org/dc/elements/1.1/',
+        'foaf' => 'http://xmlns.com/foaf/0.1/',
+        'cert' => 'http://www.w3.org/ns/auth/cert#',
+        'rsa' => 'http://www.w3.org/ns/auth/rsa#',
+        'rdfs' => 'http://www.w3.org/2000/01/rdf-schema#',
+        'vocab' => 'http://www.w3.org/1999/xhtml/vocab#',
+    );
+    
+    $conf = array('ns' => $ns);
+    $ser = ARC2::getRDFXMLSerializer($conf);
+
+    $doc = $ser->getSerializedIndex($index);
+
+    //$doc = $parser->toRDFXML($index);
 
     print $doc;
 }
