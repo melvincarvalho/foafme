@@ -42,7 +42,7 @@ if (!empty($_REQUEST['webid'])) {
 
 if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
     if (!empty($webid)) {
-        print "<script type='text/javascript' src='http://foaf-visualizer.org/embed/widget/?uri=http://foaf.me/rdfexport.php?webid=$webid' ></script>";
+        print "<script type='text/javascript' src='http://foaf-visualizer.org/embed/widget/?uri=$webid' ></script>";
         ?>
             <script type='text/javascript'>
             $("a").each( function() {
