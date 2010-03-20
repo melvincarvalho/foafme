@@ -30,11 +30,16 @@ require_once('db.class.php');
 
 $config['store_name'] ='sparql';
 
+if (!empty($_REQUEST['id'])) {
+    $whereclause = " where id = " . $_REQUEST['id'];
+} else if (!empty($_REQUEST['uri'])) {
+    $whereclause = " where URI = '" . $_REQUEST['uri'] . "'";
+}
 
 $db = new db_class();
 $db->connect('localhost', $config['db_user'], $config['db_pwd'], $config['db_name']);
 
-$res = $db->select(" select * from foaf ");
+$res = $db->select(" select * from foaf " . $whereclause );
 
 $store = ARC2::getStore($config);
 if (!$store->isSetUp()) {
