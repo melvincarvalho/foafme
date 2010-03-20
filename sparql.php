@@ -28,29 +28,40 @@
 require_once('lib/libAuthentication.php');
 require_once('db.class.php');
 
-$config['store_name'] ='sparql';
-
-
 $db = new db_class();
 $db->connect('localhost', $config['db_user'], $config['db_pwd'], $config['db_name']);
 
-$res = $db->select(" select * from foaf ");
 
-while ($res && ($row = $db->get_row($res))) {
-    if (!empty($row) && !empty($row['rdf'])) {
-        $parser = ARC2::getRDFParser();
-        $parser->parse($row['URI'], $row['rdf']);
-        $index = array_merge( (array) $index, (array)($parser->getTriples()) );
+/* MySQL and endpoint configuration */
+$config = array(
+  /* db */
+  'db_host' => 'localhost', /* optional, default is localhost */
+  'db_name' => $config['db_name'],
+  'db_user' => $config['db_user'],
+  'db_pwd' => $config['db_pwd'],
 
-        $turtle_doc = $parser->toNTriples($index);
-    }
+  /* store name */
+  'store_name' => 'sparql',
 
+  /* endpoint */
+  'endpoint_features' => array(
+    'select', 'construct', 'ask', 'describe',
+    'load', 'insert', 'delete',
+    'dump' /* dump is a special command for streaming SPOG export */
+  ),
+  'endpoint_timeout' => 60, /* not implemented in ARC2 preview */
+  'endpoint_read_key' => '', /* optional */
+  'endpoint_write_key' => 'somekey', /* optional */
+  'endpoint_max_limit' => 250, /* optional */
+);
+
+/* instantiation */
+$ep = ARC2::getStoreEndpoint($config);
+
+if (!$ep->isSetUp()) {
+  $ep->setUp(); /* create MySQL tables */
 }
 
-$store = ARC2::getStore($config);
-if (!$store->isSetUp()) {
-    $store->setUp();
-}
-$store->insert($doc, 'http://foaf.cc/', $keep_bnode_ids = 0);
-
-echo $turtle_doc;
+/* request handling */
+$ep->go();
+//print_r($config);
