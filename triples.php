@@ -36,21 +36,25 @@ $db->connect('localhost', $config['db_user'], $config['db_pwd'], $config['db_nam
 
 $res = $db->select(" select * from foaf ");
 
-while ($res && ($row = $db->get_row($res))) {
-    if (!empty($row) && !empty($row['rdf'])) {
-        $parser = ARC2::getRDFParser();
-        $parser->parse($row['URI'], $row['rdf']);
-        $index = array_merge( (array) $index, (array)($parser->getTriples()) );
-
-        $turtle_doc = $parser->toNTriples($index);
-    }
-
-}
-
 $store = ARC2::getStore($config);
 if (!$store->isSetUp()) {
     $store->setUp();
 }
-$store->insert($doc, 'http://foaf.cc/', $keep_bnode_ids = 0);
 
-echo $turtle_doc;
+while ($res && ($row = $db->get_row($res))) {
+    if (!empty($row) && !empty($row['rdf'])) {
+        $parser = ARC2::getRDFParser();
+        $parser->parse($row['URI'], $row['rdf']);
+        $triples = (array)($parser->getTriples());
+        $index = array_merge( (array) $index, $triples );
+        $doc = $parser->toNTriples($index);
+        $store->insert($triples, 'http://foaf.me/', $keep_bnode_ids = 0);
+
+    }
+
+}
+
+
+$doc = $parser->toNTriples($index);
+$store->insert($doc, 'http://foaf.me/', $keep_bnode_ids = 0);
+echo $doc;
