@@ -43,11 +43,18 @@ if (!$store->isSetUp()) {
 
 while ($res && ($row = $db->get_row($res))) {
     if (!empty($row) && !empty($row['rdf'])) {
+
+        // get rdf
         $parser = ARC2::getRDFParser();
         $parser->parse($row['URI'], $row['rdf']);
+
+        // convert to triples
         $triples = (array)($parser->getTriples());
+
+        // aggregate triples
         $index = array_merge( (array) $index, $triples );
-        $doc = $parser->toNTriples($index);
+
+        // insert into db
         $store->insert($triples, 'http://foaf.me/', $keep_bnode_ids = 0);
 
     }
@@ -55,6 +62,6 @@ while ($res && ($row = $db->get_row($res))) {
 }
 
 
+// print as n3
 $doc = $parser->toNTriples($index);
-$store->insert($doc, 'http://foaf.me/', $keep_bnode_ids = 0);
 echo $doc;
