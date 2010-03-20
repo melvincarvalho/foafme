@@ -55,7 +55,7 @@ while ($res && ($row = $db->get_row($res))) {
         $index = array_merge( (array) $index, $triples );
 
         // insert into db
-        $store->insert($triples, 'http://foaf.me/', $keep_bnode_ids = 0);
+        $store->insert($triples, $row['URI'], $keep_bnode_ids = 0);
 
     }
 
