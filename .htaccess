@@ -1,18 +1,16 @@
-#SSLOptions +StdEnvVars
-#SSLOptions +ExportCertData
+#SSLOptions +StdEnvVars +ExportCertData
 
 RewriteEngine on
+RewriteRule sparql sparql.php [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_METHOD} ^(PUT)
 RewriteRule ^(.*) webdav_server.php/$1 [L]
 
-RewriteEngine on
 RewriteCond %{QUERY_STRING} _path]?=http
 RewriteRule !^/?nofile.php - [C]
 RewriteRule (.*) nofile.php/$1/%{QUERY_STRING} [L]
 
-RewriteEngine On
 ### if the requested url doesn't exist as a file (-f)
 RewriteCond %{REQUEST_FILENAME} !-f
 ### and the requested url doesn't exist as a directory (-d)
