@@ -40,25 +40,19 @@ if ($auth['isAuthenticated'] == 1) {
 $db = new db_class();
 $db->connect('localhost', $config['db_user'], $config['db_pwd'], $config['db_name']);
 
-$db2 = new db_class();
-$db2->connect('localhost', $config['db_user'], $config['db_pwd'], $config['db_name']);
+
+$searchstring1 = '<?xml version="1.0"?>' . "\n";
+$searchstring2 = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+$searchstring3 = '<?xml version="1.0" encoding="UTF-8"?>';
+$searchstring4 = '<?xml version="1.0" encoding="ISO-8859-1"?>';
 
 // get webid from db
 $res = $db->select(" select * from foaf where CONCAT(URI, '#me') = '$webid' or URI = '$webid' ");
 
-while ($res && ($row = $db->get_row($res))) {
+if ($res && ($row = $db->get_row($res))) {
     if (!empty($row) && !empty($row['rdf'])) {
 
-        $searchstring1 = '<?xml version="1.0"?>' . "\n";
-        $searchstring2 = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-        $searchstring3 = '<?xml version="1.0" encoding="UTF-8"?>';
-
         $rdf = $row['rdf'];
-        $rdf = str_replace($searchstring1, '', $rdf);
-        $rdf = str_replace($searchstring2, '', $rdf);
-        $rdf = str_replace($searchstring3, '', $rdf);
-
-        $rdf = str_replace($searchstring, '', $rdf);
 
     }
     if (!empty ($_REQUEST['rdf'])) {
@@ -66,6 +60,18 @@ while ($res && ($row = $db->get_row($res))) {
         $res2 = $db2->update_sql(" update foaf set rdf = '$rdf' where CONCAT(URI, '#me') = '$webid' or URI = '$webid' ");
     }
 }
+
+if (!empty($webid) && empty($rdf)) {
+    $rdf = file_get_contents($webid);
+}
+
+$rdf = str_replace($searchstring1, '', $rdf);
+$rdf = str_replace($searchstring2, '', $rdf);
+$rdf = str_replace($searchstring3, '', $rdf);
+$rdf = str_replace($searchstring4, '', $rdf);
+
+
+
 ?>
 
                 <form name="results" action="" method="post" >
