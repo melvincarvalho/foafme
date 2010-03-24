@@ -1,0 +1,64 @@
+<Project xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns="http://usefulinc.com/ns/doap#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:admin="http://webns.net/mvcb/">
+    <name>
+        foaf.me
+    </name>
+    <shortname>
+        foaf.me
+    </shortname>
+    <shortdesc>
+        FOAF Me is a resource designed for use by the FOAF development community.
+    </shortdesc>
+    <description>
+        FOAF Me is a resource designed for use by the FOAF development community. The aim is to provide a persisent storage area and generator for RDF files in the FOAF format. The website is a work in progress, and feedback is appreciated.
+    </description>
+    <homepage rdf:resource="http://foaf.me/"/>
+    <wiki rdf:resource="https://www.assembla.com/spaces/foaf/wiki?id=dsgC248XKr3ROSeJe5aVNr"/>
+    <download-page rdf:resource="http://foaf.me/downloads.php"/>
+    <bug-database rdf:resource="https://www.assembla.com/spaces/foaf/tickets"/>
+    <category rdf:resource="FOAF"/>
+    <os>
+        Linux
+    </os>
+    <os>
+        Windows
+    </os>
+    <os>
+        Mac OS
+    </os>
+    <programming-language>
+        PHP
+    </programming-language>
+    <license rdf:resource="http://usefulinc.com/doap/licenses/gpl"/>
+    <maintainer>
+        <foaf:Person>
+            <foaf:name>
+                Melvin Carvalho
+            </foaf:name>
+            <foaf:homepage rdf:resource="http://foaf.me/melvincarvalho#me"/>
+            <foaf:mbox_sha1sum>
+                906db708d222dafd459198a372f4c1f774372a75
+            </foaf:mbox_sha1sum>
+        </foaf:Person>
+    </maintainer>
+    <developer>
+        <foaf:Person>
+            <foaf:name>
+                Akbar Hossain
+            </foaf:name>
+            <foaf:homepage rdf:resource="http://foaf.me/ah1#me"/>
+        </foaf:Person>
+    </developer>
+    <helper>
+        <foaf:Person>
+            <foaf:name>
+                László Török
+            </foaf:name>
+            <foaf:homepage rdf:resource="http://foaf.me/laczoka#me"/>
+        </foaf:Person>
+    </helper>
+    <repository>
+        <SVNRepository>
+            <browse rdf:resource="http://github.com/melvincarvalho/foafme"/>
+        </SVNRepository>
+    </repository>
+</Project>
