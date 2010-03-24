@@ -57,7 +57,7 @@ if ($res && ($row = $db->get_row($res))) {
     }
     if (!empty ($_REQUEST['rdf'])) {
         $rdf = stripslashes($_REQUEST['rdf']);
-        $res2 = $db2->update_sql(" update foaf set rdf = '$rdf' where CONCAT(URI, '#me') = '$webid' or URI = '$webid' ");
+        $res2 = $db->update_sql(" update foaf set rdf = '$rdf' where CONCAT(URI, '#me') = '$webid' or URI = '$webid' ");
     }
 }
 
