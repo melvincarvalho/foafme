@@ -29,6 +29,33 @@ require_once("config.php");
 require_once("arc/ARC2.php");
 require_once("lib/libActivity.php");
 
+function is_valid_url ( $url, $get_headers_func = 'get_headers' )
+{
+		$url = @parse_url($url);
+
+		if ( ! $url ) {
+			return false;
+		}
+
+		$url = array_map('trim', $url);
+		$url['port'] = (!isset($url['port'])) ? 80 : (int)$url['port'];
+		$path = (isset($url['path'])) ? $url['path'] : '';
+
+		if ($path == '')
+		{
+			$path = '/';
+		}
+
+		$path .= ( isset ( $url['query'] ) ) ? "?$url[query]" : '';
+
+		if ( isset($url['host']) AND isset($url['scheme']) AND ( ($url['scheme']=='http') OR ($url['scheme']=='https') ) AND ($url['host']!=gethostbyname($url['host'])) )
+		{
+			$headers = $get_headers_func("$url[scheme]://$url[host]:$url[port]$path");
+			$headers = ( is_array ( $headers ) ) ? implode ( "\n", $headers ) : $headers;
+			return ( bool ) preg_match ( '#^HTTP/.*\s+[(200|301|302)]+\s#i', $headers );
+		}
+		return false;
+}
 
 /* Function to return the modulus and exponent of the supplied Client SSL Page */
 function openssl_pkey_get_public_hex() {
@@ -486,18 +513,22 @@ function get_online_account($store, $agenturi) {
 }
 
 function create_store($uri) {
-    $store = ARC2::getStore($GLOBALS['config']);
-    if (!$store->isSetUp()) {
-        $store->setUp();
-    }
+    $store = NULL;
 
-    $store->reset();
+    if (is_valid_url($uri)) {
+        $store = ARC2::getStore($GLOBALS['config']);
+        if (!$store->isSetUp()) {
+            $store->setUp();
+        }
+
+        $store->reset();
 
 	/* LOAD will call the Web reader, which will call the
 	   format detector, which in turn triggers the inclusion of an
 	   appropriate parser, etc. until the triples end up in the store. */
-    $store->query('LOAD <'.$uri.'>');
-
+        $store->query('LOAD <'.$uri.'>');
+    }
+    
     return $store;
 }
 
@@ -512,6 +543,8 @@ function get_agent($agenturi) {
 			$agent = safe_array_merge($agent, array('errors'=>$errs));
 			return $agent;
 		}
+
+        if (isset($store)) {
 
         if ($agentrsakey = get_foaf_rsakey($store, $agenturi))
             $agent = safe_array_merge($agent, array('RSAKey'=>$agentrsakey));
@@ -547,7 +580,8 @@ function get_agent($agenturi) {
 
         if ($friends = get_all_friends($store, $agenturi))
             $agent = safe_array_merge($agent, array('knows'=>$friends));
-
+        }
+        
         if ($agent) {
             $agent = safe_array_merge(array("webid"=>$agenturi), $agent);
 
