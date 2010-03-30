@@ -227,14 +227,16 @@ function get_all_friends($store, $agenturi) {
 				$webid[$key] = $row['webid'];
 			}
 
-			$name_lowercase = array_map('strtolower', $name);
+                        if (is_array($name)) {
+        			$name_lowercase = array_map('strtolower', $name);
 
 			// Sort the data with volume descending, edition ascending
 			// Add $data as the last parameter, to sort by the common key
-			array_multisort($name_lowercase, SORT_ASC, SORT_STRING, $results);
+                                array_multisort($name_lowercase, SORT_ASC, SORT_STRING, $results);
 			// print "<pre>";
 			// print_r($results);
 			// print "</pre>";
+                        }
         }
     }
 
