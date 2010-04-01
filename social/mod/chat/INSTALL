@@ -1,0 +1,21 @@
+Installation
+---------------
+
+- Copy the chat folder to youre mod directory.
+- Enable and customize the plugin in the elgg admin interface.
+- Thats it!
+
+You have issues?
+---------------
+
+- What for a elgg version do you use? This plugin is tested with v1.2
+  For older version see [1]. Using later version could be a problem.
+- Your webserver requires read and write permission to the mod/chat/pfc/data folder.
+- Consult http://www.phpfreechat.net/required-config
+- Many issues could be solved by clearing the cache. You can do it with following steps
+  - Delete all files in mod/chat/pfc/data/private except for .htaccess
+  - Delete all files in mod/char/pfc/data/public except for the js directory
+- Finally you could mail to fstahlberg@gmail.com or visit the project homepage at [1].
+
+
+[1]  http://www.xilef-software.de/en/projects/scripts/elggchat

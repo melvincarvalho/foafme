@@ -1,0 +1,8 @@
+<?xml version="1.2" encoding="UTF-8"?>
+<plugin_manifest>
+        <field key="author" value="Felix Stahlberg" />
+        <field key="version" value="1.2.3" />
+        <field key="description" value="Elgg Integration of the PhpFreeChat 1.2, an nice ajax chat." />
+        <field key="website" value="http://www.xilef-software.de/en/projects/scripts/elggchat" />
+        <field key="copyright" value="GNU General Public Licence" />
+</plugin_manifest>

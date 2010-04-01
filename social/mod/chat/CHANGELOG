@@ -1,0 +1,22 @@
+1.2.3
+--------------
+- Container handling was broken
+- File container is the default container
+
+1.2.2
+---------------
+- Extend admin page: choose container (MySQL or flat files)
+- Chat can be opened embbeded in page or in a new popup window
+- Choosing chat theme in admin interface
+- Define default chatrooms in admin interface
+- For logged in user: remove from common menu and add to topbar
+- color chat icon in topbar if there was chat activity
+- Add access settings for the chat to the admin interface
+
+1.2.1
+---------------
+- User not logged in could access the chat
+
+1.2:
+---------------
+- Compatible with elgg 1.2
