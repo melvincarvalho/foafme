@@ -1,0 +1,57 @@
+Version 1.7.0
+(March 2, 2010 from http://code.elgg.org/elgg/trunk/)
+
+ User-visible changes:
+  * UTF8 now saved correctly in database. #1151
+  * Unit tests added to System diagnostics.
+  * Debug values output to screen when enabled in admin settings.
+  * Users can now log in from multiple computers or browsers concurrently.
+  * Misconfigured plugins no longer break the site. #1454
+  * User display names cannot have HTML or be longer than 50 characters.
+  * New search system.
+
+ Bugfixes:
+  * Searching by tag with extended characters now works. #1151, #1231
+  * Searching for entities works properly with case-insensitive metadata. #1326
+  * Invalid views now default to 'default' view. #1161.
+  * Metadata cache now handles a 0 string. #1227
+  * ElggPlugin get() now works with 0. #1286
+  * Metadata __isset() now works for falsy values (except NULL). #1414
+  * clear_plugin_setting() now only clears a single setting.
+  * Submenu entries are correctly calculated after a simplecache refresh.
+
+ API changes:
+  * New plugin hook system:unit_test for adding files to unit tests.
+  * $is_admin global deprecated; use elgg_set_ignore_access() instead.
+  * Deprecated get_entities().  Use elgg_get_entities().
+  * Deprecated get_entities_from_metadata().  Use elgg_get_entities_from_metadata().
+  * Deprecated get_entities_from_relationship() and g_e_f_relationships_and_meta().  Use elgg_get_entities_from_relationship().
+  * Deprecated get_entities_from_access_id(). Use elgg_get_entities_from_access_id().
+  * Deprecated get_entities_from_annotations().  Use elgg_get_entities_from_annotations().
+  * Reorganized directory file path to rely on GUID instead of username.
+  * annotation_id column added to the river database table.
+  * remove_from_river_by_annotation() added.
+  * unregister_elgg_event_handler() and unregister_plugin_hook() added. #1465
+  * clear_all_plugin_settings() added.
+  * get_entity_relationships() supports inverse relationships. #1472.
+  * can_write_to_container() can be overridden with the container_permissions_check hook. #1164 (part 2).
+  * Deprecated search_for_*().
+  * Deprecated search_list*().
+  * Added elgg_deprecated_notice().
+  * ElggEntity::countEntitiesFromRelationship() supports inverse relationships. #1325
+  * delete_relationship() triggers the hook delete:relationship and passes the relationship object. #1213
+  * added ElggEntity::removeRelationship(). #1376.
+  * get_entity_dates() supports order by. #1406.
+  * Added elgg_http_add_url_query_elements().
+  * Added elgg_register_tag_metadata_name() and elgg_get_registered_tag_metadata_names();
+  * Added ElggEntity::getTags().
+  * Added elgg_add_action_tokens_to_url().
+
+ Services API:
+  * Separated user and api authenticate processing
+  * hmac signature encoding now compatible with OAuth
+  * New plugin hook api_key:use for keeping stats on key usage
+  * New plugin hook rest:init so plugins can configure authentication modules
+  * Moved auth.gettoken to POST for increased security
+  * Fixed REST POST bug #1114
+  * Fixed #881, #1214, #1215, #1216, #1217, #1218, #1219, #1220, #1298, #1364 

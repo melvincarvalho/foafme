@@ -1,0 +1,138 @@
+The latest version of this document is available at:
+[http://docs.elgg.org/wiki/Installation]
+
+Installation Troubleshooting is available at:
+[http://docs.elgg.org/wiki/Troubleshooting]
+
+
+ELGG INSTALLATION INSTRUCTIONS
+
+TECHNICAL REQUIREMENTS
+
+Elgg runs on a combination of the Apache web server, MySQL database 
+system and the PHP interpreted scripting language. This is the most 
+popular web server environment in the world.
+
+Due to Elgg's advanced functionality, there are some extra 
+configuration requirements:
+
+    * The Apache web server needs to be installed with the following
+      modules:
+          o mod_rewrite
+          o PHP 
+    * MySQL 5+ with sql_mode in standard mode (ie not in traditional
+      or any other mode).
+    * PHP 5.2+ needs to be installed as an Apache module (not in CGI
+      mode or safe mode) with the following libraries:
+          o GD (for graphics processing, eg user icon rescaling)
+          o JSON (for API functionality)
+          o XML (not installed/compiled by default on all systems)
+          o Multibyte String support (for internationalisation)
+
+It is recommended that you increase the memory available to PHP 
+threads beyond the standard 8 or 12M, and increase the maximum 
+uploaded filesize (which defaults to 2M). In both cases, this can be
+found in your php.ini.
+
+    * The following PHP libraries are also recommended for some 
+      plugins and extra functionality:
+          o SOAP
+          o DOM 
+
+
+INSTALLING ELGG
+
+Before you begin, make sure you have read Elgg's technical 
+requirements. If you discover problems after following these 
+instructions, check out the troubleshooting page at 
+[http://docs.elgg.org/wiki/Troubleshooting].
+
+
+1. Upload Elgg
+
+Unzip Elgg and upload it to your site's document root.
+
+
+2. Create a data folder
+
+Elgg needs a special folder to store uploaded files, including 
+profile icons and photos. You will need to create this for it.
+
+We recommend that this folder is called data, and is stored outside 
+of your document root. For example, if Elgg is installed in 
+/home/elgg/html/, you might create it in /home/elgg/data.
+
+Once this folder has been created, you'll need to make sure that your
+web server has permission to write to it. This shouldn't be a problem 
+on Windows-based servers, but if your server runs Linux or a UNIX variant, 
+you'll need to figure out what user Apache runs under. For Debian-based 
+distros, it is usually www-data and for RedHat, it is often apache. If 
+cannot figure out what the ownership and permissions should be, you can
+set the permissions for world access (though not recommended):
+
+chmod 777 /home/elgg/data/
+
+If you use a graphical client to upload files, you can usually set 
+this by right or shift-clicking on the folder and selecting 
+'properties'.
+
+
+3. Create a database
+
+Using your database administration tool of choice (if you're unsure 
+about this, ask your system administrator), create a new database for 
+Elgg. Make sure you know the username and password necessary to 
+access this.
+
+4. Install your crontab (UNIX ONLY)
+
+Cron is a UNIX command which allows programs to be run at set 
+times of the day.
+
+If you want to take advantage of some of the maintenance 
+functions such as log rotation or garbage collection, you must 
+install a cron tab to trigger these events.
+
+We have provided an example crontab as /crontab.example. Edit this 
+with a text editor to provide the details of your site, rename it
+to another filename (eg 'crontab.mine') and install it with the 
+following command:
+
+   			crontab crontab.mine 
+   			
+Substitute your filename for 'crontab.mine'.
+
+5. Visit your Elgg site
+
+Once you've performed these steps, visit your Elgg site in your web 
+browser. Elgg will take you through the rest of the installation 
+process from there.
+
+
+A note on settings.php and .htaccess
+
+The Elgg installer will try and create two files for you:
+
+    * engine/settings.php, which contains the database settings for 
+      your installation
+    * .htaccess, which allows Elgg to generate dynamic URLs 
+
+If your web server does not have permission to create these files, you
+will need to either 
+
+1. Change the permissions on the directory where you are installing 
+   Elgg and the engine directory and try again. 
+
+2. Follow the instructions that Elgg gives you to create them.
+
+3. Copy engine/settings.example.php to engine/settings.php, open 
+   it up in a text editor and fill in your database details. Then
+   copy /htaccess_dist to /.htaccess 
+
+
+
+The latest version of this document is available at:
+[http://docs.elgg.org/wiki/Installation]
+
+Installation Troubleshooting is available at:
+[http://docs.elgg.org/wiki/Troubleshooting]
