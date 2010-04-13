@@ -23,12 +23,13 @@
  */
 require_once('config.php');
 require_once('db.class.php');
-require_once('lib/libAuthentication.php');
-$auth = getAuth();
+require_once('lib/Authentication.php');
+$auth = new Authentication($GLOBALS['config']);
 
-if ($auth['isAuthenticated'] == 1) {
-     $webid = $auth['agent']['webid'];
-     $name = !empty($auth['agent']['name'])?$auth['agent']['name']:$webid;
+if ($auth->isAuthenticated()) {
+    $agent=$auth->getAgent();
+     $webid = $agent['webid'];
+     $name = !empty($agent['name'])?$agent['name']:$webid;
      if ($webid == $_REQUEST['webid'] || empty($_REQUEST['webid']) ) {
          $loggedIn = true;
      }
@@ -72,14 +73,14 @@ if ($auth['isAuthenticated'] == 1) {
                 </div>
                 <!-- end friends tab -->
 
-                <?php if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) { ?>
+                <?php if ( $auth->isAuthenticated() || !empty($_REQUEST['webid']) ) { ?>
                 <!-- start activites tab -->
                 <div id="activity">Loading...
                 </div>
                 <!-- end activities tab -->
                 <?php } ?>
 
-                <?php if ( $auth['isAuthenticated'] == 1 ) { ?>
+                <?php if ( $auth->isAuthenticated() == 1 ) { ?>
                 <!-- start raw data tab -->
                 <div id="rawdata">
                     <?php include('tabdata.php'); ?>
@@ -115,7 +116,7 @@ if ($auth['isAuthenticated'] == 1) {
 
             <script type="text/javascript"> $("#activity").load("tabactivity.php?webid=<?php echo $agent ?>");</script>
 
-            <?php if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) { ?>
+            <?php if ( $auth->isAuthenticated() || !empty($_REQUEST['webid']) ) { ?>
             <?php } else { ?>
             <!-- start foaf file -->
             <form action="store.php" method="post" >

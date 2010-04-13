@@ -27,11 +27,12 @@
 // This tab can act as a standalone page or be included from a containter
 require_once('head.php');
 require_once('header.php');
-require_once('lib/libAuthentication.php');
+require_once('lib/Authentication.php');
 
+/*
 // init
-$auth = getAuth();
-if ($auth['isAuthenticated'] == 1) {
+$auth = new Authentication($GLOBALS['config']);
+if ($auth->isAuthenticated()) {
     $webid = $auth['agent']['webid'];
 }
 
@@ -39,13 +40,13 @@ if (!empty($_REQUEST['webid'])) {
     $auth = get_agent($_REQUEST['webid']);
     $webid = $auth['agent']['webid'];
 }
+*/
+
+if ( $auth->isAuthenticated() || !empty($_REQUEST['webid']) ) {
 
 
-if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
-
-
-    $a1 = replace_with_rss(isset($auth['agent']['holdsAccount']) ? $auth['agent']['holdsAccount'] : NULL);
-    $a2 = replace_with_rss(isset($auth['agent']['accountProfilePage']) ? $auth['agent']['accountProfilePage'] : NULL);
+    $a1 = replace_with_rss(isset($agent['holdsAccount']) ? $agent['holdsAccount'] : NULL);
+    $a2 = replace_with_rss(isset($agent['accountProfilePage']) ? $agent['accountProfilePage'] : NULL);
 
     if ( $a1 || $a2 ) {
         $a3 = array_merge(  $a1?$a1:array(), $a2?$a2:array() );

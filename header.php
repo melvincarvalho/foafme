@@ -23,12 +23,13 @@
  */
 require_once('config.php');
 require_once('db.class.php');
-require_once('lib/libAuthentication.php');
-$auth = getAuth();
+require_once('lib/Authentication.php');
+$auth = new Authentication($GLOBALS['config']);
 
-if ($auth['isAuthenticated'] == 1) {
-    $webid = $auth['agent']['webid'];
-    $name = !empty($auth['agent']['name'])?$auth['agent']['name']:$webid;
+if ($auth->isAuthenticated()) {
+    $agent = $auth->getAgent();
+    $webid = $agent['webid'];
+    $name = !empty($agent['name'])?$agent['name']:$webid;
 } else {
     $webid = NULL;
 }

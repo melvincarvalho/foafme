@@ -23,7 +23,7 @@
  */
 require_once('config.php');
 require_once('db.class.php');
-require_once('lib/libAuthentication.php');
+require_once('lib/Authentication.php');
 
 
 // Start a session
@@ -40,17 +40,18 @@ require_once("lib/libImport.php");
 $import = getImport();
 
 // init
-$auth = getAuth();
+$auth = new Authentication($GLOBALS['config']);
 
-if ($auth['isAuthenticated'] == 1) {
-    $webid = $auth['agent']['webid'];
-    $agent = $auth['agent']['webid'];
+if ($auth->isAuthenticated()) {
+    $authAgent = $auth->getAgent();
+    $webid = $authAgent['webid'];
+    $agent = $authAgent['webid'];
 }
 
 if (!empty($_REQUEST['webid'])) {
-    $auth = get_agent($_REQUEST['webid']);
-    $webid = $auth['agent']['webid'];
-    $agent = $auth['agent']['webid'];
+    $authAgent = new Authentication_AgentARC($GLOBALS['config'], $_REQUEST['webid']);
+    $webid = $authAgent['webid'];
+    $agent = $authAgent['webid'];
 }
 $webidbase = preg_replace('/#.*/', '', $webid);
 

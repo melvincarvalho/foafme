@@ -27,8 +27,9 @@
 
 require_once('head.php');
 require_once('header.php');
-require_once('lib/libAuthentication.php');
+require_once('lib/Authentication.php');
 
+/*
 $auth = getAuth();
 if ($auth['isAuthenticated'] == 1) {
     $webid = $auth['agent']['webid'];
@@ -38,9 +39,12 @@ if (!empty($_REQUEST['webid'])) {
     $auth = get_agent($_REQUEST['webid']);
     $webid = $auth['agent']['webid'];
 }
+*/
+
+$webid = $agent['webid'];
 
 
-if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
+if ( $auth->isAuthenticated() || !empty($_REQUEST['webid']) ) {
     if (!empty($webid)) {
         print "<script type='text/javascript' src='http://foaf-visualizer.org/embed/widget/?uri=$webid' ></script>";
         ?>

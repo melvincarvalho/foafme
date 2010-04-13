@@ -1,8 +1,8 @@
 <?php
 /**
- * header.php - short header bar and login
+ * simpleLogin.php - simpleLogin
  *
- * Copyright 2008-2009 foaf.me
+ * Copyright 2008-2010 foaf.me
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,8 +23,8 @@
  */
 require_once('config.php');
 require_once('db.class.php');
-require_once('lib/libAuthentication.php');
-$auth = getAuth();
+require_once('lib/Authentication.php');
+$auth = new Authentication($GLOBALS['config']);
 ?>
 <body>
     <h1>FOAF+SSL Simple Login Page</h1>
@@ -37,14 +37,15 @@ $auth = getAuth();
     <div id="diagnostics">
         <?
         if ($_SERVER[SSL_CLIENT_CERT]) {
-            $cert_rsakey = openssl_pkey_get_public_hex();
-            $subjectAltName = openssl_get_subjectAltName();
-            if ( isset($auth['agent']['RSAKey']) ) {
-                $foaf_rsakey = $auth['agent']['RSAKey'];
+            $cert_rsakey = $auth->opensslPkeyGetPublicHex();
+            $subjectAltName = $auth->opensslGetSubjectAltName();
+            $agent = $auth->getAgent();
+            if ( isset($agent['RSAKey']) ) {
+                $foaf_rsakey = $agent['RSAKey'];
             }
         }
 
-        if ($auth['isAuthenticated']=="1")
+        if ($auth->isAuthenticated())
             print "<b>The login Suceeded! Authenticated as:  $subjectAltName[URI]</b><p>Technical Explanation:</p>";
         else
             print "<b>Not Logged In</b><br/><br/>";

@@ -28,8 +28,9 @@
 // This tab can act as a standalone page or be included from a containter
 require_once('head.php');
 require_once('header.php');
-require_once('lib/libAuthentication.php');
+require_once('lib/Authentication.php');
 
+/*
 // init
 $auth = getAuth();
 if ($auth['isAuthenticated'] == 1) {
@@ -40,10 +41,12 @@ if (!empty($_REQUEST['webid'])) {
     $auth = get_agent($_REQUEST['webid']);
     $webid = $auth['agent']['webid'];
 }
+*/
 
+$webid = $agent['webid'];
 
-if ( $auth['isAuthenticated'] == 1 || !empty($_REQUEST['webid']) ) {
-    $key = $auth['agent']['RSAKey'];
+if ( $auth->isAuthenticated() || !empty($_REQUEST['webid']) ) {
+    $key = $agent['RSAKey'];
 
     print "<h3>Security</h3>";
 

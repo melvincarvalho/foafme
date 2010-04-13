@@ -50,6 +50,10 @@ class Authentication {
      * @var string
      */
     public  $authnDiagnostic   = NULL;
+    /**
+     *
+     * @var array
+     */
     public  $agent = NULL;
 
     private $session = NULL;
