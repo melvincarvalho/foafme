@@ -49,7 +49,8 @@ if ($auth->isAuthenticated()) {
 }
 
 if (!empty($_REQUEST['webid'])) {
-    $authAgent = new Authentication_AgentARC($GLOBALS['config'], $_REQUEST['webid']);
+    $authAgentArc = new Authentication_AgentARC($GLOBALS['config'], $_REQUEST['webid']);
+    $authAgent = $authAgentArc->getAgent();
     $webid = $authAgent['webid'];
     $agent = $authAgent['webid'];
 }
