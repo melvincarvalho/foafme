@@ -40,8 +40,8 @@ class Authentication_Session {
     private $authnSession     = NULL;
 
     const IS_AUTHENTICATED = 'Authentication_isAuthenticated';
-    const AGENT = 'Authentication_webid';
-    const WEBID = 'Authentication_agent';
+    const AGENT = 'Authentication_agent';
+    const WEBID = 'Authentication_webid';
 
     /**
      * Created FOAF+SSL authenticated session
@@ -85,7 +85,7 @@ class Authentication_Session {
         $_SESSION[self::AGENT]            = NULL;
         $_SESSION[self::WEBID]            = NULL;
 
-        $this->isAuthenticated = 1;
+        $this->isAuthenticated = 0;
         $this->webid           = NULL;
         $this->agent           = NULL;
     }

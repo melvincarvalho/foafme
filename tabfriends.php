@@ -43,9 +43,11 @@ if ($auth->isAuthenticated()) {
 if (!empty($_REQUEST['webid'])) {
     $webid = $_REQUEST['webid'];
     $webid_owner = $_REQUEST['webid'];
+    print_r($auth);
     if ( $webid_owner != $webid_viewer) {
-        $auth = new Authentication_AgentARC($GLOBALS['config'], $_REQUEST['webid']);
-        $agent = $auth->getAgent();
+        $pageAgent = new Authentication_AgentARC($GLOBALS['config'], $_REQUEST['webid']);
+        $agent = $pageAgent->getAgent();
+        print_r($auth);
     }
 }
 
