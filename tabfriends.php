@@ -33,8 +33,6 @@ require_once('lib/Authentication.php');
 // init
 $friends = 2;
 
-$agent = $auth->getAgent();
-
 if ($auth->isAuthenticated()) {
     $webid = $agent['webid'];
     $webid_viewer = $agent['webid'];

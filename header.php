@@ -25,6 +25,8 @@ require_once('config.php');
 require_once('db.class.php');
 require_once('lib/Authentication.php');
 $auth = new Authentication($GLOBALS['config']);
+$agent = NULL;
+$webid = NULL;
 
 if ($auth->isAuthenticated()) {
     $agent = $auth->getAgent();
@@ -32,6 +34,11 @@ if ($auth->isAuthenticated()) {
     $name = !empty($agent['name'])?$agent['name']:$webid;
 } else {
     $webid = NULL;
+}
+
+if ($_REQUEST['webid']) {
+    $pageAgent = new Authentication_AgentARC($GLOBALS['config'], $_REQUEST['webid']);
+    $agent = $pageAgent->getAgent();
 }
 
 ?>

@@ -40,9 +40,7 @@ if (!empty($_REQUEST['webid'])) {
     $webid = $auth['agent']['webid'];
 }
 */
-
 $webid = $agent['webid'];
-
 
 if ( $auth->isAuthenticated() || !empty($_REQUEST['webid']) ) {
     if (!empty($webid)) {
