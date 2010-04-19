@@ -25,6 +25,8 @@
 //
 //-----------------------------------------------------------------------------------------------------------------------------------
 
+require_once 'Authentication_Helper.php';
+
 function get_openlink_acct($acct)
 {
 	$parser = ARC2::getRDFParser();
@@ -92,7 +94,7 @@ function replace_with_rss($accts)
 			$acct = convert_to_rss($acct);
 
 			if ($acct)
-				$ret = safe_array_merge($ret, array($acct));
+				$ret = Authentication_Helper::safeArrayMerge($ret, array($acct));
 		}
 	}
 

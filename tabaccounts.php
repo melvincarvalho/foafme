@@ -30,27 +30,14 @@ require_once('header.php');
 require_once('lib/libActivity.php');
 require_once('lib/Authentication.php');
 
-/*
-// init
-$auth = new Authentication($GLOBALS['config']);
-if ($auth->isAuthenticated()) {
-    $webid = $auth['agent']['webid'];
-}
-
-if (!empty($_REQUEST['webid'])) {
-    $auth = get_agent($_REQUEST['webid']);
-    $webid = $auth['agent']['webid'];
-}
-*/
-
 if ( $auth->isAuthenticated() || !empty($_REQUEST['webid']) ) {
 
-
+    $agent = $auth->getAgent();
     $a1 = replace_with_rss(isset($agent['holdsAccount']) ? $agent['holdsAccount'] : NULL);
     $a2 = replace_with_rss(isset($agent['accountProfilePage']) ? $agent['accountProfilePage'] : NULL);
 
     if ( $a1 || $a2 ) {
-        $a3 = array_merge(  $a1?$a1:array(), $a2?$a2:array() );
+        $a3 = Authentication_Helper::safeArrayMerge($a1 , $a2 );
     }
 
     print "<h3>Online Accounts</h3>";
