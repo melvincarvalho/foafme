@@ -42,7 +42,7 @@ if ( $auth->isAuthenticated() || !empty($_REQUEST['webid']) ) {
     // TODO: rdfa to match the table below
         foreach ($key_array as $i => $key) {
             $wrapped_pub_key = wordwrap($key[modulus], 80, "<br />", true);
-            echo "1.<br/>";
+            echo $i.".<br/>";
             echo "Public Key:<br/>".$wrapped_pub_key."<br/>";
             echo "Exponent: $key[exponent]<br/>";
             echo "<br />";
