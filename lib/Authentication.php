@@ -117,7 +117,7 @@ class Authentication {
             print_r($agent);
             print "</pre>";
 */
-            $this->agent = $agent->agent;
+            $this->agent = $agent->getAgent();
          }
          else {
             $this->webid = NULL;

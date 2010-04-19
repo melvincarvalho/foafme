@@ -27,6 +27,7 @@
 // This tab can act as a standalone page or be included from a containter
 require_once('head.php');
 require_once('header.php');
+require_once('lib/libActivity.php');
 require_once('lib/Authentication.php');
 
 /*

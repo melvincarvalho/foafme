@@ -30,33 +30,23 @@ require_once('head.php');
 require_once('header.php');
 require_once('lib/Authentication.php');
 
-/*
-// init
-$auth = getAuth();
-if ($auth['isAuthenticated'] == 1) {
-    $webid = $auth['agent']['webid'];
-}
-
-if (!empty($_REQUEST['webid'])) {
-    $auth = get_agent($_REQUEST['webid']);
-    $webid = $auth['agent']['webid'];
-}
-*/
-
-$webid = $agent['webid'];
 
 if ( $auth->isAuthenticated() || !empty($_REQUEST['webid']) ) {
-    $key = $agent['RSAKey'];
+    $authAgent = $auth->getAgent();
+    $key_array = $authAgent['RSAKey'];
 
     print "<h3>Security</h3>";
 
-    if (!empty($key)) {
+    if (!empty($key_array)) {
 
     // TODO: rdfa to match the table below
-        $wrapped_pub_key = wordwrap($key[modulus], 80, "<br />", true);
-        echo "Public Key:<br/>".$wrapped_pub_key."<br/>";
-        print "Exponent: $key[exponent]<br/>";
-
+        foreach ($key_array as $i => $key) {
+            $wrapped_pub_key = wordwrap($key[modulus], 80, "<br />", true);
+            echo "1.<br/>";
+            echo "Public Key:<br/>".$wrapped_pub_key."<br/>";
+            echo "Exponent: $key[exponent]<br/>";
+            echo "<br />";
+        }
     } else {
         print 'This identity is not yet protected.<form name="input" action="' . $config['certficate_uri'] .'" method="get">';
         ?>
