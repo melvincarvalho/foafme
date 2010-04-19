@@ -30,9 +30,14 @@ require_once('header.php');
 require_once('lib/libActivity.php');
 require_once('lib/Authentication.php');
 
+if ($_REQUEST['webid']) {
+    $pageAgent = new Authentication_AgentARC($GLOBALS['config'], $_REQUEST['webid']);
+    $agent = $pageAgent->getAgent();
+}
+
+
 if ( $auth->isAuthenticated() || !empty($_REQUEST['webid']) ) {
 
-    $agent = $auth->getAgent();
     $a1 = replace_with_rss(isset($agent['holdsAccount']) ? $agent['holdsAccount'] : NULL);
     $a2 = replace_with_rss(isset($agent['accountProfilePage']) ? $agent['accountProfilePage'] : NULL);
 

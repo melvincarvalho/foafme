@@ -40,6 +40,11 @@ if (!empty($_REQUEST['webid'])) {
     $webid = $auth['agent']['webid'];
 }
 */
+if ($_REQUEST['webid']) {
+    $pageAgent = new Authentication_AgentARC($GLOBALS['config'], $_REQUEST['webid']);
+    $agent = $pageAgent->getAgent();
+}
+
 $webid = $agent['webid'];
 
 if ( $auth->isAuthenticated() || !empty($_REQUEST['webid']) ) {

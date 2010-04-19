@@ -28,8 +28,6 @@ require_once('head.php');
 require_once('header.php');
 require_once('lib/Authentication.php');
 
-//$auth = getAuth();
-
 if ($auth->isAuthenticated()) {
      $authAgent = $auth->getAgent();
      $webid = $authAgent['webid'];

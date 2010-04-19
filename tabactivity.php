@@ -30,6 +30,11 @@
 require_once('lib/libActivity.php');
 require_once('lib/Authentication.php');
 
+if ($_REQUEST['webid']) {
+    $pageAgent = new Authentication_AgentARC($GLOBALS['config'], $_REQUEST['webid']);
+    $agent = $pageAgent->getAgent();
+}
+
 $a1 = replace_with_rss($agent['holdsAccount']);
 $a2 = replace_with_rss($agent['accountProfilePage']);
 $a3 = (array)$agent['weblog'];

@@ -31,13 +31,10 @@ require_once('simplepie/1.1.3/simplepie.inc');
 require_once('simplepie/1.1.3/idn/idna_convert.class.php');
 require_once('lib/Authentication.php');
 
-/*
-$auth = $_SESSION['auth'];
-
-if (isset($_REQUEST['webid'])) {
-    $auth = get_agent($_REQUEST['webid']);
+if ($_REQUEST['webid']) {
+    $pageAgent = new Authentication_AgentARC($GLOBALS['config'], $_REQUEST['webid']);
+    $agent = $pageAgent->getAgent();
 }
-*/
 
 $knows = $agent['knows'];
 

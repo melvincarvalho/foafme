@@ -30,6 +30,10 @@ require_once('head.php');
 require_once('header.php');
 require_once('lib/Authentication.php');
 
+if ($_REQUEST['webid']) {
+    $pageAgent = new Authentication_AgentARC($GLOBALS['config'], $_REQUEST['webid']);
+    $agent = $pageAgent->getAgent();
+}
 
 if ( $auth->isAuthenticated() || !empty($_REQUEST['webid']) ) {
     $authAgent = $auth->getAgent();
