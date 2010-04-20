@@ -24,7 +24,7 @@
 require_once('config.php');
 require_once('db.class.php');
 require_once('lib/Authentication.php');
-$auth = new Authentication($GLOBALS['config']);
+$auth = new Authentication_FoafSSLARC($GLOBALS['config']);
 ?>
 <body>
     <h1>FOAF+SSL Simple Login Page</h1>
@@ -39,7 +39,8 @@ $auth = new Authentication($GLOBALS['config']);
         if ($_SERVER[SSL_CLIENT_CERT]) {
             $cert_rsakey = $auth->opensslPkeyGetPublicHex();
             $subjectAltName = $auth->opensslGetSubjectAltName();
-            $agent = $auth->getAgent();
+            $agentArc = new Authentication_AgentARC($GLOBALS['config'], $auth->webid);
+            $agent = $agentArc->getAgent();
             if ( isset($agent['RSAKey']) ) {
                 $foaf_rsakey = $agent['RSAKey'];
             }
