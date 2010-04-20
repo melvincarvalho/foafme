@@ -291,11 +291,7 @@ class Authentication_AgentARC extends Authentication_AgentAbstract {
                         $webid = $this->webid($seeAlso, $y, $row['homepage'], $row['mbox']);
 
                         if ($webid != $prevWebid) {
-                            if (isset($res)) {
-                                $results[] = $res;
-                                $res = NULL;
-                            }
-
+                            
                             if (isset($row['name']))
                                 $res = array('name'=>$row['name']);
 
@@ -313,6 +309,11 @@ class Authentication_AgentARC extends Authentication_AgentAbstract {
 
                             $res = Authentication_Helper::safeArrayMerge($res, array('webid'=>$webid));
 
+                            if (isset($res)) {
+                                $results[] = $res;
+                                $res = NULL;
+                            }
+                            
                             $prevWebid = $webid;
                         }
                         else {

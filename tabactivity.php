@@ -27,10 +27,17 @@
 //-----------------------------------------------------------------------------------------------------------------------------------
 
 // Include the SimplePie library, and the one that handles internationalized domain names.
+require_once('config.php');
+require_once('db.class.php');
 require_once('lib/libActivity.php');
 require_once('lib/Authentication.php');
+require_once('simplepie/1.1.3/simplepie.inc');
+require_once('simplepie/1.1.3/idn/idna_convert.class.php');
 
-if ($_REQUEST['webid']) {
+$auth = new Authentication($GLOBALS['config']);
+$agent = $auth->getAgent();
+
+if (!empty($_REQUEST['webid'])) {
     $pageAgent = new Authentication_AgentARC($GLOBALS['config'], $_REQUEST['webid']);
     $agent = $pageAgent->getAgent();
 }

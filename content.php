@@ -35,6 +35,11 @@ if ($auth->isAuthenticated()) {
      }
 }
 
+if (!empty($_REQUEST['webid'])) {
+    $pageAgent = new Authentication_AgentARC($GLOBALS['config'], $_REQUEST['webid']);
+    $agent = $pageAgent->getAgent();
+}
+
 ?>
 
             <!-- personal profile document -->
@@ -114,7 +119,7 @@ if ($auth->isAuthenticated()) {
             </div>
             <!-- end tabs container -->
 
-            <script type="text/javascript"> $("#activity").load("tabactivity.php?webid=<?php echo $agent ?>");</script>
+            <script type="text/javascript"> $("#activity").load("tabactivity.php?webid=<?php echo $agent['webid'] ?>");</script>
 
             <?php if ( $auth->isAuthenticated() || !empty($_REQUEST['webid']) ) { ?>
             <?php } else { ?>
