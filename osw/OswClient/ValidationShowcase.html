@@ -1,0 +1,345 @@
+<!--
+	Copyright 2009 Anatol Gregory Mayen
+	
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License. 
+	You may obtain a copy of the License at 
+	
+	http://www.apache.org/licenses/LICENSE-2.0 
+	
+	Unless required by applicable law or agreed to in writing, software 
+	distributed under the License is distributed on an "AS IS" BASIS, 
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+	See the License for the specific language governing permissions and 
+	limitations under the License. 
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
+<!-- above set at the top of the file will set     -->
+<!-- the browser's rendering engine into           -->
+<!-- "Quirks Mode". Replacing this declaration     -->
+<!-- with a "Standards Mode" doctype is supported, -->
+<!-- but may lead to some differences in layout.   -->
+
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <!--  Default locale is English -->
+    <meta name="gwt:property" content="locale=en"/>
+    <!--                                           -->
+    <!-- Any title is fine                         -->
+    <!--                                           -->
+    <title>GWT Validation Library Showcase</title>
+    
+    <!--                                           -->
+    <!-- This script loads your compiled module.   -->
+    <!-- If you add any GWT meta tags, they must   -->
+    <!-- be added before this line.                -->
+    <!--                                           -->
+    <script type="text/javascript" language="javascript" src="eu.maydu.gwt.validation.ValidationShowcase.nocache.js"></script>
+  </head>
+
+  <!--                                           -->
+  <!-- The body can have arbitrary html, or      -->
+  <!-- you can leave the body empty if you want  -->
+  <!-- to create a completely dynamic UI.        -->
+  <!--                                           -->
+  <body>
+
+    <!-- OPTIONAL: include this if you want history support -->
+    <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
+
+	<center>
+	<h1>GWT Validation Library Showcase</h1>
+	<br/><br/>
+	This is the showcase site of the GWT Validation Library<br/><br/>
+	
+	<h4>For an introduction see <a href="http://techblog.maydu.eu">techblog.maydu.eu</a></h4>
+	
+	<h3>Download the library at <a href="http://sourceforge.net/projects/gwt-vl/">sourceforge.net/projects/gwt-vl/</a></h3>
+	
+	<div id="main">
+		<!-- GWT content -->
+	</div>
+	
+	<noscript>
+	<font color="#ff0000"><i>This site is about Javascript. So if you would like to use the site for the 
+	purpose it was made for, please activate Javascript.</i></font>
+	</noscript>
+	<br/>
+	You want to see i18n working? Append '?locale=de' to the url or just click this link: <a href="http://gwt-vl.maydu.eu/ValidationShowcase.html?locale=de">German Version</a>
+	<br/>
+	Back to english: <a href="http://gwt-vl.maydu.eu/ValidationShowcase.html">English Version</a>
+
+	<br/><br/>
+	Visit: <a href="http://maydu.eu">maydu.eu</a> or <a href="http://techblog.maydu.eu">techblog.maydu.eu</a>
+	<br/><br/><br/><a href="http://maydu.eu/?to=impress">Impressum</a>
+	
+	<div id="sourceCode" style="visibility:hidden;">
+		<pre style="font-size:10pt;">
+<font color="#1e9415">
+/*
+ * 
+ * Copyright 2009 Anatol Gregory Mayen
+ * 
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *  
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *  
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License. 
+ */ 
+ </font>
+ <font color="#4687c9">
+/**
+ * A showcase for the GWT Validation Library.
+ * 
+ * @author Anatol Gregory Mayen
+ */
+ </font>
+ <font color="#a4bac8">
+public class ValidationShowcase implements EntryPoint {
+
+	private TextBox integerTextBox1, integerTextBox2;
+	private TextBox stringTextBox1, stringTextBox2;
+	private TextBox uppercaseTextBox, trimmedUppercaseTextBox;
+	private TextBox caesarTextBox;
+	private TextBox regexEntryTextBox;
+	private TextBox regexValidateEntryTextBox;
+	private DisclosurePanel allErrorsPanel;
+	private PopupDescription popupDesc;
+	
+	private ValidationProcessor validator;
+
+	/**
+	 * This is the entry point method.
+	 */
+	public void onModuleLoad() {
+
+		setup();
+		setupValidation();
+
+		FormLayoutPanel form = new FormLayoutPanel();
+
+		form.add("Positive integer", integerTextBox1, true)
+		.addDelimiter("")
+		.add("Integer in Range [-5,30]", integerTextBox2, true)
+		.newRow()
+		.add("String length < 5", stringTextBox1, true)
+		.addDelimiter("")
+		.add("String length in Range [2,5]", stringTextBox2, true)
+		.newRow()
+		.add(null, allErrorsPanel, false, 1, 5)
+		.create();
+		
+		Button validateButton = new Button("Validate!");
+		</font>
+		<font color="#000096">
+		validateButton.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				validator.validate();
+			}
+		});
+		
+		Button resetButton = new Button("Reset validations!");
+		resetButton.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				validator.reset();
+			}
+		});
+		</font>
+		<font color="a4bac8">
+		HorizontalPanel hp = new HorizontalPanel();
+		hp.add(resetButton);
+		hp.add(validateButton);
+		VerticalPanel vp = new VerticalPanel();
+		vp.add(form);
+		vp.add(hp);
+		
+		//Setup transformation panel
+		<font color="#000096">
+		Button transformButton = new Button("Transform!");
+		transformButton.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				transValidator.validate();
+			}
+		});
+		</font>
+		FormLayoutPanel transformationForm = new FormLayoutPanel();
+		transformationForm.add("Uppercase transformation", uppercaseTextBox, false)
+			.add("Trimmed uppercase transformation", trimmedUppercaseTextBox, false)
+			.newRow()
+			.add("Encrypt with Caesar cipher", caesarTextBox, false)
+			.create();
+		VerticalPanel transformationPanel = new VerticalPanel();
+		transformationPanel.add(transformationForm);
+		transformationPanel.add(transformButton);
+
+		DecoratorPanel sourcePanel = new DecoratorPanel();
+		HTML sourceCode = new HTML();
+		sourceCode.setText(getSourceCodeText());
+		sourcePanel.add(sourceCode);
+		
+		TabPanel tabPanel = new TabPanel();
+		tabPanel.add(vp, "Showcase");
+		tabPanel.add(transformationPanel, "Transformations");
+		tabPanel.add(sourcePanel, "Source code");
+		tabPanel.selectTab(0);
+		
+		RootPanel.get("main").add(tabPanel);
+
+	}
+
+	private void setup() {
+		integerTextBox1 = new TextBox();
+		integerTextBox2 = new TextBox();
+		stringTextBox1 = new TextBox();
+		stringTextBox2 = new TextBox();
+		allErrorsPanel = new DisclosurePanel("All Errors");
+		uppercaseTextBox = new TextBox();
+		trimmedUppercaseTextBox = new TextBox();
+		caesarTextBox = new TextBox();
+	}
+	
+	private String getSourceCodeText() {
+		Element sourceCode = DOM.getElementById("sourceCode");
+		String html = sourceCode.getInnerHTML();
+		sourceCode.setInnerHTML("");
+		return html;
+	}
+	</font>
+	<font color="#000096">
+	private void setupValidation() {
+		validator = new DefaultValidationProcessor(showcaseMessages);
+		popupDesc = new PopupDescription(showcaseMessages);
+		FocusAction focusAction = new FocusAction();
+		
+		validator.addValidators("positiveInteger",
+				new IntegerValidator(integerPositiveTextBox, 0, Integer.MAX_VALUE)
+					.addActionForFailure(focusAction)
+					.addActionForFailure(new StyleAction("validationFailedBorder"))
+					//.addActionForFailure(new TextAction(errorLabel))
+		);
+		
+		
+		popupDesc.addDescription("positiveIntegerHelp", integerPositiveTextBox);
+		
+		validator.addValidators("integerInRangeMinus5000Plus5000", 
+			new IntegerValidator(integerMinus5000To5000TextBox, -5000, 5000)
+				.addActionForFailure(focusAction)
+				.addActionForFailure(new StyleAction("validationFailedBorder"))
+		);
+		
+		popupDesc.addDescription("integerInRangeMinus5000Plus5000Help", integerMinus5000To5000TextBox);
+		
+		validator.addValidators("anyInteger", 
+				new IntegerValidator(integerTextBox3)
+					.addActionForFailure(focusAction)
+					.addActionForFailure(new StyleAction("validationFailedBorder"))
+			);
+		
+		popupDesc.addDescription("anyIntegerHelp", integerTextBox3);
+		
+		
+		validator.addValidators("stringLengthSmaller5",
+			new StringLengthValidator(stringLengthSmaller5TextBox, 0, 4)
+				.addActionForFailure(focusAction)
+				.addActionForFailure(new StyleAction("validationFailedBorder"))
+		);
+		
+		popupDesc.addDescription("stringLengthSmaller5Help", stringLengthSmaller5TextBox);
+		
+		
+		
+		validator.addValidators("stringLengthBetween2And5",
+				new StringLengthValidator(stringLengthBetween2And5TextBox, 2, 5)
+					.addActionForFailure(focusAction)
+					.addActionForFailure(new StyleAction("validationFailedBorder"))
+		);
+		
+		popupDesc.addDescription("stringLengthBetween2And5Help", stringLengthBetween2And5TextBox);
+		
+		validator.addValidators("notEmpty",
+				new NotEmptyValidator(notEmptyTextBox)
+					.addActionForFailure(focusAction)
+					.addActionForFailure(new StyleAction("validationFailedBorder"))
+		);
+		
+		popupDesc.addDescription("notEmptyHelp", notEmptyTextBox);
+		
+		RegularExpressionValidator regex = new RegularExpressionValidator(regexValidateEntryTextBox, new ValidatorConfigurationSource<String>() {
+
+			/* 
+			*  Use of a dynamically configured RegularExpressionValidator.
+			*
+			*  Normally you would only have to pass the regex string "(a|b)*" in this
+			*  case into the constructor. But if you want dynamic setting of the
+			*  regular expression you need to provide an implementation for this
+			*  interface
+			*
+			*/
+			public String getConfigurationValue() {
+				String regex = regexEntryTextBox.getText();
+				return regex;
+			}
+			
+		}, "regexNotMatched");
+		
+		validator.addValidators("enterRegExedText", regex
+			.addActionForFailure(new StyleAction("validationFailedBorder"))
+			.addActionForFailure(focusAction)
+		);
+		
+		popupDesc.addDescription("regexText.description", regexValidateEntryTextBox);
+		
+		validator.addGlobalAction(new DisclosureTextAction(allErrorsPanel, "redText") );
+		
+		
+		transValidator = new ValidationProcessor();
+		transValidator.addValidators("string1", new UpperCaseTransformer(uppercaseTextBox));
+		transValidator.addValidators("string2", new TrimmedUpperCaseTransformer(trimmedUppercaseTextBox));
+		transValidator.addValidators("caesar1", new CaesarEncryptionTransformer(caesarTextBox, 1));
+		
+	}
+	</font>
+}
+		
+		</pre>
+		
+		<br/>
+		Code for the multi field validations:
+		<pre style="font-size:10pt;">
+			<font color="#000096">
+		PopupDescription description = new PopupDescription(new ShowcaseValidationMessages());
+		
+		description.addDescription("password.description", pass1);
+		description.addDescription("password.description", pass2);
+		
+		description.addDescription("multiEquals.description", name1);
+		description.addDescription("multiEquals.description", name2);
+		description.addDescription("multiEquals.description", name3);
+		
+		validator.addValidators("passwords", new MultiStringsEqualsValidator(pass1, pass2)
+			.addActionForFailure(new StyleAction("validationFailedBorder"))
+			.addActionForFailure(focusAction)
+			, new MultiStringLengthValidator(6, 15, pass1, pass2)
+			.addActionForFailure(new StyleAction("validationFailedBorder"))
+			.addActionForFailure(focusAction)
+		);
+		
+		
+		validator.addValidators("names", new MultiStringsEqualsValidator(name1, name2, name3)
+			.addActionForFailure(new StyleAction("validationFailedBorder"))
+			.addActionForFailure(focusAction)
+		);
+			</font>
+		</pre>
+	</div>
+	</center>
+  </body>
+</html>
