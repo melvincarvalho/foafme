@@ -28,23 +28,22 @@
 // This tab can act as a standalone page or be included from a containter
 require_once('head.php');
 require_once('header.php');
-require_once('lib/libAuthentication.php');
+require_once('lib/Authentication.php');
 
 // init
 $friends = 2;
 
-
-$auth = getAuth();
-if ($auth['isAuthenticated'] == 1) {
-    $webid = $auth['agent']['webid'];
-    $webid_viewer = $auth['agent']['webid'];
+if ($auth->isAuthenticated()) {
+    $webid = $agent['webid'];
+    $webid_viewer = $agent['webid'];
 }
 
 if (!empty($_REQUEST['webid'])) {
     $webid = $_REQUEST['webid'];
     $webid_owner = $_REQUEST['webid'];
     if ( $webid_owner != $webid_viewer) {
-        $auth = get_agent($_REQUEST['webid']);
+        $pageAgent = new Authentication_AgentARC($GLOBALS['config'], $_REQUEST['webid']);
+        $agent = $pageAgent->getAgent();
     }
 }
 
@@ -57,7 +56,7 @@ if (!empty($webid)) {
 
 if ( !empty($webid_owner) || !empty($webid_viewer) ) {
 
-    $friends = count($auth['agent']['knows']);
+    $friends = count($agent['knows']);
 
 } 
 ?>
@@ -66,8 +65,8 @@ if ( !empty($webid_owner) || !empty($webid_viewer) ) {
                 <script type="text/javascript">
                     // TODO: make this more generic
                     function sparul() {
-                        $("span[property]").editInPlace({ url: 'sparul.php' , params: 'uri=<?php echo $agent ?>' });
-                        $("span[rel]").editInPlace({ url: 'sparul.php' , params: 'uri=<?php echo $agent ?>' });
+                        $("span[property]").editInPlace({ url: 'sparul.php' , params: 'uri=<?php echo $webid ?>' });
+                        $("span[rel]").editInPlace({ url: 'sparul.php' , params: 'uri=<?php echo $webid ?>' });
                     }
 
 <?php if ($canEdit) { ?>
@@ -138,7 +137,7 @@ if ( !empty($webid_owner) || !empty($webid_viewer) ) {
                         <td><input size="12" rel="rdfs:seeAlso" onchange="makeTags()" type="text" /></td>
                     </tr>
 
-                        <?php } else { $v = $auth['agent']['knows'][$i]; $about =  $v['about']?$v['about']  : $webidbase . "friend" . $i ; ?>
+                        <?php } else { $v = $agent['knows'][$i]; $about =  $v['about']?$v['about']  : $webidbase . "friend" . $i ; ?>
 
                     <tr typeof="foaf:Person" id="friend<?php echo $i ?>" about="<?php echo $about ?>" >
                         <td><a href="?webid=<?php echo $v['webid'] ?>">View</a>: </td>
@@ -160,7 +159,7 @@ if ( !empty($webid_owner) || !empty($webid_viewer) ) {
                 <br/>
 
                 <?php
-                if ( $auth['isAuthenticated'] == 1 || empty($_REQUEST['webid']) ) {
+                if ( $auth->isAuthenticated() || empty($_REQUEST['webid']) ) {
 
                     print '<a id="addf" href="#" onclick="javascript:addf(this)">Add</a>';
 

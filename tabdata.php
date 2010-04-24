@@ -26,13 +26,12 @@
 // includes
 require_once('head.php');
 require_once('header.php');
+require_once('lib/Authentication.php');
 
-
-$auth = getAuth();
-
-if ($auth['isAuthenticated'] == 1) {
-     $webid = $auth['agent']['webid'];
-     $name = !empty($auth['agent']['name'])?$auth['agent']['name']:$webid;
+if ($auth->isAuthenticated()) {
+     $authAgent = $auth->getAgent();
+     $webid = $authAgent['webid'];
+     $name = !empty($authAgent['name'])?$authAgent['name']:$webid;
 }
 
 

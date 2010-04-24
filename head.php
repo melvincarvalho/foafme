@@ -23,7 +23,7 @@
  */
 require_once('config.php');
 require_once('db.class.php');
-require_once('lib/libAuthentication.php');
+require_once('lib/Authentication.php');
 
 
 // Start a session
@@ -40,17 +40,19 @@ require_once("lib/libImport.php");
 $import = getImport();
 
 // init
-$auth = getAuth();
+$auth = new Authentication($GLOBALS['config']);
 
-if ($auth['isAuthenticated'] == 1) {
-    $webid = $auth['agent']['webid'];
-    $agent = $auth['agent']['webid'];
+if ($auth->isAuthenticated()) {
+    $authAgent = $auth->getAgent();
+    $webid = $authAgent['webid'];
+    $agent = $authAgent['webid'];
 }
 
 if (!empty($_REQUEST['webid'])) {
-    $auth = get_agent($_REQUEST['webid']);
-    $webid = $auth['agent']['webid'];
-    $agent = $auth['agent']['webid'];
+    $authAgentArc = new Authentication_AgentARC($GLOBALS['config'], $_REQUEST['webid']);
+    $authAgent = $authAgentArc->getAgent();
+    $webid = $authAgent['webid'];
+    $agent = $authAgent['webid'];
 }
 $webidbase = preg_replace('/#.*/', '', $webid);
 
@@ -76,7 +78,6 @@ $webidbase = preg_replace('/#.*/', '', $webid);
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="Content-Style-Type" content="text/css" />
         <meta http-equiv="Content-Script-Type" content="text/javascript" />
-        <!-- <base href="<?php echo $agent ?>"> -->
         <title>FOAF Me</title>
         <link rel="stylesheet" href="css/jquery.tabs.css" type="text/css" media="print, projection, screen" />
         <!--
@@ -135,9 +136,6 @@ $webidbase = preg_replace('/#.*/', '', $webid);
                 }
 
                 frag = "<?php echo $agent ?>#" + frag;
-                //alert("sparul.php?uri=<?php echo $agent ?>&delete=" + escape(frag));
-                //$.post("sparul.php?uri=<?php echo $agent ?>&delete=" + escape(frag));
-
                 var sparul = 'DELETE { ';
                 $(str).parent().parent().rdf().databank.triples().each(function () { sparul += this + ' '; } );
                 sparul += ' } ';

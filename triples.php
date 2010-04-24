@@ -2,7 +2,7 @@
 
 //-----------------------------------------------------------------------------------------------------------------------------------
 //
-// Filename   : tabme.php                                                                                                  
+// Filename   : triples.php
 // Date       : 15th October 2009
 //
 // Copyright 2008-2009 foaf.me
@@ -25,7 +25,7 @@
 //
 //-----------------------------------------------------------------------------------------------------------------------------------
 
-require_once('lib/libAuthentication.php');
+require_once(dirname(__FILE__)."/arc/ARC2.php");
 require_once('db.class.php');
 
 $config['store_name'] ='sparql';

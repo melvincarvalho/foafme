@@ -25,7 +25,7 @@
 //
 //-----------------------------------------------------------------------------------------------------------------------------------
 
-require_once('lib/libAuthentication.php');
+require_once(dirname(__FILE__)."/arc/ARC2.php");
 require_once('db.class.php');
 
 $db = new db_class();

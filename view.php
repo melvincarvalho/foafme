@@ -27,7 +27,7 @@
 
 require_once("config.php");
 require_once("db.class.php");
-require_once('lib/libAuthentication.php');
+require_once('lib/Authentication.php');
 
 // set up db
 $db = new db_class();
@@ -116,13 +116,15 @@ if (preg_match('/^post$/i', $_SERVER['REQUEST_METHOD'])) {
     $foaf = $foaf . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
     $process_process = false;
-    $agent = get_agent($foaf);
+    $authAgent = new Authentication_AgentARC($GLOBALS['config'], $foaf);
+    $foafAgent = $authAgent->getAgent();
 
-    if (isset($agent['agent']['RSAKey'])) {
-        $auth = getAuth();
+    if (isset($foafAgent['RSAKey'])) {
+        $auth = new Authentication($GLOBALS['config']);
 
-        if ( (isset($auth['isAuthenticated'])) && ($auth['isAuthenticated']==1) ) {
-            if ( equal_rsa_keys($agent['agent']['RSAKey'], $auth['agent']['RSAKey']) ) {
+        if ($auth->isAuthenticated()) {
+            $authAgent=$auth->getAgent();
+            if ( equal_rsa_keys($foafAgent['RSAKey'], $authAgent['RSAKey']) ) {
                 $process_sparul = true;
             }
         }
