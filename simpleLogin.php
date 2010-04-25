@@ -64,8 +64,8 @@ $auth = new Authentication_FoafSSLARC($GLOBALS['config']);
             print "Client Certificate Public Key <span style='color:green'>detected! (HEX):<br>";
 
             print "<pre>";
-            print "Certificate Modulus : <span style='color:green'> $certModulus </span><br/>";
-            print "Certificate Exponent : <span style='color:green'> $certExponent </span><br/>";
+            print "Certificate Modulus : <span style='color:green'>".wordwrap($certModulus, 80, "<br />", true)."</span><br/>";
+            print "Certificate Exponent : <span style='color:green'> ".wordwrap($certExponent, 80, "<br />", true)." </span><br/>";
             print "</pre></span>";
         }
         else
@@ -82,9 +82,12 @@ $auth = new Authentication_FoafSSLARC($GLOBALS['config']);
         if ( $foaf_rsakey ) {
             print "FOAF Remote Public Key found in $subjectAltName:<br><span style='color:green'>";
 
-            print "<pre>";
-            print_r($foaf_rsakey);
-            print "</pre></span>";
+            foreach ($foaf_rsakey as $rsa_key) {
+                print "<pre>";
+                print "Certificate Modulus : <span style='color:green'>".wordwrap($rsa_key['modulus'], 80, "<br />", true)."</span><br/>";
+                print "Certificate Exponent : <span style='color:green'> ".wordwrap($rsa_key['exponent'], 80, "<br />", true)." </span><br/>";
+                print "</pre></span>";
+            }
         }
         else
             print "FOAF Remote Public Key: <span style='color:green'>Not detected!</span><BR><BR>";
