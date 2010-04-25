@@ -36,10 +36,10 @@ $auth = new Authentication_FoafSSLARC($GLOBALS['config']);
 
     <div id="diagnostics">
         <?
-        if ($_SERVER[SSL_CLIENT_CERT]) {
+        if ($_SERVER['SSL_CLIENT_CERT']) {
             $certModulus = $auth->certModulus;
             $certExponent = $auth->certExponent;
-            $subjectAltName = $auth->certSubjectAltName;
+            $subjectAltName = $auth->certSubjectAltName['URI'];
             $agentArc = new Authentication_AgentARC($GLOBALS['config'], $auth->webid);
             $agent = $agentArc->getAgent();
             if ( isset($agent['RSAKey']) ) {
@@ -48,12 +48,12 @@ $auth = new Authentication_FoafSSLARC($GLOBALS['config']);
         }
 
         if ($auth->isAuthenticated())
-            print "<b>The login Suceeded! Authenticated as:  $subjectAltName[URI]</b><p>Technical Explanation:</p>";
+            print "<b>The login Suceeded! Authenticated as:  $subjectAltName</b><p>Technical Explanation:</p>";
         else
             print "<b>Not Logged In</b><br/><br/>";
 
 
-        if ($_SERVER[SSL_CLIENT_CERT])
+        if ($_SERVER['SSL_CLIENT_CERT'])
             print 'SSL Client Certificate: <span style="color:green">detected!</span><BR><BR>';
         else
             print 'SSL Client Certificate: <span style="color:green">Not detected!</span><BR><BR>';
@@ -64,8 +64,8 @@ $auth = new Authentication_FoafSSLARC($GLOBALS['config']);
             print "Client Certificate Public Key <span style='color:green'>detected! (HEX):<br>";
 
             print "<pre>";
-            print "Certificate Modulus : <span style='color:green'>" . $certModulus . "</span><br/>";
-            print "Certificate Exponent : <span style='color:green'>" . $certExponent . "</span><br/>";
+            print "Certificate Modulus : <span style='color:green'> $certModulus </span><br/>";
+            print "Certificate Exponent : <span style='color:green'> $certExponent </span><br/>";
             print "</pre></span>";
         }
         else
