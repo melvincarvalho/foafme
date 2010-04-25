@@ -24,7 +24,7 @@
 require_once('config.php');
 require_once('db.class.php');
 require_once('lib/Authentication.php');
-$auth = new Authentication_FoafSSLARC($GLOBALS['config']);
+$auth = new Authentication_FoafSSLARC($GLOBALS['config'], NULL, FALSE);
 ?>
 <body>
     <h1>FOAF+SSL Simple Login Page</h1>
