@@ -64,8 +64,8 @@ $auth = new Authentication_FoafSSLARC($GLOBALS['config'], NULL, FALSE);
             print "Client Certificate Public Key <span style='color:green'>detected! (HEX):<br>";
 
             print "<pre>";
-            print "Certificate Modulus : <br /><span style='color:green'>".wordwrap($certModulus, 80, "<br />", true)."</span><br/>";
-            print "Certificate Exponent : <span style='color:green'> ".wordwrap($certExponent, 80, "<br />", true)." </span><br/>";
+            print "Modulus : <br /><span style='color:green'>".wordwrap($certModulus, 80, "<br />", true)."</span><br/>";
+            print "Exponent : <span style='color:green'> ".wordwrap($certExponent, 80, "<br />", true)." </span><br/>";
             print "</pre></span>";
         }
         else
