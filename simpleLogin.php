@@ -37,8 +37,9 @@ $auth = new Authentication_FoafSSLARC($GLOBALS['config']);
     <div id="diagnostics">
         <?
         if ($_SERVER[SSL_CLIENT_CERT]) {
-            $cert_rsakey = $auth->opensslPkeyGetPublicHex();
-            $subjectAltName = $auth->opensslGetSubjectAltName();
+            $certModulus = $auth->certModulus;
+            $certExponent = $auth->certExponent;
+            $subjectAltName = $auth->certSubjectAltName;
             $agentArc = new Authentication_AgentARC($GLOBALS['config'], $auth->webid);
             $agent = $agentArc->getAgent();
             if ( isset($agent['RSAKey']) ) {
@@ -63,7 +64,8 @@ $auth = new Authentication_FoafSSLARC($GLOBALS['config']);
             print "Client Certificate Public Key <span style='color:green'>detected! (HEX):<br>";
 
             print "<pre>";
-            print_r($cert_rsakey);
+            print "Certificate Modulus : <span style='color:green'>" . $certModulus . "</span><br/>";
+            print "Certificate Exponent : <span style='color:green'>" . $certExponent . "</span><br/>";
             print "</pre></span>";
         }
         else
@@ -71,14 +73,14 @@ $auth = new Authentication_FoafSSLARC($GLOBALS['config']);
 
 
         if ($subjectAltName) {
-            print "Subject Alt Name (FOAF Profile): <span style='color:green'>detected!: $subjectAltName[URI]</span><BR><BR>";
+            print "Subject Alt Name (FOAF Profile): <span style='color:green'>detected!: $subjectAltName</span><BR><BR>";
         }
         else
             print "Subject Alt Name: <span style='color:green'>Not detected!</span><BR><BR>";
 
 
         if ( $foaf_rsakey ) {
-            print "FOAF Remote Public Key found in $subjectAltName[URI]:<br><span style='color:green'>";
+            print "FOAF Remote Public Key found in $subjectAltName:<br><span style='color:green'>";
 
             print "<pre>";
             print_r($foaf_rsakey);
