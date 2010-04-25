@@ -35,9 +35,11 @@ if ($_REQUEST['webid']) {
     $agent = $pageAgent->getAgent();
 }
 
+if ( $auth->isAuthenticated() )
+    $agent = $auth->getAgent();
+
 if ( $auth->isAuthenticated() || !empty($_REQUEST['webid']) ) {
-    $authAgent = $auth->getAgent();
-    $key_array = $authAgent['RSAKey'];
+    $key_array = $agent['RSAKey'];
 
     print "<h3>Security</h3>";
 
