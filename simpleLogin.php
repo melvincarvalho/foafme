@@ -84,8 +84,8 @@ $auth = new Authentication_FoafSSLARC($GLOBALS['config'], NULL, FALSE);
 
             foreach ($foaf_rsakey as $rsa_key) {
                 print "<pre>";
-                print "Certificate Modulus : <br /><span style='color:green'>".wordwrap($rsa_key['modulus'], 80, "<br />", true)."</span><br/>";
-                print "Certificate Exponent : <span style='color:green'> ".wordwrap($rsa_key['exponent'], 80, "<br />", true)." </span><br/>";
+                print "Modulus : <br /><span style='color:green'>".wordwrap($rsa_key['modulus'], 80, "<br />", true)."</span><br/>";
+                print "Exponent : <span style='color:green'> ".wordwrap($rsa_key['exponent'], 80, "<br />", true)." </span><br/>";
                 print "</pre></span>";
             }
         }
