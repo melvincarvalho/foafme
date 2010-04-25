@@ -174,7 +174,7 @@ abstract class Authentication_FoafSSLAbstract {
             }
 
         }
-
+        return $this->certSubjectAltName;
     }
 
     /* Function to compare the certifactes keys against the keys found in the FOAF */
