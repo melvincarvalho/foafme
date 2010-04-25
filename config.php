@@ -29,13 +29,15 @@
 $config = array(
 
         /* db */
-        'db_name'        => 'test',                     // db name
+        'db_name'        => 'foaf',                     // db name
         'db_user'        => 'root',                          // db username
         'db_pwd'         => '',                              // db password
 
         /* store */
         'store_name'     => 'arc_tests',                     // tmp table name
 
+	/* openssl configuration directory */
+        'openssl_config_dir' => '/ebs1/ssl',
         /* modes */
         'multi_user'     => true,                            // not yet impl
         'auto_generate'  => true,                            // not yet impl
