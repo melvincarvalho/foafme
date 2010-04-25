@@ -15,18 +15,10 @@ include('head.php'); ?>
 
 
 	<ul>
-		<a href="http://github.com/melvincarvalho/foafme/tree/master"><h2>GIT Hub Web App</h2></a>
-		<a href="http://github.com/melvincarvalho/foafssl/tree/master"><h2>GIT Hub Certifcates</h2></a>
-
+		<a href="http://github.com/melvincarvalho/foafme"><h2>GIT Hub Web App</h2></a>
+		<a href="http://github.com/melvincarvalho/foafssl"><h2>GIT Hub Certifcates</h2></a>
+		<a href="http://github.com/melvincarvalho/libAuthentication"><h2>GIT Hub libAuthentication</h2></a>
 	</ul>
-
-	<h3>FOAF+SSL Authentication PHP Library</h3>
-		Requires: <a href="http://arc.semsol.org/download">ARC RDF Classes for PHP</a><br>
-		Demo: <a href="https://foaf.me/testLibAuthentication.php">Example usage of getAuth();</a>
-
-		<ul>
-			v0.1: <a href="download.php?uri=libAuthentication.php">libAuthentication.php</a><br>
-		</ul>
 
         </div>
 
