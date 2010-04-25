@@ -108,7 +108,7 @@ abstract class Authentication_FoafSSLAbstract {
     /**
      *  Function to return the modulus and exponent of the supplied Client SSL Page 
      */
-    public function opensslPkeyGetPublicHex() {
+    protected function opensslPkeyGetPublicHex() {
 
         if ($this->SSLClientCert) {
 
@@ -145,7 +145,7 @@ abstract class Authentication_FoafSSLAbstract {
     /**
      *  Returns an array holding the subjectAltName of the supplied SSL Client Certificate 
      */
-    public function opensslGetSubjectAltName() {
+    protected function opensslGetSubjectAltName() {
 
         if ($this->SSLClientCert) {
 
@@ -174,7 +174,6 @@ abstract class Authentication_FoafSSLAbstract {
             }
 
         }
-        return $this->certSubjectAltName;
     }
 
     /* Function to compare the certifactes keys against the keys found in the FOAF */
