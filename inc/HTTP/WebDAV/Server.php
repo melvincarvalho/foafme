@@ -1221,19 +1221,25 @@ class HTTP_WebDAV_Server
 					}
 					else
 					{
-						$agent = get_agent($path);
+                                                $auth = new Authentication_AgentARC($GLOBALS['config']);
+
+                                                $auth->setAgent($path);
+
+                                                $agent = $auth->getAgent();
+
 						$sql = NULL;
 
 						if (isset($agent['agent']['RSAKey']))
 						{
-							$auth = getAuth();
+                                                        $auth = new Authentication($GLOBALS['config']);
 
-							if ( (isset($auth['isAuthenticated'])) && ($auth['isAuthenticated']==1) )
+							if ($auth->isAuthenticated())
 							{
-								if ( equal_rsa_keys($agent['agent']['RSAKey'], $auth['agent']['RSAKey']) )
-								{
-									$sql = 'update foaf set rdf = "' . $data . '" , rdf2 = "' . $data . '" where username like "' . $username . '"';
-								}
+                                                            $authAgent = $auth->getAgent();
+                                                            if ( equal_rsa_keys($agent['RSAKey'], $authAgent['RSAKey']) )
+                                                            {
+								$sql = 'update foaf set rdf = "' . $data . '" , rdf2 = "' . $data . '" where username like "' . $username . '"';
+                                                            }
 							}
 						}
 						else
