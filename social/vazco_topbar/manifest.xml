@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin_manifest>
+	<field key="author" value="Michal Zacher" />
+	<field key="version" value="1.3" />
+	<field key="description" value="Extends topbar functionality" />
+	<field key="website" value="www.elggdev.com" />
+	<field key="copyright" value="(C Michal Zacher" />
+	<field key="licence" value="" />
+	<field key="elgg_version" value="2009030702" />
+</plugin_manifest>
