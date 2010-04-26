@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin_manifest>
+	<field key="author" value="Rhizomatik" />
+	<field key="version" value="1.7" />
+	<field key="description" value="Test activity streams implementation" />
+	<field key="website" value="http://lorea.cc/" />
+	<field key="copyright" value="(C) Rhizomatik 2010-2012" />
+	<field key="licence" value="GNU Public License version 2" />
+	<field key="elgg_version" value="2010030101" />
+</plugin_manifest>
+

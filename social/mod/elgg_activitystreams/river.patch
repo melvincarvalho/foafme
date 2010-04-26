@@ -1,0 +1,43 @@
+diff -r cb1ef321bd6b engine/lib/river2.php
+--- a/engine/lib/river2.php	Fri Mar 26 02:11:06 2010 +0100
++++ b/engine/lib/river2.php	Sun Apr 04 05:31:40 2010 +0200
+@@ -48,8 +48,28 @@
+ 	// Load config
+ 	global $CONFIG;
+ 
++	// Check for duplicated last entry and delete it
++	$lastentry = get_river_items('','','','','','',1,'','','');
++	if ($lastentry[0]->type == $type and
++		$lastentry[0]->subtype == $subtype and
++		$lastentry[0]->action_type == $action_type and
++		$lastentry[0]->access_id == $access_id and
++		$lastentry[0]->view == $view and
++		$lastentry[0]->subject_guid == $subject_guid and
++		$lastentry[0]->object_guid == $object_guid and
++		$lastentry[0]->annotation_id == $annotation_id)
++		delete_data("delete from {$CONFIG->dbprefix}river where " .
++			" type = '{$type}' " .
++			"and subtype = '{$subtype}' " .
++			"and action_type = '{$action_type}' " .
++			"and access_id = {$access_id} " .
++			"and view = '{$view}' " .
++			"and subject_guid = {$subject_guid} " .
++			"and object_guid = {$object_guid} " .
++			"and annotation_id = {$annotation_id} ");
++
+ 	// Attempt to save river item; return success status
+-	return insert_data("insert into {$CONFIG->dbprefix}river " .
++	$res = insert_data("insert into {$CONFIG->dbprefix}river " .
+ 		" set type = '{$type}', " .
+ 		" subtype = '{$subtype}', " .
+ 		" action_type = '{$action_type}', " .
+@@ -59,6 +79,9 @@
+ 		" object_guid = {$object_guid}, " .
+ 		" annotation_id = {$annotation_id}, " .
+ 		" posted = {$posted} ");
++	if ($res)
++		trigger_plugin_hook("river_update", "river_update", array('action_type'=>$action_type, 'subject_guid'=>$subject_guid, 'object_guid' =>$object_guid));
++	return $res;
+ }
+ 
+ /**
