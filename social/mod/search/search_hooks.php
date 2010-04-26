@@ -232,7 +232,7 @@ function search_tags_hook($hook, $type, $value, $params) {
 			// @todo make one long tag string and run this through the highlight
 			// function.  This might be confusing as it could chop off
 			// the tag labels.
-			if (in_array($query, $tags)) {
+			if (in_array(strtolower($query), array_map('strtolower', $tags))) {
 				if (is_array($tags)) {
 					$tag_name_str = elgg_echo("tag_names:$tag_name");
 					$matched_tags_strs[] = "$tag_name_str: " . implode(', ', $tags);
@@ -240,8 +240,21 @@ function search_tags_hook($hook, $type, $value, $params) {
 			}
 		}
 
+		// different entities have different titles
+		switch($entity->type) {
+			case 'site':
+			case 'user':
+			case 'group':
+				$title_tmp = $entity->name;
+				break;
+
+			case 'object':
+				$title_tmp = $entity->title;
+				break;
+		}
+
 		// Nick told me my idea was dirty, so I'm hard coding the numbers.
-		$title_tmp = strip_tags($entity->title);
+		$title_tmp = strip_tags($title_tmp);
 		if (elgg_strlen($title_tmp) > 297) {
 			$title_str = elgg_substr($title_tmp, 0, 297) . '...';
 		} else {
@@ -257,7 +270,6 @@ function search_tags_hook($hook, $type, $value, $params) {
 
 		$tags_str = implode('. ', $matched_tags_strs);
 		$tags_str = search_get_highlighted_relevant_substrings($tags_str, $params['query']);
-		$tags_str = "($tags_str)";
 
 		$entity->setVolatileData('search_matched_title', $title_str);
 		$entity->setVolatileData('search_matched_description', $desc_str);
@@ -312,6 +324,11 @@ function search_comments_hook($hook, $type, $value, $params) {
 	// available on metastrings (and boolean mode doesn't need it)
 	$search_where = search_get_where_sql('msv', $fields, $params, FALSE);
 
+	$container_and = '';
+	if ($params['container_guid'] && $params['container_guid'] !== ELGG_ENTITIES_ANY_VALUE) {
+		$container_and = 'AND e.container_guid = ' . sanitise_string($params['container_guid']);
+	}
+
 	$e_access = get_access_sql_suffix('e');
 	$a_access = get_access_sql_suffix('a');
 	// @todo this can probably be done through the api..
@@ -323,6 +340,7 @@ function search_comments_hook($hook, $type, $value, $params) {
 			AND ($search_where)
 			AND $e_access
 			AND $a_access
+			$container_and
 
 		LIMIT {$params['offset']}, {$params['limit']}
 		";
@@ -337,6 +355,7 @@ function search_comments_hook($hook, $type, $value, $params) {
 			AND ($search_where)
 			AND $e_access
 			AND $a_access
+			$container_and
 		";
 
 	$result = get_data($q);

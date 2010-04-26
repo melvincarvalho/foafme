@@ -1,6 +1,6 @@
 <?php
 /**
- * Activity viewer
+ * Core language file
  *
  * @package Elgg
  * @subpackage Core
@@ -30,6 +30,8 @@ $english = array(
 
 	'loggedinrequired' => "You must be logged in to view that page.",
 	'adminrequired' => "You must be an administrator to view that page.",
+	'membershiprequired' => "You must be a member of this group to view that page.",
+
 
 /**
  * Errors
@@ -91,7 +93,7 @@ $english = array(
 	'ImportException:NotAllImported' => "Not all elements were imported.",
 
 	'InvalidParameterException:UnrecognisedFileMode' => "Unrecognised file mode '%s'",
-	'InvalidParameterException:MissingOwner' => "File %s (%d) is missing an owner!",
+	'InvalidParameterException:MissingOwner' => "File %s (file guid:%d) (owner guid:%d) is missing an owner!",
 	'IOException:CouldNotMake' => "Could not make %s",
 	'IOException:MissingFileName' => "You must specify a name before opening a file.",
 	'ClassNotFoundException:NotFoundNotSavedWithFile' => "Filestore not found or class not saved with file!",
@@ -710,6 +712,8 @@ Creating this is easy. Copy the contents of the textbox below into a text editor
 
 Alternatively, you can enter your database settings below and we will try and do this for you...",
 
+	'installation:error:db:title' => "Database settings error",
+	'installation:error:db:text' => "Check your database settings again as Elgg could not connect and access the database.",
 	'installation:error:configuration' => "Once you've corrected any configuration issues, press reload to try again.",
 
 	'installation' => "Installation",

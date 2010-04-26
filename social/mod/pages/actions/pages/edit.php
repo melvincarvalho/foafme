@@ -22,6 +22,9 @@
 	$input = array();
 	foreach($CONFIG->pages as $shortname => $valuetype) {
 		$input[$shortname] = get_input($shortname);
+		if ($shortname == 'title') {
+			$input[$shortname] = strip_tags($input[$shortname]);
+		}
 		if ($valuetype == 'tags')
 			$input[$shortname] = string_to_tag_array($input[$shortname]);
 	}
@@ -52,6 +55,12 @@
 		// New instance, so set container_guid
 		$container_guid = get_input('container_guid', $_SESSION['user']->getGUID());
 		$page->container_guid = $container_guid;
+
+		// cache data in session in case data from form does not validate
+		$_SESSION['page_description'] = $input['description'];
+		$_SESSION['page_tags'] = get_input('tags');
+		$_SESSION['page_read_access'] = (int)get_input('access_id');
+		$_SESSION['page_write_access'] = (int)get_input('write_access_id');
 	}
 	
 	// Have we got it? Can we edit it?
@@ -96,6 +105,12 @@
 			
 			// Now save description as an annotation
 			$page->annotate('page', $page->description, $page->access_id);
+
+			// clear cache
+			unset($_SESSION['page_description']);
+			unset($_SESSION['page_tags']);
+			unset($_SESSION['page_read_access']);
+			unset($_SESSION['page_write_access']);
 				
 		
 			system_message(elgg_echo("pages:saved"));
