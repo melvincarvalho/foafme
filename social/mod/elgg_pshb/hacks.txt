@@ -1,0 +1,6 @@
+../riverdashboard/index.php: removed gatekeeper
+
+river.patch <-- patch to add the hook to the river so we can replicate on the hubs
+
+both the publisher and the subscriber are hacked to ignore ssl certs, should have a folder
+of trusted ca certs.

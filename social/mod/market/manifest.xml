@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin_manifest>
+        <field key="author" value="slyhne" />
+        <field key="version" value="1.0b" />
+        <field key="description" value="Create a market place where your, or your users, can create classifieds. Requires the file and embed plugin!" />
+        <field key="website" value="http://www.techisus.com , donations here: http://www.techisus.dk/social.html" />
+		<field key="copyright" value="(C) TechIsUs 2010" />
+        <field key="licence" value="GNU Public License version 2" />
+		<field key="elgg_version" value="2010030101" />
+</plugin_manifest>

@@ -1,0 +1,13 @@
+data/graphics/foreign_notification.png.i
+data/languages/en.php.i
+data/languages/es.php.i
+data/manifest.xml.i
+data/start.php.i
+data/views/default/foreign_objects/css.php.i
+data/views/default/foreign_objects/river.php.i
+data/views/default/groups/grouplisting.php.i
+data/views/default/groups/groupprofile.php.i
+data/views/default/groups/icon.php.i
+data/views/default/object/bookmarks.php.i
+data/views/default/object/file.php.i
+data/views/default/pages/pagelisting.php.i

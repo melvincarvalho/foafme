@@ -1,0 +1,1 @@
+a:3:{s:3:"url";s:28:"http://www.planet-libre.org/";s:8:"feed_url";s:46:"http://www.planet-libre.org//feed.php?type=rss";s:5:"build";i:20081219;}

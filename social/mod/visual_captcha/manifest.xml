@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin_manifest>
+	<field key="author" value="Brett Profitt" />
+	<field key="version" value="1.0" />
+	<field key="description" value="Provides visual captcha support." />
+	<field key="website" value="http://www.elgg.org/" />
+	<field key="copyright" value="(C) Brett Profitt 2008-2009" />
+	<field key="licence" value="GNU Public License version 2" />
+	<field key="elgg_version" value="2010010501" />
+</plugin_manifest>
