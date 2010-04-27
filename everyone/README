@@ -1,0 +1,12 @@
+This is an implementation using mod_auth_everyone
+
+Use a directive similar to :
+
+
+<Directory /ebs1/foafme/everyone/>
+    AuthType WebID
+    Require valid-user
+    AuthWebIDAuthoritative off
+    Require everyone
+</Directory>
+
