@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin_manifest>
+    <field key="author" value="Melvin Carvalho" />
+    <field key="version" value="1.7.1" />
+    <field key="description" value="A simple example of adding foaf+ssl to elgg" />
+    <field key="website" value="http://foaf.me/" />
+    <field key="copyright" value="Copyright 2010 Melvin Carvalho" />
+    <field key="licence" value="GNU Public License version 2" />
+    <field key="elgg_version" value="2009072201" />
+</plugin_manifest>

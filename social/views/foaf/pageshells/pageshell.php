@@ -41,7 +41,7 @@ if (!$owner = page_owner_entity()) {
 		<foaf:nick><?php echo $owner->username; ?></foaf:nick>
 		<foaf:name><?php echo $owner->name; ?></foaf:name>
 		<foaf:homepage rdf:resource="<?php echo $owner->getURL(); ?>" />
-		<foaf:depiction rdf:resource="<?php echo $vars['url']; ?>pg/icon/<?php echo $owner->username; ?>/large/icon.jpg" />
+		<foaf:depiction rdf:resource="<?php echo elgg_format_url($owner->getIcon('large')); ?>" />
                 <foaf:weblog rdf:resource="<?php echo $vars['url']; ?>pg/blog/<?php echo $owner->username; ?>" />
 		<?php
 			echo $vars['body'];

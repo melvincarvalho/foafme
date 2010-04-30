@@ -14,7 +14,7 @@
 		if (!isloggedin()) forward();
 
 	// Get input data
-		$title = get_input('title'); // message title
+		$title = strip_tags(get_input('title')); // message title
 		$message_contents = get_input('message'); // the message
 		$send_to = get_input('send_to'); // this is the user guid to whom the message is going to be sent
 		$reply = get_input('reply',0); // this is the guid of the message replying to
@@ -59,6 +59,6 @@
 		system_message(elgg_echo("messages:posted"));
 	
 	// Forward to the users inbox
-		forward('mod/messages/sent.php');	
+		forward('pg/messages/' . get_loggedin_user()->username);
 
 ?>

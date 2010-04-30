@@ -1,0 +1,4 @@
+The plugin exposes a few activitystream views:
+  * profile: https://n-1.cc/pg/profile/caedes?view=activitystream
+  * group: https://n-1.artelibredigital.net/pg/groups/6081/invisible/?view=activitystream
+  * general: http://n-1.artelibredigital.net/mod/riverdashboard/?view=activitystream

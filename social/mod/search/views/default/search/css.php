@@ -98,3 +98,8 @@ margin: 6px;
 	padding: 0;
 }
 
+/* formatting for the search results */
+
+.search_listing .item_timestamp {
+	font-style: italic;
+}

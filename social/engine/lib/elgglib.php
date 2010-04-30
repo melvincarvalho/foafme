@@ -14,10 +14,10 @@
  */
 
 /**
- * Adds messages to the session so they'll be carried over, and forwards the browser.
+ * Forwards the browser.
  * Returns false if headers have already been sent and the browser cannot be moved.
  *
- * @param string $location URL to forward to browser to
+ * @param string $location URL to forward to browser to. Can be relative path.
  * @return nothing|false
  */
 function forward($location = "") {
@@ -25,10 +25,6 @@ function forward($location = "") {
 
 	if (!headers_sent()) {
 		$current_page = current_page_url();
-		// What is this meant to do?
-		//if (strpos($current_page, $CONFIG->wwwroot . "action") ===false)
-
-		$_SESSION['msg'] = array_merge($_SESSION['msg'], system_messages());
 		if ((substr_count($location, 'http://') == 0) && (substr_count($location, 'https://') == 0)) {
 			$location = $CONFIG->url . $location;
 		}
@@ -253,6 +249,11 @@ function elgg_view($view, $vars = array(), $bypass = false, $debug = false, $vie
 		$viewtype = elgg_get_viewtype();
 	}
 
+	// Viewtypes can only be alphanumeric 
+	if (preg_match('[\W]', $viewtype)) {
+		return ''; 
+	} 
+
 	// Set up any extensions to the requested view
 	if (isset($CONFIG->views->extensions[$view])) {
 		$viewlist = $CONFIG->views->extensions[$view];
@@ -284,7 +285,7 @@ function elgg_view($view, $vars = array(), $bypass = false, $debug = false, $vie
 			}
 
 			// log warning
-			elgg_log($error, 'WARNING');
+			elgg_log($error, 'NOTICE');
 		}
 	}
 
@@ -746,8 +747,12 @@ function elgg_view_annotation(ElggAnnotation $annotation, $bypass = true, $debug
  */
 function elgg_view_entity_list($entities, $count, $offset, $limit, $fullview = true, $viewtypetoggle = true, $pagination = true) {
 	$count = (int) $count;
-	$offset = (int) $offset;
 	$limit = (int) $limit;
+	
+	// do not require views to explicitly pass in the offset
+	if (!$offset = (int) $offset) {
+		$offset = sanitise_int(get_input('offset', 0));
+	}
 
 	$context = get_context();
 
@@ -1224,51 +1229,7 @@ function page_draw($title, $body, $sidebar = "") {
  * @return string The friendly time
  */
 function friendly_time($time) {
-	$diff = time() - ((int) $time);
-
-	$minute = 60;
-	$hour = $minute * 60;
-	$day = $hour * 24;
-
-	if ($diff < $minute) {
-		$friendly_time = elgg_echo("friendlytime:justnow");
-	} else if ($diff < $hour) {
-		$diff = round($diff / $minute);
-		if ($diff == 0) {
-			$diff = 1;
-		}
-
-		if ($diff > 1) {
-			$friendly_time = sprintf(elgg_echo("friendlytime:minutes"), $diff);
-		} else {
-			$friendly_time = sprintf(elgg_echo("friendlytime:minutes:singular"), $diff);
-		}
-	} else if ($diff < $day) {
-		$diff = round($diff / $hour);
-		if ($diff == 0) {
-			$diff = 1;
-		}
-
-		if ($diff > 1) {
-			$friendly_time = sprintf(elgg_echo("friendlytime:hours"), $diff);
-		} else {
-			$friendly_time = sprintf(elgg_echo("friendlytime:hours:singular"), $diff);
-		}
-	} else {
-		$diff = round($diff / $day);
-		if ($diff == 0) {
-			$diff = 1;
-		}
-
-		if ($diff > 1) {
-			$friendly_time = sprintf(elgg_echo("friendlytime:days"), $diff);
-		} else {
-			$friendly_time = sprintf(elgg_echo("friendlytime:days:singular"), $diff);
-		}
-	}
-
-	$timestamp = htmlentities(date(elgg_echo('friendlytime:date_format'), $time));
-	return "<acronym title=\"$timestamp\">$friendly_time</acronym>";
+	return elgg_view('output/friendlytime', array('time' => $time));
 }
 
 /**
@@ -1278,12 +1239,7 @@ function friendly_time($time) {
  * @return string The optimised title
  */
 function friendly_title($title) {
-	$title = trim($title);
-	$title = strtolower($title);
-	$title = preg_replace("/[^\w ]/","",$title);
-	$title = str_replace(" ","-",$title);
-	$title = str_replace("--","-",$title);
-	return $title;
+	return elgg_view('output/friendlytitle', array('title' => $title));
 }
 
 /**
@@ -1341,7 +1297,20 @@ function sanitised() {
 		$save_vars = get_input('db_install_vars');
 		$result = "";
 		if ($save_vars) {
+			$rtn = db_check_settings($save_vars['CONFIG_DBUSER'],
+									$save_vars['CONFIG_DBPASS'],
+									$save_vars['CONFIG_DBNAME'],
+									$save_vars['CONFIG_DBHOST'] );
+			if ($rtn == FALSE) {
+				register_error(elgg_view("messages/sanitisation/dbsettings_error"));
+				register_error(elgg_view("messages/sanitisation/settings",
+								array(	'settings.php' => $result,
+										'sticky' => $save_vars)));
+				return FALSE;
+			}
+
 			$result = create_settings($save_vars, dirname(dirname(__FILE__)) . "/settings.example.php");
+
 
 			if (file_put_contents(dirname(dirname(__FILE__)) . "/settings.php", $result)) {
 				// blank result to stop it being displayed in textarea
@@ -1941,13 +1910,21 @@ function elgg_log($message, $level='NOTICE') {
  * @return void
  */
 function elgg_dump($value, $to_screen = TRUE, $level = 'NOTICE') {
-
+	global $CONFIG;
+	
 	// plugin can return false to stop the default logging method
 	$params = array('level' => $level,
 					'msg' => $value,
 					'to_screen' => $to_screen);
 	if (!trigger_plugin_hook('debug', 'log', $params, true)) {
 		return;
+	}
+
+	// Do not want to write to screen before page creation has started.
+	// This is not fool-proof but probably fixes 95% of the cases when logging
+	// results in data sent to the browser before the page is begun.
+	if (!isset($CONFIG->pagesetupdone)) {
+		$to_screen = FALSE;
 	}
 
 	if ($to_screen == TRUE) {
@@ -2374,8 +2351,12 @@ function elgg_normalise_plural_options_array($options, $singulars) {
 function full_url() {
 	$s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : "";
 	$protocol = substr(strtolower($_SERVER["SERVER_PROTOCOL"]), 0, strpos(strtolower($_SERVER["SERVER_PROTOCOL"]), "/")) . $s;
-	$port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]);
-	return $protocol . "://" . $_SERVER['SERVER_NAME'] . $port . $_SERVER['REQUEST_URI'];
+	$port = ($_SERVER["SERVER_PORT"] == "80" || $_SERVER["SERVER_PORT"] == "443") ? "" : (":".$_SERVER["SERVER_PORT"]);
+
+	$quotes = array('\'', '"'); 
+	$encoded = array('%27', '%22'); 
+
+	return $protocol . "://" . $_SERVER['SERVER_NAME'] . $port . str_replace($quotes, $encoded, $_SERVER['REQUEST_URI']); 
 }
 
 /**
@@ -2550,6 +2531,17 @@ interface Friendable {
 }
 
 /**
+ * Handles formatting of ampersands in urls
+ *
+ * @param string $url
+ * @return string
+ * @since 1.7.1
+ */
+function elgg_format_url($url) {
+	return preg_replace('/&(?!amp;)/', '&amp;', $url);
+}
+
+/**
  * Rebuilds a parsed (partial) URL
  *
  * @param array $parts Associative array of URL components like parse_url() returns
@@ -2721,7 +2713,8 @@ function __elgg_shutdown_hook() {
 	trigger_elgg_event('shutdown', 'system');
 
 	$time = (float)(microtime(TRUE) - $START_MICROTIME);
-	elgg_log("Page {$_SERVER['REQUEST_URI']} generated in $time seconds", 'DEBUG');
+	// demoted to NOTICE from DEBUG so javascript is not corrupted
+	elgg_log("Page {$_SERVER['REQUEST_URI']} generated in $time seconds", 'NOTICE');
 }
 
 /**

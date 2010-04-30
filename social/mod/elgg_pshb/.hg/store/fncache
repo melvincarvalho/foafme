@@ -1,0 +1,16 @@
+data/README.i
+data/actions/delete_subscription.php.i
+data/actions/pshb_subscribe.php.i
+data/hacks.txt.i
+data/languages/en.php.i
+data/languages/es.php.i
+data/lib/LICENSE.PuSHSubscriber.txt.i
+data/lib/PuSHSubscriber.inc.i
+data/lib/publisher.php.i
+data/manifest.xml.i
+data/river.patch.i
+data/start.php.i
+data/subscribe.php.i
+data/views/default/form/pshb_subscribe.php.i
+data/views/default/object/pshb_subscription.php.i
+data/views/default/pshb_subscription/listing.php.i

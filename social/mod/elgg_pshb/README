@@ -1,0 +1,10 @@
+PubSubHubBub support for elgg
+ostatus, part 2/4
+
+by: devel@lorea.cc
+dependencies: curl
+license: gpl2
+
+INSTALL:
+make sure you put it in the mods directory as pshb
+

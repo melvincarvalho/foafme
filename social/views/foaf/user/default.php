@@ -8,9 +8,7 @@
  * @link http://elgg.org/
  */
 
-define('MAX_FRIENDS', 1000);
-
-$friends=(array) ( get_user_friends($vars['page_owner'],$subtype = "",$limit = MAX_FRIENDS ,$offset = 0) );
+$friends=get_user_friends($vars['page_owner'],$subtype = "",$limit = 10000,$offset = 0);
 
 foreach ($friends as $friend) {
 ?>

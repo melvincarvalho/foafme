@@ -24,7 +24,8 @@
         if ($owner instanceof ElggUser) add_submenu_item(elgg_echo('pages:welcome'), $CONFIG->url . "pg/pages/welcome/", 'pagesactions');
     }
     
-    if (is_callable('group_gatekeeper')) group_gatekeeper();
+	// access check for closed groups
+	group_gatekeeper();
 	
 	$limit = get_input("limit", 10);
 	$offset = get_input("offset", 0);
@@ -41,7 +42,7 @@
 	
 	set_context('search');
 	
-	$objects = elgg_list_entities(array('types' => 'object', 'subtypes' => 'page_top', 'container_guid' => page_owner(), 'limit' => $limit, 'full_view' => FALSE));
+	$objects = elgg_list_entities(array('types' => 'object', 'subtypes' => 'page_top', 'container_guid' => page_owner(), 'limit' => $limit, 'offset' => $offset, 'full_view' => FALSE));
 	
 	set_context($context);
 	
