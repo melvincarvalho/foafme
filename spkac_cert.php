@@ -24,7 +24,7 @@
 //              http://phpmylogin.sourceforge.net/wiki/doku.php?id=keygen_attribute
 //
 //-----------------------------------------------------------------------------------------------------------------------------------
-
+require_once 'config.php';
 
 // Returns a X.509 SSL certificate
 function create_identity_x509( 
@@ -84,8 +84,8 @@ function create_identity_x509(
 	fclose($handle);
 
 	// TODO - This should be more easily configured
-	$command = "openssl ca -config /usr/share/ssl/openssl.cnf -verbose -batch -notext -spkac $tmpSPKACfname -out $tmpCERTfname -passin file:/home/foaf/ssl/password 2>&1";
-
+        $command = "openssl ca -config ".$GLOBALS['config']['openssl_config_dir']."/openssl.cnf -verbose -batch -notext -spkac $tmpSPKACfname -out $tmpCERTfname -passin file:".$GLOBALS['config']['openssl_config_dir']."/password 2>&1";
+	
 	// Run the command;
 	$output = `$command`;
 

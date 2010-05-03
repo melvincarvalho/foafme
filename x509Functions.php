@@ -60,7 +60,7 @@ function create_identity_x509(
 	fclose($handle);
 
 	// TODO - This should be more easily configured
-	$command = "openssl ca -config ".$GLOBALS['config']['openssl_config_dir']."/openssl.cnf -verbose -batch -notext -spkac $tmpSPKACfname -out $tmpCERTfname -passin file:/ebs1/ssl/password 2>&1";
+	$command = "openssl ca -config ".$GLOBALS['config']['openssl_config_dir']."/openssl.cnf -verbose -batch -notext -spkac $tmpSPKACfname -out $tmpCERTfname -passin file:".$GLOBALS['config']['openssl_config_dir']."/password 2>&1";
 
 	// Run the command;
 	$output = `$command`;
