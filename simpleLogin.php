@@ -24,42 +24,44 @@
 require_once('config.php');
 require_once('db.class.php');
 require_once('lib/Authentication.php');
-$auth = new Authentication_FoafSSLARC($GLOBALS['config'], NULL, FALSE);
+$auth = new Authentication($GLOBALS['config']);
 ?>
 <body>
     <h1>FOAF+SSL Simple Login Page</h1>
 
-    <!--
-    <form><input type=button value="Click Here For Login Diagnostics" onclick="javascript:document.getElementById('diagnostics').style.display = 'block'" /></form>
-    -->
-
 
     <div id="diagnostics">
-        <?
+        <?php
+        // Setup
         if ($_SERVER['SSL_CLIENT_CERT']) {
             $certModulus = $auth->certModulus;
             $certExponent = $auth->certExponent;
             $subjectAltName = $auth->certSubjectAltName['URI'];
-            $agentArc = new Authentication_AgentARC($GLOBALS['config'], $auth->webid);
-            $agent = $agentArc->getAgent();
+            $agent = $auth->getAgent();
+            //$agentArc = new Authentication_AgentARC($GLOBALS['config'], $auth->webid);
+            //$agent = $agentArc->getAgent();
             if ( isset($agent['RSAKey']) ) {
                 $foaf_rsakey = $agent['RSAKey'];
             }
         }
 
-        if ($auth->isAuthenticated())
-            print "<b>The login Suceeded! Authenticated as:  $subjectAltName</b><p>Technical Explanation:</p>";
-        else
+        // Did we login?
+        if ($auth->isAuthenticated()) {
+            print "<b>The login Suceeded! Authenticated as:  " . $subjectAltName
+                    . "</b><p>Technical Explanation:</p>";
+        } else {
             print "<b>Not Logged In</b><br/><br/>";
+        }
 
-
-        if ($_SERVER['SSL_CLIENT_CERT'])
+        // Did we discover a cert?
+        if ($_SERVER['SSL_CLIENT_CERT']) {
             print 'SSL Client Certificate: <span style="color:green">detected!</span><BR><BR>';
-        else
+        } else {
             print 'SSL Client Certificate: <span style="color:green">Not detected!</span><BR><BR>';
+        }
 
-
-        if ($_SERVER[SSL_CLIENT_CERT]) {
+        // What's in the cert?
+        if ($_SERVER['SSL_CLIENT_CERT']) {
 
             print "Client Certificate Public Key <span style='color:green'>detected! (HEX):<br>";
 
@@ -67,18 +69,18 @@ $auth = new Authentication_FoafSSLARC($GLOBALS['config'], NULL, FALSE);
             print "Modulus : <br /><span style='color:green'>". $certModulus ."</span><br/>";
             print "Exponent : <span style='color:green'> ". $certExponent ." </span><br/>";
             print "</pre></span>";
-        }
-        else
+        } else {
             print "Client Certificate Public Key: <span style='color:green'>Not detected!</span><BR><BR>";
+        }
 
-
+        // Did we find a subjectAltName?
         if ($subjectAltName) {
             print "Subject Alt Name (FOAF Profile): <span style='color:green'>detected!: $subjectAltName</span><BR><BR>";
-        }
-        else
+        } else {
             print "Subject Alt Name: <span style='color:green'>Not detected!</span><BR><BR>";
+        }
 
-
+        //  Did we find a public key in the FOAF?
         if ( $foaf_rsakey ) {
             print "FOAF Remote Public Key found in $subjectAltName:<br><span style='color:green'>";
 
@@ -88,9 +90,9 @@ $auth = new Authentication_FoafSSLARC($GLOBALS['config'], NULL, FALSE);
                 print "Exponent : <span style='color:green'> ". $rsa_key['exponent'] ." </span><br/>";
                 print "</pre></span>";
             }
-        }
-        else
+        } else {
             print "FOAF Remote Public Key: <span style='color:green'>Not detected!</span><BR><BR>";
+        }
 
 
         ?>
