@@ -6,7 +6,7 @@
 	<link rel="stylesheet" href="css/general.css" type="text/css" media="screen" />
 </head>
 <body>
-<?  if ($_REQUEST['webid']) { ?>
+<?php  if ($_REQUEST['webid']) { ?>
 	<form method="post" id="form">
 		<table>
 			<tr style='display:none'>
@@ -24,14 +24,14 @@
 			</tr>
 		</table>
 	</form>
-<?  } else  { ?>
+<?php  } else  { ?>
 		<div id="user">
-				<a id="account" href="https://foafssl.org/srv/idp?authreqissuer=http://foaf.me/shout/index.php">
+				<a id="account" href="https://foafssl.org/srv/idp?authreqissuer=<?php echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] ?>">
 					login to your <strong>account</strong>
 				</a>
 			<br clear="all" />
 		</div>
-<?  } ?>
+<?php  } ?>
 	<div id="container">
 		<ul class="menu">
 			<li>Shoutbox</li>
