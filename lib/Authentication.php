@@ -30,9 +30,27 @@
 require_once(dirname(__FILE__)."/Authentication_FoafSSLDelegate.php");
 require_once(dirname(__FILE__)."/Authentication_FoafSSLARC.php");
 require_once(dirname(__FILE__)."/Authentication_AgentARC.php");
+
+
 /**
- * @author Akbar Hossain
- *
+ * Simple weblogin function, assumes config is set
+ */
+function weblogin() {
+     $auth = new Authentication($GLOBALS['config']);
+     return $auth;
+}
+
+/**
+ * Simple weblogin display
+ */
+function weblogin_display() {
+    print '<a id="account" href="https://foafssl.org/srv/idp?authreqissuer=' 
+        . "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] 
+        . '">Login via foafssl.org</a>';
+}
+
+
+/**
  * Top-level authentication class that integrates multiple authentication
  * procedures. (session, Foaf+SSL, delegated Foaf+SSL)
  */
@@ -40,16 +58,18 @@ class Authentication {
 
     /**
      * After succesful authentication contains the webid
-     * (e.g. http://foaf.me/tl73#me)
      * @var string
      */
     public  $webid             = NULL;
+
     public  $isAuthenticated   = 0;
+
     /**
      * Always contains the diagnostic message for the last authentication attempt
      * @var string
      */
     public  $authnDiagnostic   = NULL;
+    
     /**
      *
      * @var array
@@ -62,73 +82,57 @@ class Authentication {
 
     public function __construct($ARCConfig, $sig = NULL) {
 
+        // 1. Authenticate via session and return
         $this->session = new Authentication_Session();
         if ($this->session->isAuthenticated) {
             $this->webid           = $this->session->webid;
             $this->isAuthenticated = $this->session->isAuthenticated;
             $this->agent           = $this->session->agent;
             $this->authnDiagnostic = self::STATUS_AUTH_VIA_SESSION;
-/*
-            print "<pre>";
-            print_r($session);
-            print "</pre>";
-*/
             return;
-         }
+        }
 
-         $sig = isset($sig)?$sig:$_GET["sig"];
+        // 2. Authenticate via delegated login
+        $sig = isset($sig)?$sig:$_GET["sig"];
+        if ( (isset($sig)) ) {
+            $authDelegate = new Authentication_FoafSSLDelegate(FALSE);
 
-         if ( /*($this->isAuthenticated == 0) &&*/ (isset($sig)) ) {
-             $authDelegate = new Authentication_FoafSSLDelegate(FALSE);
+            $this->webid           = $authDelegate->webid;
+            $this->isAuthenticated = $authDelegate->isAuthenticated;
+            $this->authnDiagnostic = $authDelegate->authnDiagnostic;
+        }
 
-             $this->webid           = $authDelegate->webid;
-             $this->isAuthenticated = $authDelegate->isAuthenticated;
-             $this->authnDiagnostic = $authDelegate->authnDiagnostic;
-/*
-             print "<pre>";
-             print_r($authDelegate);
-             print "</pre>";
-*/
-         }
+        // 3. Authenticate via native FOAF+SSL
+        $authSSL = NULL;
+        if ( ($this->isAuthenticated == 0) ) {
+            $authSSL = new Authentication_FoafSSLARC($ARCConfig, NULL, FALSE);
 
-         $authSSL = NULL;
-         if ( ($this->isAuthenticated == 0) && true ) {
-             $authSSL = new Authentication_FoafSSLARC($ARCConfig, NULL, FALSE);
+            $this->webid           = $authSSL->webid;
+            $this->isAuthenticated = $authSSL->isAuthenticated;
+            $this->authnDiagnostic = $authSSL->authnDiagnostic;
+        }
 
-             $this->webid           = $authSSL->webid;
-             $this->isAuthenticated = $authSSL->isAuthenticated;
-             $this->authnDiagnostic = $authSSL->authnDiagnostic;
-/*
-             print "<pre>";
-             print_r($authSSL);
-             print "</pre>";
-*/
-         }
-
-         if ($this->isAuthenticated) {
-            if (isset($authSSL))
+        if ($this->isAuthenticated) {
+            if (isset($authSSL)) {
                 $ARCStore = $authSSL->ARCStore;
-            else
+            } else {
                 $ARCStore = NULL;
-            
+            }
+
             $agent = new Authentication_AgentARC($ARCConfig, $this->webid, $ARCStore);
-/*
-            print "<pre>";
-            print_r($agent);
-            print "</pre>";
-*/
             $this->agent = $agent->getAgent();
-         }
-         else {
+        } else {
             $this->webid = NULL;
             $this->agent = NULL;
-         }
+        }
 
-         if ($this->isAuthenticated)
+        if ($this->isAuthenticated) {
             $this->session->setAuthenticatedWebid($this->webid, $this->agent);
-         else
+        } else {
             $this->session->unsetAuthenticatedWebid();
+        }
     }
+
     /**
      * Is the current user authenticated?
      * @return bool
@@ -136,6 +140,7 @@ class Authentication {
     public function isAuthenticated() {
         return $this->isAuthenticated;
     }
+
     /**
      * Leave the authenticated session
      */
@@ -143,6 +148,7 @@ class Authentication {
         $this->isAuthenticated = 0;
         $this->session->unsetAuthenticatedWebid();
     }
+
     /**
      * Returns an the authenticated user's parsed Foaf profile
      * @return Authentication_AgentARC
