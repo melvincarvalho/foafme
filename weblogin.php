@@ -24,16 +24,6 @@
 require_once('config.php');
 require_once('lib/Authentication.php');
 
-function weblogin() {
-     $auth = new Authentication($GLOBALS['config']);
-     return $auth;
-}
-
-function weblogin_display() {
-    print '<a id="account" href="https://foafssl.org/srv/idp?authreqissuer=' . "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '">Login via foafssl.org</a>';
-}
-
-
 $auth = weblogin();
 weblogin_display();
 print '<pre>';
